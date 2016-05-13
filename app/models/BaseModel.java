@@ -10,5 +10,13 @@ import play.db.ebean.Model;
 public class BaseModel extends Model {
 	public Date createTs;
 	public Date updateTs;
-	public Integer versions;
+	public Long versions;
+
+	@Override
+	public void save() {
+		this.createTs = new Date(System.currentTimeMillis());
+		this.updateTs = this.createTs;
+		this.versions++;
+		super.save();
+	}
 }

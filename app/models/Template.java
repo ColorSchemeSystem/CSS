@@ -22,5 +22,15 @@ public class Template extends BaseModel {
 
 	public Integer accessFlag;
 
+	private static Finder<Long, Template> find =
+			new Finder<Long, Template>(Long.class, Template.class);
 
+	/**
+	 *
+	 * @param templateId
+	 * @return
+	 */
+	public static Template findById(Long templateId) {
+		return find.byId(templateId);
+	}
 }
