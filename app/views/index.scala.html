@@ -1,7 +1,18 @@
-@(message: String)
+@(msg: String)
 
-@main("Welcome to Play") {
+@import helper._
+@import helper.twitterBootstrap._
+@import play.api.Play.current;
+@import play.api.cache.Cache;
 
-    @play20.welcome(message, style = "Java")
-
+@main("Sample Page") {
+	<h1>Hello!</h1>
+	<p>@msg</p>
+	@Cache.get("hoge")
+	@Cache.remove("hoge")
+	@Cache.set("hoge","hoge")
+	<form method="get" action="/submit">
+		名前：<input type="text" name="name" id="name" value="hoge">
+		<input type="submit" value="リクエスト">
+	</form>
 }
