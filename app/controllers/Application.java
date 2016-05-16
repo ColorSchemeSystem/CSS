@@ -3,6 +3,7 @@ package controllers;
 import play.*;
 import play.mvc.*;
 import play.data.Form;
+import play.cache.Cache;
 
 import views.html.*;
 
@@ -10,9 +11,11 @@ public class Application extends Controller {
 
 	public static Result index() {
 		String uuid=session("uuid");
+		uuid = (String)Cache.get("hoge");
 		if(uuid==null) {
 			uuid=java.util.UUID.randomUUID().toString();
 			session("uuid", uuid);
+			Cache.set("hoge",uuid);
 		}
 		return ok(index.render("UserID:" + uuid));
 	}
