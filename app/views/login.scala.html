@@ -1,0 +1,10 @@
+@(myform: Form[models.Member])
+
+@import helper._
+
+@main("Sample Page") {
+	@helper.form(action = routes.Application.loginEntry()) {
+		@inputText(myform("memberName"),'_label -> "name")
+		<input type="submit" value="ログイン">
+	}
+}

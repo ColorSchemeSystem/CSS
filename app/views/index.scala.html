@@ -1,4 +1,4 @@
-@(msg: String)
+@(btnName: String, bntUrl: String)
 
 @import helper._
 @import helper.twitterBootstrap._
@@ -6,9 +6,7 @@
 
 @main("Sample Page") {
 	<h1>Hello!</h1>
-	<p>@msg</p>
-	<form method="get" action="/submit">
-		名前：<input type="text" name="name" id="name" value="hoge">
-		<input type="submit" value="リクエスト">
+	<form method="get" action=@bntUrl>
+		<input type="submit" value=@btnName>
 	</form>
 }

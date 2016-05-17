@@ -4,7 +4,7 @@
 		module="css-build"
 		revision="0.1-SNAPSHOT"
 		status="integration"
-		publication="20160513172707"
+		publication="20160516133655"
 		e:sbtVersion="0.13" e:scalaVersion="2.10"
 	>
 		<description>
