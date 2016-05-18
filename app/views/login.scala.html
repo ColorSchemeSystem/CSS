@@ -2,9 +2,12 @@
 
 @import helper._
 
-@main("Sample Page") {
+@main("login Page") {
 	@helper.form(action = routes.Application.loginEntry()) {
 		@inputText(myform("memberName"),'_label -> "name")
+		@inputText(myform("password"),'_label -> "password")
 		<input type="submit" value="ログイン">
 	}
+
+	<a href="@routes.Application.createAccount()"><input type="button" value="新規登録"></a>
 }

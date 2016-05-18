@@ -14,6 +14,7 @@ public class Member extends BaseModel {
 	@Required(message = "入力してください")
 	public String memberName;
 
+	@Required(message = "入力してください")
 	public String password;
 
 	public String mail;
