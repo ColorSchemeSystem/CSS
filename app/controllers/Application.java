@@ -38,6 +38,8 @@ public class Application extends Controller {
 		if(!form.hasErrors()) {
 			mem.memberName = form.get().memberName;
 			Cache.set("Member",mem);
+		} else {
+			return ok(login.render(form));
 		}
 		return redirect("./");
 	}

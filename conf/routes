@@ -6,6 +6,7 @@
 GET     /                           controllers.Application.index()
 GET     /login                      controllers.Application.login()
 GET     /loginEntry                 controllers.Application.loginEntry()
+GET     /myPage                     controllers.Application.myPage()
 GET     /submit                     controllers.Application.submit()
 GET     /redirect                   controllers.Application.redirect()
 

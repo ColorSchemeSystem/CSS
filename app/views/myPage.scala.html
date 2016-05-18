@@ -1,0 +1,9 @@
+@()
+
+@import helper._
+
+@main("Sample Page") {
+	@helper.form(action = routes.Application.index()) {
+		<input type="submit" value="TOP">
+	}
+}
