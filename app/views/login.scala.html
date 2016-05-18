@@ -1,8 +1,9 @@
-@(myform: Form[models.Member])
+@(message: String, myform: Form[models.Member])
 
 @import helper._
 
 @main("login Page") {
+	<h1>@message</h1>
 	@helper.form(action = routes.Application.loginEntry()) {
 		@inputText(myform("memberName"),'_label -> "name")
 		@inputText(myform("password"),'_label -> "password")

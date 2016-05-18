@@ -4,11 +4,18 @@ import play.*;
 import play.mvc.*;
 import play.data.Form;
 import play.cache.Cache;
+import play.db.ebean.Model.Finder;
+
+import java.util.List;
+
+import com.avaje.ebean.Query;
 
 import views.html.*;
 import models.*;
 
 public class Application extends Controller {
+
+	private static final Finder<Long, Member> finder = new Finder<Long, Member>(Long.class,Member.class);
 
 	public static Result index() {
 		Member mem = (Member)Cache.get("Member");
@@ -18,9 +25,20 @@ public class Application extends Controller {
 		return ok(index.render("ログイン", "/login"));
 	}
 
+	/*
+	*  ログイン画面へ
+	*/
 	public static Result login() {
 		Form<Member> form = Form.form(Member.class);
-		return ok(login.render(form));
+		return ok(login.render("ログイン", form));
+	}
+
+	/*
+	*  ログアウト処理
+	*/
+	public static Result logout() {
+		Cache.remove("Member");
+		return redirect("./");
 	}
 
 	/*
@@ -30,19 +48,30 @@ public class Application extends Controller {
 	*/
 	public static Result loginEntry() {
 		Form<Member> form = Form.form(Member.class).bindFromRequest();
-		Member mem = new Member();
+		Member mem = null;
 		if(!form.hasErrors()) {
-			// TODO 名前を取得しデータベース検索
+			// 名前を取得しデータベース検索
+			String name = form.get().memberName;
+			Query<Member> query = finder.where("memberName='"+name+"'");
+			List<Member> members = query.findList();
+			if(members.size() == 0) return ok(login.render("ログインに失敗しました", form));
 
-			// TODO パスワード確認
+			// パスワード確認
+			String password = form.get().password;
+			for(Member m : members) {
+				if(m.password.equals(password)) {
+					mem = m;
+					break;
+				}
+			}
 
-			// TODO ログイン画面
+			// 一致していなかったらログイン画面へ
+			if(mem == null) return ok(login.render("ログインに失敗しました", form));
 
-			// 仮処理
-			mem.memberName = form.get().memberName;
+			// ログインする
 			Cache.set("Member", mem, 1 * 60 * 60);
 		} else {
-			return ok(login.render(form));
+			return ok(login.render("ログインに失敗しました", form));
 		}
 		return redirect("./");
 	}
@@ -58,19 +87,39 @@ public class Application extends Controller {
 	/*
 	*  送られてきた情報をフォーム取得しIDが存在するか判別
 	*  なければ新規登録,あれば上書き
-	*  index画面へ?
+	*  ログイン処理をしてindex画面へ?
 	*/
 	public static Result saveAccount() {
 		Form<Member> form = Form.form(Member.class).bindFromRequest();
+		Member mem = new Member();
 		if(!form.hasErrors()) {
-			// TODO IDがあるか判断し適切処理
+			// IDがなければ新規登録
+			if(form.get().memberId == null) {
+				mem.memberName = form.get().memberName;
+				mem.password = form.get().password;
+				mem.mail = form.get().mail;
+				mem.save();
+				System.out.println("create");
+			}
+
+			// 上書き
+			else {
+				mem = finder.byId(form.get().memberId);
+				mem.memberName = form.get().memberName;
+				mem.memberId = form.get().memberId;
+				mem.mail = form.get().mail;
+				System.out.println("update");
+			}
 		} else {
-			// TODO 新規アカウント登録画面へ
+			// 新規アカウント登録画面へ
+			return ok(createAccount.render("ERROR!　もう一度入力してください", form));
 		}
-		return TODO;
+		Cache.set("Member", mem, 1 * 60 * 60);
+		return redirect("./");
 	}
 
 	public static Result myPage() {
-		return ok(myPage.render());
+		Member mem = (Member)Cache.get("Member");
+		return ok(myPage.render(mem));
 	}
 }
