@@ -99,7 +99,6 @@ public class Application extends Controller {
 				mem.password = form.get().password;
 				mem.mail = form.get().mail;
 				mem.save();
-				System.out.println("create");
 			}
 
 			// 上書き
@@ -108,7 +107,6 @@ public class Application extends Controller {
 				mem.memberName = form.get().memberName;
 				mem.memberId = form.get().memberId;
 				mem.mail = form.get().mail;
-				System.out.println("update");
 			}
 		} else {
 			// 新規アカウント登録画面へ
