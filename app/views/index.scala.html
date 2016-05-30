@@ -2,168 +2,203 @@
 
 <!DOCTYPE html>
 <html lang="ja">
-	<head>
-		<meta charset="UTF-8">
-		<meta http-equiv="X-UA-Compatible" content="IE=edge">
-		<meta name="viewport" content="width=device-width, initial-scale=1">
-		<link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css" rel="stylesheet">
-		<meta name="viewport" content="width=device-width,user-scalable=no,maximum-scale=1"/>
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css" rel="stylesheet">
+	<meta name="viewport" content="width=device-width,user-scalable=no,maximum-scale=1"/>
 
-		<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
-		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/js/bootstrap.min.js"></script>
-		<!-- <script type="text/javascript" src="bootstrap.js"></script> -->
-		<script type="text/javascript" src='@routes.Assets.at("javascripts/cpick.js")'></script>
-		<style>
-			body{
-				height: 100%;
-			}
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/js/bootstrap.min.js"></script>
+	<!-- <script type="text/javascript" src="bootstrap.js"></script> -->
+	<script type="text/javascript" src='@routes.Assets.at("javascripts/cpick.js")'></script>
 
-			.header .titleBar{
-				padding-left: 20px;
-			}
+	<link rel="shortcut icon" href="libraries/favicon.ico">
 
-			.contentColor{
-				background: #eeeeee;
-			}
+	<link href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.2.0/css/bootstrap.min.css" rel="stylesheet" type="text/css" media="all">
+	<link href="https://cdnjs.cloudflare.com/ajax/libs/prettify/r298/prettify.min.css" rel="stylesheet" type="text/css" media="all">
+	<link href='@routes.Assets.at("stylesheets/demo.css")' rel="stylesheet" type="text/css" media="all">
+	<link href='@routes.Assets.at("stylesheets/bootstrap.colorpickersliders.css")' rel="stylesheet" type="text/css" media="all">
 
-			.content{
-				padding-top: 20px;
-				max-width: 1150px;
-				margin-left: auto;
-				margin-right: 0px;
-				padding-bottom: 20px;
-			}
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.2.0/js/bootstrap.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/prettify/r298/run_prettify.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/tinycolor/0.11.1/tinycolor.min.js"></script>
+	<script src='@routes.Assets.at("javascripts/bootstrap.colorpickersliders.js")'></script>
+	<style>
+		body{
+			height: 100%;
+		}
 
-			.navbar{
-				margin: 0px;
-			}
+		.header .titleBar{
+			padding-left: 20px;
+		}
 
-			.content .sideBar{
-				float: right;
-				height: 100%;
-				background-color: #FFF;
-				width: 230px;
-				margin-right: 0px;
-			}
+		.contentColor{
+			background: #eeeeee;
+		}
 
-			.panel-primary {
-				border-color: white;
-			}
+		.content{
+			padding-top: 20px;
+			max-width: 1150px;
+			margin-left: auto;
+			margin-right: 0px;
+			padding-bottom: 20px;
+		}
 
-			.content .sidebar .panel-heading{
-				background-color: #464e54;
-			}
+		.navbar{
+			margin: 0px;
+		}
 
-			.content .sidebar .panel-heading .panel-title{
-				color: #FFF;
-			}
+		.content .sideBar{
+			float: right;
+			height: 100%;
+			background-color: #FFF;
+			width: 230px;
+			margin-right: 0px;
+		}
 
-			.content .inHtml{
-				float: left;
-				max-width: 900px;
-				margin-right: 20px;
-				background-color: #FFF;
-				padding: 10px;
-				margin-bottom: 20px;
-			}
+		.panel-primary {
+			border-color: white;
+		}
 
-			.clear {
-				clear:both;
-			}
+		.content .sidebar .panel-heading{
+			background-color: #464e54;
+		}
 
-			.footer{
-				border-top: 1px solid black;
-				padding: 30px;
-				text-align: center;
-			}
+		.content .sidebar .panel-heading .panel-title{
+			color: #FFF;
+		}
 
-		</style>
-	</head>
+		.content .inHtml{
+			float: left;
+			max-width: 900px;
+			margin-right: 20px;
+			background-color: #FFF;
+			padding: 10px;
+			margin-bottom: 20px;
+		}
 
-  <body>
-		<div class="header">
+		.clear {
+			clear:both;
+		}
 
-			<div class="titleBar">
-				<h1>Title</h1>
-			</div>
+		.footer{
+			border-top: 1px solid black;
+			padding: 30px;
+			text-align: center;
+		}
 
-			<div class="menuBar">
-				<nav class="navbar navbar-inverse">
-					<div class="container-fluid">
-						<div class="navbar-header">
-							<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbarEexample7">
-								<span class="sr-only">Toggle navigation</span>
-								<span class="icon-bar"></span>
-								<span class="icon-bar"></span>
-								<span class="icon-bar"></span>
-							</button>
-							<a class="navbar-brand" href="#">
-								HOME
-							</a>
-						</div>
+	</style>
+</head>
 
-						<div class="collapse navbar-collapse" id="navbarEexample7">
-							<ul class="nav navbar-nav">
-								<li><a href="#">すべてのテンプレート</a></li>
-								<li><a href="#">URLからデザインを読み込む</a></li>
-								<li><a href="#">テンプレートのアップデート</a></li>
-							</ul>
-							<a class="navbar-right" href=@bntUrl><button type="button" class="btn btn-default navbar-btn">@btnName</button></a>
-						</div>
+<body>
+	<div class="header">
+
+		<div class="titleBar">
+			<h1>Title</h1>
+		</div>
+
+		<div class="menuBar">
+			<nav class="navbar navbar-inverse">
+				<div class="container-fluid">
+					<div class="navbar-header">
+						<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbarEexample7">
+							<span class="sr-only">Toggle navigation</span>
+							<span class="icon-bar"></span>
+							<span class="icon-bar"></span>
+							<span class="icon-bar"></span>
+						</button>
+						<a class="navbar-brand" href="#">
+							HOME
+						</a>
 					</div>
-				</nav>
-			</div>
 
+					<div class="collapse navbar-collapse" id="navbarEexample7">
+						<ul class="nav navbar-nav">
+							<li><a href="#">すべてのテンプレート</a></li>
+							<li><a href="#">URLからデザインを読み込む</a></li>
+							<li><a href="#">テンプレートのアップデート</a></li>
+						</ul>
+						<a class="navbar-right" href=@bntUrl><button type="button" class="btn btn-default navbar-btn">@btnName</button></a>
+					</div>
+				</div>
+			</nav>
 		</div>
 
+	</div>
 
-		<div class="contentColor">
-			<div class="content">
-				<div class="inHtml">
-					<p>hoge hoge hoge hoge hoge hoge hoge hoge hoge hoge hoge hoge hoge hoge hoge hoge hoge hoge hoge hoge hoge hoge hoge hoge hoge <p>
-					<br>
-					<p>hoge hoge hoge hoge hoge hoge hoge hoge hoge hoge hoge hoge hoge hoge hoge hoge hoge hoge hoge hoge hoge hoge hoge hoge hoge <p>
-					<br>
-					<p>hoge hoge hoge hoge hoge hoge hoge hoge hoge hoge hoge hoge hoge hoge hoge hoge hoge hoge hoge hoge hoge hoge hoge hoge hoge <p>
-					<br>
-					<p>hoge hoge hoge hoge hoge hoge hoge hoge hoge hoge hoge hoge hoge hoge hoge hoge hoge hoge hoge hoge hoge hoge hoge hoge hoge <p>
-					<br>
-					<p>hoge hoge hoge hoge hoge hoge hoge hoge hoge hoge hoge hoge hoge hoge hoge hoge hoge hoge hoge hoge hoge hoge hoge hoge hoge <p>
-					<br>
-					<p>hoge hoge hoge hoge hoge hoge hoge hoge hoge hoge hoge hoge hoge hoge hoge hoge hoge hoge hoge hoge hoge hoge hoge hoge hoge <p>
-					<br>
-					<p>hoge hoge hoge hoge hoge hoge hoge hoge hoge hoge hoge hoge hoge hoge hoge hoge hoge hoge hoge hoge hoge hoge hoge hoge hoge <p>
-					<br>
-					<p>hoge hoge hoge hoge hoge hoge hoge hoge hoge hoge hoge hoge hoge hoge hoge hoge hoge hoge hoge hoge hoge hoge hoge hoge hoge <p>
-					<br>
-					<p>hoge hoge hoge hoge hoge hoge hoge hoge hoge hoge hoge hoge hoge hoge hoge hoge hoge hoge hoge hoge hoge hoge hoge hoge hoge <p>
-					<br>
-					<p>hoge hoge hoge hoge hoge hoge hoge hoge hoge hoge hoge hoge hoge hoge hoge hoge hoge hoge hoge hoge hoge hoge hoge hoge hoge <p>
-					<br>
-					<p>hoge hoge hoge hoge hoge hoge hoge hoge hoge hoge hoge hoge hoge hoge hoge hoge hoge hoge hoge hoge hoge hoge hoge hoge hoge <p>
-					<br>
-					<p>hoge hoge hoge hoge hoge hoge hoge hoge hoge hoge hoge hoge hoge hoge hoge hoge hoge hoge hoge hoge hoge hoge hoge hoge hoge <p>
-					<br>
-					<p>hoge hoge hoge hoge hoge hoge hoge hoge hoge hoge hoge hoge hoge hoge hoge hoge hoge hoge hoge hoge hoge hoge hoge hoge hoge <p>
-					<br>
-				</div>
 
-				<div class="sideBar">
-					<p>
-						<input type="text" name="c3" value="#2fcf66" size="12" id="t3" />
-						<button class="html5jp-cpick [target:t3]">色選択</button>
-					</p>
-				</div>
-
-				<div class="clear"></div>
-				<a href="#"><input type="button" value="登録"></a>
-				<a href="#"><input type="button" value="CSSを書き出す"></a>
-				</div>
+	<div class="contentColor">
+		<div class="content">
+			<div class="inHtml">
+				<p>hoge hoge hoge hoge hoge hoge hoge hoge hoge hoge hoge hoge hoge hoge hoge hoge hoge hoge hoge hoge hoge hoge hoge hoge hoge <p>
+				<br>
+				<p>hoge hoge hoge hoge hoge hoge hoge hoge hoge hoge hoge hoge hoge hoge hoge hoge hoge hoge hoge hoge hoge hoge hoge hoge hoge <p>
+				<br>
+				<p>hoge hoge hoge hoge hoge hoge hoge hoge hoge hoge hoge hoge hoge hoge hoge hoge hoge hoge hoge hoge hoge hoge hoge hoge hoge <p>
+				<br>
+				<p>hoge hoge hoge hoge hoge hoge hoge hoge hoge hoge hoge hoge hoge hoge hoge hoge hoge hoge hoge hoge hoge hoge hoge hoge hoge <p>
+				<br>
+				<p>hoge hoge hoge hoge hoge hoge hoge hoge hoge hoge hoge hoge hoge hoge hoge hoge hoge hoge hoge hoge hoge hoge hoge hoge hoge <p>
+				<br>
+				<p>hoge hoge hoge hoge hoge hoge hoge hoge hoge hoge hoge hoge hoge hoge hoge hoge hoge hoge hoge hoge hoge hoge hoge hoge hoge <p>
+				<br>
+				<p>hoge hoge hoge hoge hoge hoge hoge hoge hoge hoge hoge hoge hoge hoge hoge hoge hoge hoge hoge hoge hoge hoge hoge hoge hoge <p>
+				<br>
+				<p>hoge hoge hoge hoge hoge hoge hoge hoge hoge hoge hoge hoge hoge hoge hoge hoge hoge hoge hoge hoge hoge hoge hoge hoge hoge <p>
+				<br>
+				<p>hoge hoge hoge hoge hoge hoge hoge hoge hoge hoge hoge hoge hoge hoge hoge hoge hoge hoge hoge hoge hoge hoge hoge hoge hoge <p>
+				<br>
+				<p>hoge hoge hoge hoge hoge hoge hoge hoge hoge hoge hoge hoge hoge hoge hoge hoge hoge hoge hoge hoge hoge hoge hoge hoge hoge <p>
+				<br>
+				<p>hoge hoge hoge hoge hoge hoge hoge hoge hoge hoge hoge hoge hoge hoge hoge hoge hoge hoge hoge hoge hoge hoge hoge hoge hoge <p>
+				<br>
+				<p>hoge hoge hoge hoge hoge hoge hoge hoge hoge hoge hoge hoge hoge hoge hoge hoge hoge hoge hoge hoge hoge hoge hoge hoge hoge <p>
+				<br>
+				<p>hoge hoge hoge hoge hoge hoge hoge hoge hoge hoge hoge hoge hoge hoge hoge hoge hoge hoge hoge hoge hoge hoge hoge hoge hoge <p>
+				<br>
 			</div>
 
-		<div class="footer">
-			ColorSchemeSystem All rights reserved.
-		</div>
+			<div class="sideBar">
+				<p>
+					<input type="text" name="c3" value="#2fcf66" size="12" id="t3" />
+					<button class="html5jp-cpick [target:t3]">色選択</button>
+				</p>
+			</div>
 
-	</body>
+			<div class="clear"></div>
+			<a href="#"><input type="button" value="登録"></a>
+			<a href="#"><input type="button" value="CSSを書き出す"></a>
+			</div>
+		</div>
+	</div>
+
+	<div class="container">
+
+		<div class="row">
+			<div class="col-md-4">
+				<form class="form-vertical" role="form">
+					<div class="form-group">
+						<input type="text" class="form-control" id="full-popover" value="#A6FF00" data-color-format="hex">
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
+	<script>
+		$("input#full-popover").ColorPickerSliders({
+			placement: 'top',
+			hsvpanel: false,
+			sliders: false,
+			previewformat: 'hex'
+		});
+	</script>
+
+	<div class="footer">
+		ColorSchemeSystem All rights reserved.
+	</div>
+
+</body>
 </html>
