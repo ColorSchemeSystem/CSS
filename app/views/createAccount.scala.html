@@ -1,0 +1,14 @@
+@(message: String, myform: Form[models.Member])
+
+@import helper._
+
+@main("createAccount Page") {
+	<h1>@message</h1>
+	@helper.form(action = routes.Application.saveAccount()) {
+		@inputText(myform("memberName"),'_label -> "name")
+		@inputText(myform("password"),'_label -> "password")
+		@inputText(myform("mail"),'_label -> "E-Mail")
+		<a href="/"><input type="button" value="TOPへ"></a>
+		<input type="submit" value="登録">
+	}
+}

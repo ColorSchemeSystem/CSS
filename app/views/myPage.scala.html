@@ -1,0 +1,12 @@
+@(member: models.Member)
+
+@import helper._
+
+@main("myPage") {
+	<p>id : @member.memberId</p>
+	<p>name : @member.memberName</p>
+	<p>password : @member.password</p>
+	<p>mail : @member.mail</p>
+	<a href="/login/@member.memberId"><input type="button" value="TOPへ"></a>
+	<a href="@routes.Application.logout()"><input type="button" value="ログアウト"></a>
+}

@@ -1,57 +1,13 @@
-2016-05-13 14:45:59,756 - [INFO] - from play in pool-4-thread-3 
+2016-05-30 11:06:36,186 - [INFO] - from play in pool-4-thread-4 
 Listening for HTTP on /0:0:0:0:0:0:0:0:9000
 
-2016-05-13 14:46:23,221 - [INFO] - from play in play-internal-execution-context-1 
+2016-05-30 11:06:41,297 - [INFO] - from play in play-internal-execution-context-1 
 database [default] connected at jdbc:h2:mem:play
 
-2016-05-13 14:46:23,835 - [ERROR] - from com.avaje.ebeaninternal.server.type.reflect.ImmutableMetaFactory in play-internal-execution-context-1 
-Was unable to use reflection to find a constructor and appropriate getters forimmutable type interface java.sql.Blob.  The errors while looking for the getter methods follow:
-
-2016-05-13 14:46:23,854 - [ERROR] - from com.avaje.ebeaninternal.server.deploy.parse.DeployCreateProperties in play-internal-execution-context-1 
-Error with models.Template field:html
-java.lang.RuntimeException: Unable to use reflection to build ImmutableMeta for interface java.sql.Blob.  Associated Errors trying to find a constructor and getter methods have been logged
-	at com.avaje.ebeaninternal.server.type.reflect.ImmutableMetaFactory.createImmutableMeta(ImmutableMetaFactory.java:53) ~[avaje-ebeanorm.jar:na]
-	at com.avaje.ebeaninternal.server.type.DefaultTypeManager.recursiveCreateScalarTypes(DefaultTypeManager.java:205) ~[avaje-ebeanorm.jar:na]
-	at com.avaje.ebeaninternal.server.deploy.parse.DeployCreateProperties.createProp(DeployCreateProperties.java:321) [avaje-ebeanorm.jar:na]
-	at com.avaje.ebeaninternal.server.deploy.parse.DeployCreateProperties.createProp(DeployCreateProperties.java:341) [avaje-ebeanorm.jar:na]
-	at com.avaje.ebeaninternal.server.deploy.parse.DeployCreateProperties.createProperties(DeployCreateProperties.java:128) [avaje-ebeanorm.jar:na]
-	at com.avaje.ebeaninternal.server.deploy.parse.DeployCreateProperties.createProperties(DeployCreateProperties.java:54) [avaje-ebeanorm.jar:na]
-	at com.avaje.ebeaninternal.server.deploy.BeanDescriptorManager.createDeployBeanInfo(BeanDescriptorManager.java:1036) [avaje-ebeanorm.jar:na]
-	at com.avaje.ebeaninternal.server.deploy.BeanDescriptorManager.readEntityDeploymentInitial(BeanDescriptorManager.java:515) [avaje-ebeanorm.jar:na]
-	at com.avaje.ebeaninternal.server.deploy.BeanDescriptorManager.deploy(BeanDescriptorManager.java:235) [avaje-ebeanorm.jar:na]
-	at com.avaje.ebeaninternal.server.core.InternalConfiguration.<init>(InternalConfiguration.java:114) [avaje-ebeanorm.jar:na]
-	at com.avaje.ebeaninternal.server.core.DefaultServerFactory.createServer(DefaultServerFactory.java:204) [avaje-ebeanorm.jar:na]
-	at com.avaje.ebeaninternal.server.core.DefaultServerFactory.createServer(DefaultServerFactory.java:65) [avaje-ebeanorm.jar:na]
-	at com.avaje.ebean.EbeanServerFactory.create(EbeanServerFactory.java:58) [avaje-ebeanorm.jar:na]
-	at play.db.ebean.EbeanPlugin.onStart(EbeanPlugin.java:79) [play-java-ebean_2.10.jar:2.2.6]
-	at play.api.Play$$anonfun$start$1$$anonfun$apply$mcV$sp$1.apply(Play.scala:88) [play_2.10.jar:2.2.6]
-	at play.api.Play$$anonfun$start$1$$anonfun$apply$mcV$sp$1.apply(Play.scala:88) [play_2.10.jar:2.2.6]
-	at scala.collection.immutable.List.foreach(List.scala:318) [scala-library.jar:na]
-	at play.api.Play$$anonfun$start$1.apply$mcV$sp(Play.scala:88) [play_2.10.jar:2.2.6]
-	at play.api.Play$$anonfun$start$1.apply(Play.scala:88) [play_2.10.jar:2.2.6]
-	at play.api.Play$$anonfun$start$1.apply(Play.scala:88) [play_2.10.jar:2.2.6]
-	at play.utils.Threads$.withContextClassLoader(Threads.scala:18) [play_2.10.jar:2.2.6]
-	at play.api.Play$.start(Play.scala:87) [play_2.10.jar:2.2.6]
-	at play.core.ReloadableApplication$$anonfun$get$1$$anonfun$apply$1$$anonfun$1.apply(ApplicationProvider.scala:139) [play_2.10.jar:2.2.6]
-	at play.core.ReloadableApplication$$anonfun$get$1$$anonfun$apply$1$$anonfun$1.apply(ApplicationProvider.scala:112) [play_2.10.jar:2.2.6]
-	at scala.Option.map(Option.scala:145) [scala-library.jar:na]
-	at play.core.ReloadableApplication$$anonfun$get$1$$anonfun$apply$1.apply(ApplicationProvider.scala:112) [play_2.10.jar:2.2.6]
-	at play.core.ReloadableApplication$$anonfun$get$1$$anonfun$apply$1.apply(ApplicationProvider.scala:110) [play_2.10.jar:2.2.6]
-	at scala.util.Success.flatMap(Try.scala:200) [scala-library.jar:na]
-	at play.core.ReloadableApplication$$anonfun$get$1.apply(ApplicationProvider.scala:110) [play_2.10.jar:2.2.6]
-	at play.core.ReloadableApplication$$anonfun$get$1.apply(ApplicationProvider.scala:102) [play_2.10.jar:2.2.6]
-	at scala.concurrent.impl.Future$PromiseCompletingRunnable.liftedTree1$1(Future.scala:24) [scala-library.jar:na]
-	at scala.concurrent.impl.Future$PromiseCompletingRunnable.run(Future.scala:24) [scala-library.jar:na]
-	at scala.concurrent.forkjoin.ForkJoinTask$AdaptedRunnableAction.exec(ForkJoinTask.java:1361) [scala-library.jar:na]
-	at scala.concurrent.forkjoin.ForkJoinTask.doExec(ForkJoinTask.java:260) [scala-library.jar:na]
-	at scala.concurrent.forkjoin.ForkJoinPool$WorkQueue.runTask(ForkJoinPool.java:1339) [scala-library.jar:na]
-	at scala.concurrent.forkjoin.ForkJoinPool.runWorker(ForkJoinPool.java:1979) [scala-library.jar:na]
-	at scala.concurrent.forkjoin.ForkJoinWorkerThread.run(ForkJoinWorkerThread.java:107) [scala-library.jar:na]
-
-2016-05-13 14:46:24,272 - [ERROR] - from application in New I/O worker #1 
+2016-05-30 11:06:42,390 - [ERROR] - from application in New I/O worker #1 
 
 
-! @7047m2g0m - Internal server error, for (GET) [/] ->
+! @70909b38a - Internal server error, for (GET) [/login1] ->
 
 play.api.db.evolutions.InvalidDatabaseRevision: Database 'default' needs evolution![An SQL script need to be run on your database.]
 	at play.api.db.evolutions.EvolutionsPlugin$$anonfun$onStart$1$$anonfun$apply$1.apply$mcV$sp(Evolutions.scala:486) ~[play-jdbc_2.10.jar:2.2.6]
@@ -84,53 +40,69 @@ play.api.db.evolutions.InvalidDatabaseRevision: Database 'default' needs evoluti
 	at scala.concurrent.forkjoin.ForkJoinPool.runWorker(ForkJoinPool.java:1979) ~[scala-library.jar:na]
 	at scala.concurrent.forkjoin.ForkJoinWorkerThread.run(ForkJoinWorkerThread.java:107) ~[scala-library.jar:na]
 
-2016-05-13 14:46:27,651 - [INFO] - from play in play-internal-execution-context-1 
+2016-05-30 11:06:44,942 - [INFO] - from play in play-internal-execution-context-1 
 database [default] connected at jdbc:h2:mem:play
 
-2016-05-13 14:46:27,685 - [ERROR] - from com.avaje.ebeaninternal.server.type.reflect.ImmutableMetaFactory in play-internal-execution-context-1 
-Was unable to use reflection to find a constructor and appropriate getters forimmutable type interface java.sql.Blob.  The errors while looking for the getter methods follow:
+2016-05-30 11:06:45,113 - [INFO] - from play in play-internal-execution-context-1 
+Application started (Dev)
 
-2016-05-13 14:46:27,686 - [ERROR] - from com.avaje.ebeaninternal.server.deploy.parse.DeployCreateProperties in play-internal-execution-context-1 
-Error with models.Template field:html
-java.lang.RuntimeException: Unable to use reflection to build ImmutableMeta for interface java.sql.Blob.  Associated Errors trying to find a constructor and getter methods have been logged
-	at com.avaje.ebeaninternal.server.type.reflect.ImmutableMetaFactory.createImmutableMeta(ImmutableMetaFactory.java:53) ~[avaje-ebeanorm.jar:na]
-	at com.avaje.ebeaninternal.server.type.DefaultTypeManager.recursiveCreateScalarTypes(DefaultTypeManager.java:205) ~[avaje-ebeanorm.jar:na]
-	at com.avaje.ebeaninternal.server.deploy.parse.DeployCreateProperties.createProp(DeployCreateProperties.java:321) [avaje-ebeanorm.jar:na]
-	at com.avaje.ebeaninternal.server.deploy.parse.DeployCreateProperties.createProp(DeployCreateProperties.java:341) [avaje-ebeanorm.jar:na]
-	at com.avaje.ebeaninternal.server.deploy.parse.DeployCreateProperties.createProperties(DeployCreateProperties.java:128) [avaje-ebeanorm.jar:na]
-	at com.avaje.ebeaninternal.server.deploy.parse.DeployCreateProperties.createProperties(DeployCreateProperties.java:54) [avaje-ebeanorm.jar:na]
-	at com.avaje.ebeaninternal.server.deploy.BeanDescriptorManager.createDeployBeanInfo(BeanDescriptorManager.java:1036) [avaje-ebeanorm.jar:na]
-	at com.avaje.ebeaninternal.server.deploy.BeanDescriptorManager.readEntityDeploymentInitial(BeanDescriptorManager.java:515) [avaje-ebeanorm.jar:na]
-	at com.avaje.ebeaninternal.server.deploy.BeanDescriptorManager.deploy(BeanDescriptorManager.java:235) [avaje-ebeanorm.jar:na]
-	at com.avaje.ebeaninternal.server.core.InternalConfiguration.<init>(InternalConfiguration.java:114) [avaje-ebeanorm.jar:na]
-	at com.avaje.ebeaninternal.server.core.DefaultServerFactory.createServer(DefaultServerFactory.java:204) [avaje-ebeanorm.jar:na]
-	at com.avaje.ebeaninternal.server.core.DefaultServerFactory.createServer(DefaultServerFactory.java:65) [avaje-ebeanorm.jar:na]
-	at com.avaje.ebean.EbeanServerFactory.create(EbeanServerFactory.java:58) [avaje-ebeanorm.jar:na]
-	at play.db.ebean.EbeanPlugin.onStart(EbeanPlugin.java:79) [play-java-ebean_2.10.jar:2.2.6]
-	at play.api.Play$$anonfun$start$1$$anonfun$apply$mcV$sp$1.apply(Play.scala:88) [play_2.10.jar:2.2.6]
-	at play.api.Play$$anonfun$start$1$$anonfun$apply$mcV$sp$1.apply(Play.scala:88) [play_2.10.jar:2.2.6]
-	at scala.collection.immutable.List.foreach(List.scala:318) [scala-library.jar:na]
-	at play.api.Play$$anonfun$start$1.apply$mcV$sp(Play.scala:88) [play_2.10.jar:2.2.6]
-	at play.api.Play$$anonfun$start$1.apply(Play.scala:88) [play_2.10.jar:2.2.6]
-	at play.api.Play$$anonfun$start$1.apply(Play.scala:88) [play_2.10.jar:2.2.6]
-	at play.utils.Threads$.withContextClassLoader(Threads.scala:18) [play_2.10.jar:2.2.6]
-	at play.api.Play$.start(Play.scala:87) [play_2.10.jar:2.2.6]
-	at play.core.ReloadableApplication$$anonfun$get$1$$anonfun$apply$1$$anonfun$1.apply(ApplicationProvider.scala:139) [play_2.10.jar:2.2.6]
-	at play.core.ReloadableApplication$$anonfun$get$1$$anonfun$apply$1$$anonfun$1.apply(ApplicationProvider.scala:112) [play_2.10.jar:2.2.6]
-	at scala.Option.map(Option.scala:145) [scala-library.jar:na]
-	at play.core.ReloadableApplication$$anonfun$get$1$$anonfun$apply$1.apply(ApplicationProvider.scala:112) [play_2.10.jar:2.2.6]
-	at play.core.ReloadableApplication$$anonfun$get$1$$anonfun$apply$1.apply(ApplicationProvider.scala:110) [play_2.10.jar:2.2.6]
-	at scala.util.Success.flatMap(Try.scala:200) [scala-library.jar:na]
-	at play.core.ReloadableApplication$$anonfun$get$1.apply(ApplicationProvider.scala:110) [play_2.10.jar:2.2.6]
-	at play.core.ReloadableApplication$$anonfun$get$1.apply(ApplicationProvider.scala:102) [play_2.10.jar:2.2.6]
-	at scala.concurrent.impl.Future$PromiseCompletingRunnable.liftedTree1$1(Future.scala:24) [scala-library.jar:na]
-	at scala.concurrent.impl.Future$PromiseCompletingRunnable.run(Future.scala:24) [scala-library.jar:na]
-	at scala.concurrent.forkjoin.ForkJoinTask$AdaptedRunnableAction.exec(ForkJoinTask.java:1361) [scala-library.jar:na]
-	at scala.concurrent.forkjoin.ForkJoinTask.doExec(ForkJoinTask.java:260) [scala-library.jar:na]
-	at scala.concurrent.forkjoin.ForkJoinPool$WorkQueue.runTask(ForkJoinPool.java:1339) [scala-library.jar:na]
-	at scala.concurrent.forkjoin.ForkJoinPool.runWorker(ForkJoinPool.java:1979) [scala-library.jar:na]
-	at scala.concurrent.forkjoin.ForkJoinWorkerThread.run(ForkJoinWorkerThread.java:107) [scala-library.jar:na]
+2016-05-30 11:08:12,831 - [INFO] - from play in play-internal-execution-context-1 
+database [default] connected at jdbc:h2:mem:play
 
-2016-05-13 14:46:27,852 - [INFO] - from play in play-internal-execution-context-1 
+2016-05-30 11:08:13,456 - [INFO] - from play in play-internal-execution-context-1 
+Application started (Dev)
+
+2016-05-30 11:08:54,250 - [INFO] - from play in play-internal-execution-context-1 
+database [default] connected at jdbc:h2:mem:play
+
+2016-05-30 11:08:54,901 - [INFO] - from play in play-internal-execution-context-1 
+Application started (Dev)
+
+2016-05-30 11:10:00,924 - [INFO] - from play in play-internal-execution-context-1 
+database [default] connected at jdbc:h2:mem:play
+
+2016-05-30 11:10:01,681 - [INFO] - from play in play-internal-execution-context-1 
+Application started (Dev)
+
+2016-05-30 11:10:33,190 - [INFO] - from play in play-internal-execution-context-1 
+database [default] connected at jdbc:h2:mem:play
+
+2016-05-30 11:10:33,271 - [INFO] - from play in play-internal-execution-context-1 
+Application started (Dev)
+
+2016-05-30 11:11:31,723 - [INFO] - from play in play-internal-execution-context-1 
+database [default] connected at jdbc:h2:mem:play
+
+2016-05-30 11:11:31,987 - [INFO] - from play in play-internal-execution-context-1 
+Application started (Dev)
+
+2016-05-30 11:12:40,742 - [INFO] - from play in play-internal-execution-context-1 
+database [default] connected at jdbc:h2:mem:play
+
+2016-05-30 11:12:41,723 - [INFO] - from play in play-internal-execution-context-1 
+Application started (Dev)
+
+2016-05-30 11:13:50,458 - [INFO] - from play in play-internal-execution-context-1 
+database [default] connected at jdbc:h2:mem:play
+
+2016-05-30 11:13:51,163 - [INFO] - from play in play-internal-execution-context-1 
+Application started (Dev)
+
+2016-05-30 11:18:47,027 - [INFO] - from play in play-internal-execution-context-1 
+database [default] connected at jdbc:h2:mem:play
+
+2016-05-30 11:18:47,638 - [INFO] - from play in play-internal-execution-context-1 
+Application started (Dev)
+
+2016-05-30 11:20:01,446 - [INFO] - from play in play-internal-execution-context-1 
+database [default] connected at jdbc:h2:mem:play
+
+2016-05-30 11:20:02,631 - [INFO] - from play in play-internal-execution-context-1 
+Application started (Dev)
+
+2016-05-30 11:20:38,561 - [INFO] - from play in play-internal-execution-context-1 
+database [default] connected at jdbc:h2:mem:play
+
+2016-05-30 11:20:38,855 - [INFO] - from play in play-internal-execution-context-1 
 Application started (Dev)
 
