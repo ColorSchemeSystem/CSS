@@ -27,7 +27,7 @@ cpick = function (trigger, target, p) {
 	if( ! /^input$/i.test(target.nodeName) || ! /^text$/.test(target.type) ) { return; }
 	if( ! /^(input|button)$/i.test(trigger.nodeName) ) { return; }
 	/* -------------------------------------------------------------------
-	* default settings
+	* default settings  表示サイズとか
 	* ----------------------------------------------------------------- */
 	var dp = {
 		width: 200,

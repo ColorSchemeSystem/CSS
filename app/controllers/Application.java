@@ -18,6 +18,7 @@ public class Application extends Controller {
 	private static final Finder<Long, Member> finder = new Finder<Long, Member>(Long.class,Member.class);
 
 	public static Result index() {
+		//return ok(test.render());
 		return ok(index.render("ログイン", "/login"));
 	}
 
