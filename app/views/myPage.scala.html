@@ -7,6 +7,6 @@
 	<p>name : @member.memberName</p>
 	<p>password : @member.password</p>
 	<p>mail : @member.mail</p>
-	<a href="@routes.Application.index()"><input type="button" value="TOPへ"></a>
+	<a href="/login/@member.memberId"><input type="button" value="TOPへ"></a>
 	<a href="@routes.Application.logout()"><input type="button" value="ログアウト"></a>
 }

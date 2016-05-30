@@ -18,9 +18,13 @@ public class Application extends Controller {
 	private static final Finder<Long, Member> finder = new Finder<Long, Member>(Long.class,Member.class);
 
 	public static Result index() {
-		Member mem = (Member)Cache.get("Member");
+		return ok(index.render("ログイン", "/login"));
+	}
+
+	public static Result logind(Long id) {
+		Member mem = (Member)Cache.get("Member"+id.toString());
 		if(mem != null) {
-			return ok(index.render(mem.memberName, "/myPage"));
+			return ok(index.render(mem.memberName, "/myPage/"+mem.memberId.toString()));
 		}
 		return ok(index.render("ログイン", "/login"));
 	}
@@ -69,11 +73,11 @@ public class Application extends Controller {
 			if(mem == null) return ok(login.render("ログインに失敗しました", form));
 
 			// ログインする
-			Cache.set("Member", mem, 1 * 60 * 60);
+			Cache.set("Member"+mem.memberId.toString(), mem, 1 * 60 * 60);
 		} else {
 			return ok(login.render("ログインに失敗しました", form));
 		}
-		return redirect("./");
+		return redirect("/login/"+mem.memberId.toString());
 	}
 
 	/*
@@ -93,11 +97,18 @@ public class Application extends Controller {
 		Form<Member> form = Form.form(Member.class).bindFromRequest();
 		Member mem = new Member();
 		if(!form.hasErrors()) {
-			// IDがなければ新規登録
+			// IDがなく名前とパスワードの被りがなければ新規登録
 			if(form.get().memberId == null) {
 				mem.memberName = form.get().memberName;
 				mem.password = form.get().password;
 				mem.mail = form.get().mail;
+
+				// 名前が同じものを取得
+				Query<Member> query = finder.where("memberName='"+mem.memberName+"'");
+				List<Member> members = query.findList();
+				for(Member m:members) {
+					if(mem.password.equals(m.password)) return ok(createAccount.render("名前とパスワードが同一のものがあります", form));
+				}
 				mem.save();
 			}
 
@@ -112,12 +123,13 @@ public class Application extends Controller {
 			// 新規アカウント登録画面へ
 			return ok(createAccount.render("ERROR!　もう一度入力してください", form));
 		}
-		Cache.set("Member", mem, 1 * 60 * 60);
-		return redirect("./");
+		String id = mem.memberId.toString();
+		Cache.set("Member"+id, mem, 1 * 60 * 60);
+		return redirect("/login/"+id);
 	}
 
-	public static Result myPage() {
-		Member mem = (Member)Cache.get("Member");
+	public static Result myPage(Long id) {
+		Member mem = (Member)Cache.get("Member"+id.toString());
 		return ok(myPage.render(mem));
 	}
 }
