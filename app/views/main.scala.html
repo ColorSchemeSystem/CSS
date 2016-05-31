@@ -2,14 +2,175 @@
 
 <!DOCTYPE html>
 
-<html>
-    <head>
-        <title>@title</title>
-        <link rel="stylesheet" media="screen" href="@routes.Assets.at("stylesheets/main.css")">
-        <link rel="shortcut icon" type="image/png" href="@routes.Assets.at("images/favicon.png")">
-        <script src="@routes.Assets.at("javascripts/jquery-1.9.0.min.js")" type="text/javascript"></script>
-    </head>
-    <body>
-        @content
+<html lang="ja">
+	<head>
+    <meta charset="UTF-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css" rel="stylesheet">
+		<meta name="viewport" content="width=device-width,user-scalable=no,maximum-scale=1"/>
+
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/js/bootstrap.min.js"></script>
+		<script type="text/javascript" src="bootstrap.js"></script>
+		<script>
+			$(window).load(function(){
+				fixFrameSize();
+
+  			var navi = $('.fixnav');
+  			var main  = $('.main');
+				var target_top = navi.offset().top - parseInt(navi.css('margin-top'),10);
+  			var sub_top = main.offset().top - parseInt(main.css('margin-top'),10);
+  			var sub_scroll = main.offset().top + main.outerHeight(true) - navi.outerHeight(true) - parseInt(navi.css('margin-top'),10);
+
+  			if (navi.outerHeight(true) + target_top < main.outerHeight(true) + sub_top) {
+    			$(window).scroll(function () {
+      			var ws = $(window).scrollTop();
+      			$('.scroll').text(ws);
+      			if (ws > sub_scroll) {
+        			navi.css({position:'fixed', top: sub_scroll - ws + 'px'});
+      			} else if(ws > target_top) {
+        			navi.css({position:'fixed', top: '0px'});
+      			} else {
+        			navi.css({position:'relative', top: '0px'});
+      			}
+    			});
+  			}
+			});
+
+			function fixFrameSize() {
+				if (window.parent) {
+					var body = document.body;
+					var height = body.scrollHeight;
+					var iframe = window.parent.document.getElementsByTagName("iframe")[0];
+					iframe.style.height = height + "px";
+					iframe.scrolling = "no";
+				}
+			}
+		</script>
+		<style>
+
+		* {
+				box-sizing: border-box;
+			}
+
+			body {
+				margin: 0;
+				font-size: 13px;
+				background: #eeeeee;
+			}
+
+			.clearfix {
+				zoom: 1;
+			}
+
+			.clearfix:after {
+				content: "";
+				display: block;
+				clear: both;
+			}
+
+			.header{
+				background-color: #F6F6F6;
+			}
+
+			.header .titleBar{
+				padding: 0px 0px 0px 30px;
+				font-size: 30px;
+				background-color: #FFF;
+			}
+
+			.header .titleBar p{
+				margin: 0px;
+				padding: 10px;
+			}
+
+			.navbar-inverse{
+				margin-bottom: 0px;
+			}
+
+			.wrapper {
+				max-width: 1300px;
+				margin: 0px;
+				overflow: hidden;
+			}
+
+			.main {
+				width: 980px;
+				float: left;
+				padding: 20px;
+				margin: 10px 0px 0px 10px;
+			}
+
+			.main a{
+				text-decoration: none;
+			}
+
+			.main .inHtml{
+				background-color: #FFF;
+				padding: 10px;
+				margin-bottom: 15px;
+			}
+
+			.side  {
+				float: right;
+				position: relative;
+				width: 230px;
+				padding-bottom: 32768px;
+				margin-bottom: -32768px;
+				background-color: #FFF;
+			}
+
+			.side .fixnav .tempButton{
+				margin: 40px 20px 40px 40px;
+			}
+
+			.side .fixnav .tempButton .button1{
+				font-size: 12px;
+    		font-weight: bold;
+    		padding: 10px 30px;
+    		background-color: #202020;
+    		color: #FFF;
+    		border-style: none;
+			}
+
+			.side .fixnav .tempButton .button1:hover{
+				background-color: #696969;
+				color: #FFF;
+			}
+
+			.fixnav {
+				background-color: #FFF;
+				width: 230px;
+				margin-right: 0px;
+				height: 610px;
+				overflow: scroll;
+			}
+
+			.footer{
+				padding: 30px;
+				margin-top: 0px;
+				text-align: center;
+				background: #FFF;
+				height: 90px;
+			}
+		</style>
+	</head>
+
+	<body>
+		<div class="header">
+			<div class="titleBar">
+				<p>Title</p>
+			</div>
+			<div class="menuBar">
+				@template.menuBar()
+			</div>
+		</div>
+		<div class="wrapper clearfix">
+        	@content
+      	</div>
+      	<div class="footer">
+      	  ColorSchemeSystem All rights reserved.
+      	</div>
     </body>
 </html>
