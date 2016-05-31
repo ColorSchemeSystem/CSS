@@ -33,8 +33,8 @@ create table Templates (
   versions                  bigint,
   member_id                 bigint,
   template_name             varchar(255),
-  message                   varchar(255),
-  html                      varchar(255),
+  template_message          varchar(255),
+  html                      blob,
   access_flag               integer,
   constraint pk_Templates primary key (template_id))
 ;
