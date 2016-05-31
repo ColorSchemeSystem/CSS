@@ -3,6 +3,19 @@
 
 # --- !Ups
 
+create table choosers (
+  chooser_id                bigint not null,
+  create_ts                 date,
+  update_ts                 date,
+  versions                  bigint,
+  member_id                 bigint,
+  placement                 varchar(255),
+  hsvpanel                  boolean,
+  slider                    boolean,
+  swatche                   boolean,
+  constraint pk_choosers primary key (chooser_id))
+;
+
 create table ColorSchemes (
   color_scheme_id           bigint not null,
   create_ts                 date,
@@ -26,6 +39,8 @@ create table Members (
   constraint pk_Members primary key (member_id))
 ;
 
+create sequence choosers_seq;
+
 create sequence ColorSchemes_seq;
 
 create sequence Members_seq;
@@ -37,11 +52,15 @@ create sequence Members_seq;
 
 SET REFERENTIAL_INTEGRITY FALSE;
 
+drop table if exists choosers;
+
 drop table if exists ColorSchemes;
 
 drop table if exists Members;
 
 SET REFERENTIAL_INTEGRITY TRUE;
+
+drop sequence if exists choosers_seq;
 
 drop sequence if exists ColorSchemes_seq;
 

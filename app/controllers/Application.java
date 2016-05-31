@@ -18,7 +18,6 @@ public class Application extends Controller {
 	private static final Finder<Long, Member> finder = new Finder<Long, Member>(Long.class,Member.class);
 
 	public static Result index() {
-		//return ok(test.render());
 		return ok(index.render("ログイン", "/login"));
 	}
 
@@ -132,5 +131,9 @@ public class Application extends Controller {
 	public static Result myPage(Long id) {
 		Member mem = (Member)Cache.get("Member"+id.toString());
 		return ok(myPage.render(mem));
+	}
+
+	public static Result test() {
+		return ok(test.render());
 	}
 }
