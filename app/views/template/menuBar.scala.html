@@ -1,4 +1,4 @@
-
+@(user: Member)
 
 <nav class="navbar navbar-inverse">
 	<div class="container-fluid">
@@ -20,7 +20,11 @@
 				<li><a href="#">URLからデザインを読み込む</a></li>
 				<li><a href="#">テンプレートのアップデート</a></li>
 			</ul>
-			<a class="navbar-right" href="/login"><button type="button" class="btn btn-default navbar-btn">ログイン</button></a>
+			@if(user == null) {
+				<a class="navbar-right" href="/login"><button type="button" class="btn btn-default navbar-btn">ログイン</button></a>
+			} else {
+				<a class="navbar-right" href="/myPage/@user.memberId"><button type="button" class="btn btn-default navbar-btn">@user.memberName</button></a>
+			}
 		</div>
 	</div>
 </nav>

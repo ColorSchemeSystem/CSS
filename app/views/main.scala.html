@@ -1,4 +1,4 @@
-@(title: String)(content: Html)
+@(title: String, user: Member)(content: Html)
 
 <!DOCTYPE html>
 
@@ -163,7 +163,7 @@
 				<p>Title</p>
 			</div>
 			<div class="menuBar">
-				@template.menuBar()
+				@template.menuBar(user)
 			</div>
 		</div>
 		<div class="wrapper clearfix">

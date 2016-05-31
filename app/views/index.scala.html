@@ -1,6 +1,6 @@
-@(btnName: String, bntUrl: String)
+@(user: Member)
 
-@main("Color Scheme"){ 
+@main("Color Scheme", user){ 
 	<div class="main">
 		<div class="inHtml">
 			<iframe src="@routes.Assets.at("iframe/iframe.html")" width="920px" name="template"></iframe>

@@ -18,15 +18,15 @@ public class Application extends Controller {
 	private static final Finder<Long, Member> finder = new Finder<Long, Member>(Long.class,Member.class);
 
 	public static Result index() {
-		return ok(index.render("ログイン", "/login"));
+		return ok(index.render(null));
 	}
 
 	public static Result logind(Long id) {
 		Member mem = (Member)Cache.get("Member"+id.toString());
 		if(mem != null) {
-			return ok(index.render(mem.memberName, "/myPage/"+mem.memberId.toString()));
+			return ok(index.render(mem));
 		}
-		return ok(index.render("ログイン", "/login"));
+		return ok(index.render(null));
 	}
 
 	/*
@@ -34,7 +34,7 @@ public class Application extends Controller {
 	*/
 	public static Result login() {
 		Form<Member> form = Form.form(Member.class);
-		return ok(login.render("ログイン", form));
+		return ok(login.render(null, "ログイン", form));
 	}
 
 	/*
@@ -58,7 +58,7 @@ public class Application extends Controller {
 			String name = form.get().memberName;
 			Query<Member> query = finder.where("memberName='"+name+"'");
 			List<Member> members = query.findList();
-			if(members.size() == 0) return ok(login.render("ログインに失敗しました", form));
+			if(members.size() == 0) return ok(login.render(null, "ログインに失敗しました", form));
 
 			// パスワード確認
 			String password = form.get().password;
@@ -70,12 +70,12 @@ public class Application extends Controller {
 			}
 
 			// 一致していなかったらログイン画面へ
-			if(mem == null) return ok(login.render("ログインに失敗しました", form));
+			if(mem == null) return ok(login.render(null, "ログインに失敗しました", form));
 
 			// ログインする
 			Cache.set("Member"+mem.memberId.toString(), mem, 1 * 60 * 60);
 		} else {
-			return ok(login.render("ログインに失敗しました", form));
+			return ok(login.render(null, "ログインに失敗しました", form));
 		}
 		return redirect("/login/"+mem.memberId.toString());
 	}
@@ -85,7 +85,7 @@ public class Application extends Controller {
 	*/
 	public static Result createAccount() {
 		Form<Member> form = Form.form(Member.class);
-		return ok(createAccount.render("新規登録", form));
+		return ok(createAccount.render(null, "新規登録", form));
 	}
 
 	/*
@@ -107,7 +107,7 @@ public class Application extends Controller {
 				Query<Member> query = finder.where("memberName='"+mem.memberName+"'");
 				List<Member> members = query.findList();
 				for(Member m:members) {
-					if(mem.password.equals(m.password)) return ok(createAccount.render("名前とパスワードが同一のものがあります", form));
+					if(mem.password.equals(m.password)) return ok(createAccount.render(null, "名前とパスワードが同一のものがあります", form));
 				}
 				mem.save();
 			}
@@ -121,7 +121,7 @@ public class Application extends Controller {
 			}
 		} else {
 			// 新規アカウント登録画面へ
-			return ok(createAccount.render("ERROR!　もう一度入力してください", form));
+			return ok(createAccount.render(null, "ERROR!　もう一度入力してください", form));
 		}
 		String id = mem.memberId.toString();
 		Cache.set("Member"+id, mem, 1 * 60 * 60);
