@@ -6,8 +6,9 @@ libraryDependencies ++= Seq(
   javaJdbc,
   javaEbean,
   cache,
-  "net.sf.flexjson" % "flexjson" % "3.3",
-  "org.jsoup" % "jsoup" % "1.9.1"
+  "org.jsoup" % "jsoup" % "1.9.1",
+  "commons-io" % "commons-io" % "2.5",
+  "net.sf.flexjson" % "flexjson" % "3.3"
 )
 
 play.Project.playJavaSettings
