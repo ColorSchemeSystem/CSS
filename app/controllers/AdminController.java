@@ -13,11 +13,11 @@ import models.*;
 public class AdminController extends Controller {
 	public static Result upload() {
 		Form<TemplateUpload> form = Form.form(TemplateUpload.class);
-		return ok(upload.render(form));
+		return TODO;
 	}
 	
 	public static Result doUpload() {
 		Form<TemplateUpload> form = Form.form(TemplateUpload.class).bindFromRequest();
-		return ok(upload.render("ログイン", "/login"));
+		return TODO;
 	}
 }

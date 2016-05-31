@@ -12,17 +12,19 @@ import com.avaje.ebean.Query;
 
 import views.html.*;
 import models.*;
+import services.*;
+
+import flexjson.JSONSerializer;
+import flexjson.JSONDeserializer;
 
 public class Application extends Controller {
 
 	private static final Finder<Long, Member> finder = new Finder<Long, Member>(Long.class,Member.class);
 
-	public static Result index() {
-		return ok(index.render(null));
-	}
+	private static AppService appS = new AppService();
 
-	public static Result logind(Long id) {
-		Member mem = (Member)Cache.get("Member"+id.toString());
+	public static Result index() {
+		Member mem = (Member)getObjectFormSession("Member");
 		if(mem != null) {
 			return ok(index.render(mem));
 		}
@@ -41,7 +43,7 @@ public class Application extends Controller {
 	*  ログアウト処理
 	*/
 	public static Result logout() {
-		Cache.remove("Member");
+		removeObjectSession("Member");
 		return redirect("./");
 	}
 
@@ -73,11 +75,11 @@ public class Application extends Controller {
 			if(mem == null) return ok(login.render(null, "ログインに失敗しました", form));
 
 			// ログインする
-			Cache.set("Member"+mem.memberId.toString(), mem, 1 * 60 * 60);
+			writeObjectOnSession("Member", mem);
 		} else {
 			return ok(login.render(null, "ログインに失敗しました", form));
 		}
-		return redirect("/login/"+mem.memberId.toString());
+		return redirect("/");
 	}
 
 	/*
@@ -124,16 +126,47 @@ public class Application extends Controller {
 			return ok(createAccount.render(null, "ERROR!　もう一度入力してください", form));
 		}
 		String id = mem.memberId.toString();
-		Cache.set("Member"+id, mem, 1 * 60 * 60);
-		return redirect("/login/"+id);
+		writeObjectOnSession("Member", mem);
+		return redirect("/");
 	}
 
-	public static Result myPage(Long id) {
-		Member mem = (Member)Cache.get("Member"+id.toString());
+	public static Result myPage() {
+		Member mem = (Member)getObjectFormSession("Member");
+		if(mem == null) return badRequest("/");
 		return ok(myPage.render(mem));
 	}
 
 	public static Result test() {
 		return ok(test.render());
+	}
+
+	/**
+	 * @param key
+	 * @param value
+	 */
+	public static void writeObjectOnSession(String key, Object value) {
+		JSONSerializer jsonSerializer = new JSONSerializer();
+		if(value != null) {
+			session().put(key, jsonSerializer.deepSerialize(value));
+		} else {
+			Logger.error("Value for " + key + " is null");
+		}
+	}
+
+	/**
+	 * @param key
+	 * @return
+	 */
+	public static <T> T getObjectFormSession(String key) {
+		String value = session().get(key);
+		if(value == null) return null;
+		return new JSONDeserializer<T>().deserialize(value);
+	}
+
+	/**
+	 * @param key
+	 */
+	public static void removeObjectSession(String key) {
+		session().remove(key);
 	}
 }

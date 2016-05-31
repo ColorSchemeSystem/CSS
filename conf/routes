@@ -4,13 +4,12 @@
 
 # Home page
 GET     /                           controllers.Application.index()
-GET     /login/:id                  controllers.Application.logind(id:Long)
 GET     /login                      controllers.Application.login()
 GET     /logout                     controllers.Application.logout()
 GET     /loginEntry                 controllers.Application.loginEntry()
 GET     /createAccount              controllers.Application.createAccount()
 GET     /saveAccount                controllers.Application.saveAccount()
-GET     /myPage/:id                 controllers.Application.myPage(id:Long)
+GET     /myPage                     controllers.Application.myPage()
 GET     /test                       controllers.Application.test()
 
 # Map static resources from the /public folder to the /assets URL path
