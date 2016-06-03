@@ -11,7 +11,6 @@ GET     /loginEntry                 controllers.Application.loginEntry()
 GET     /createAccount              controllers.Application.createAccount()
 GET     /saveAccount                controllers.Application.saveAccount()
 GET     /myPage                     controllers.Application.myPage()
-GET     /test                       controllers.Application.test()
 
 GET     /upload             controllers.AdminController.upload()
 POST    /upload             controllers.AdminController.doUpload()

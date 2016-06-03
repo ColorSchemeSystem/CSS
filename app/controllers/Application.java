@@ -165,15 +165,18 @@ public class Application extends Controller {
 	}
 
 	public static Result myPage() {
-		Form form = Form.form(ChooserAdvancedSetting.class);
+		//Form<ChooserAdvancedSetting> form = Form.form(ChooserAdvancedSetting.class);
 		Member mem = (Member)getObjectFormSession("Member");
-		if(mem == null) return badRequest("/");
+		System.out.println("asddfghjgklkh");
+		//if(mem == null) return badRequest("/");
 		return ok(myPage.render(mem));
 	}
 
-	public static Result test() {
-		return ok(test.render());
-	}
+/*	public static Result SaveChooserSetting() {
+		Form<ChooserAdvancedSetting> form = Form.form(ChooserAdvancedSetting.class).bindFromRequest();
+		Member mem = (Member)getObjectFormSession("Member");
+		return ok(myPage.render(mem, form));
+	}*/
 
 	/**
 	 * @param key

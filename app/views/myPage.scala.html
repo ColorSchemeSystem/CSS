@@ -8,50 +8,51 @@
 	<p>password : @member.password</p>
 	<p>mail : @member.mail</p>
 
-	<div class="container">
-		<div class="row">
-			<div class="col-xs-4">
-				<div id="hsvflat"></div>
-				<script>
-				$("#hsvflat").ColorPickerSliders({
-						color: "rgb(36, 170, 242)",
-						flat: true,
-						sliders: false,
-						swatches: false,
-						hsvpanel: true
-				});
-				</script>
-			</div>
+		<div class="container">
+			<div class="row">
+				<div class="col-xs-4">
+					
+					<div id="hsvflat"></div>
+					<script>
+					$("#hsvflat").ColorPickerSliders({
+							color: "rgb(36, 170, 242)",
+							flat: true,
+							sliders: false,
+							swatches: false,
+							hsvpanel: true
+					});
+					</script>
+				</div>
 
-			<div class="col-xs-4">
-				<div id="hslflat"></div>
-				<script>
-				$("#hslflat").ColorPickerSliders({
-						color: "rgb(36, 170, 242)",
-						flat: true,
-						order: {
-								hsl: 1,
-								cie: 2,
-								preview: 3
-						},
-						swatches: false
-				});
-				</script>
-			</div>
+				<div class="col-xs-4">
+					<div id="hslflat"></div>
+					<script>
+					$("#hslflat").ColorPickerSliders({
+							color: "rgb(36, 170, 242)",
+							flat: true,
+							order: {
+									hsl: 1,
+									cie: 2,
+									preview: 3
+							},
+							swatches: false
+					});
+					</script>
+				</div>
 
-			<div class="col-xs-4">
-				<div id="flat"></div>
-				<script>
-				$("#flat").ColorPickerSliders({
-						flat: true,
-						sliders: false,
-						invalidcolorsopacity: 0
-				});
-				</script>
-			</div>
+				<div class="col-xs-4">
+					<div id="flat"></div>
+					<script>
+					$("#flat").ColorPickerSliders({
+							flat: true,
+							sliders: false,
+							invalidcolorsopacity: 0
+					});
+					</script>
+				</div>
 
+			</div>
 		</div>
-	</div>
 
 	<a href="/"><input type="button" value="TOPへ"></a>
 	<a href="/logout"><input type="button" value="ログアウト"></a>
