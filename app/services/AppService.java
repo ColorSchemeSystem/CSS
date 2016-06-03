@@ -6,6 +6,7 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Pattern;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -26,7 +27,8 @@ public class AppService {
 		Map<String, Integer> classesMap = new HashMap<String, Integer>();
 		for (Element e : elements) {
 			String classValue = e.attr("class");
-			for (String c : classValue.split(" ")) {
+			Pattern p = Pattern.compile("[\\s]+");
+			for (String c : p.split(classValue)) {
 				if (classesMap.containsKey(c)) {
 					classesMap.put(c, classesMap.get(c) + 1);
 				} else {
