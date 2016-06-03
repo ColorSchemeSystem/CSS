@@ -4,7 +4,7 @@
 
 # Home page
 GET     /                           controllers.Application.index()
-GET		/:id             			controllers.Application.indexWithId(id: Long)
+#GET		/:id             			controllers.Application.indexWithId(id: Long)
 GET     /login                      controllers.Application.login()
 GET     /logout                     controllers.Application.logout()
 GET     /loginEntry                 controllers.Application.loginEntry()
