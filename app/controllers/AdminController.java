@@ -25,9 +25,13 @@ import services.AdminService;
 public class AdminController extends Controller {
 	private static AdminService adminService = new AdminService();
 	
+	/**
+	 * 
+	 * @return
+	 */
 	public static Result upload() {
 		Form<TemplateUpload> form = Form.form(TemplateUpload.class);
-		return TODO;
+		return ok(upload.render(form));
 	}
 	
 	public static Result doUpload() {
