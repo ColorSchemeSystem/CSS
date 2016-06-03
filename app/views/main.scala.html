@@ -15,6 +15,8 @@
 		<script type="text/javascript" src="bootstrap.js"></script>
 		<script>
 			$(window).load(function(){
+				fixFrameSize();
+
   			var navi = $('.fixnav');
   			var main  = $('.main');
 				var target_top = navi.offset().top - parseInt(navi.css('margin-top'),10);
@@ -35,6 +37,16 @@
     			});
   			}
 			});
+
+			function fixFrameSize() {
+				if (window.parent) {
+					var body = document.body;
+					var height = body.scrollHeight;
+					var iframe = window.parent.document.getElementsByTagName("iframe")[0];
+					iframe.style.height = height + "px";
+					iframe.scrolling = "no";
+				}
+			}
 		</script>
 		<style>
 
@@ -81,6 +93,7 @@
 				max-width: 1300px;
 				margin: 0px;
 				overflow: hidden;
+				min-height: 510px;
 			}
 
 			.main {
@@ -140,7 +153,6 @@
 				margin-top: 0px;
 				text-align: center;
 				background: #FFF;
-				height: 90px;
 			}
 		</style>
 	</head>

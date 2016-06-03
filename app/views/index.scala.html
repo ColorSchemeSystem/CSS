@@ -1,4 +1,4 @@
-@(user: Member)
+@(user: Member, path: String, tags: List[String])
 
 @main("Color Scheme", user){ 
 <script>
@@ -17,7 +17,7 @@ function fixFrameSize() {
 </script>
 	<div class="main">
 		<div class="inHtml">
-			<iframe src="@routes.Assets.at("iframe/iframe.html")" width="920px" name="template"></iframe>
+			<iframe src="@routes.Assets.at(path)" width="920px" name="template"></iframe>
 		</div>
 		<div class="button">
 			<a href="#"><input type="button" value="登録"></a>
@@ -40,102 +40,12 @@ function fixFrameSize() {
 						</thead>
 						<!-- ここにスクライビングしてきたclassタグを入れる -->
 						<tbody>
+						@for(data <- tags){
 							<tr>
-								<td>header.title</td>
-								<td>red</td>
+								<td>@data</td>
+								<td>COLOR</td>
 							</tr>
-							<tr>
-								<td>header</td>
-								<td>white</td>
-							</tr>
-							<tr>
-								<td>content</td>
-								<td>#eeeeee</td>
-							</tr>
-							<tr>
-								<td>content.main</td>
-								<td>none</td>
-							</tr>
-							<tr>
-								<td>content.sidebar</td>
-								<td>green</td>
-							</tr>
-							<tr>
-								<td>content.sidebar.button</td>
-								<td>gray</td>
-							</tr>
-							<tr>
-								<td>footer</td>
-								<td>white</td>
-							</tr>
-							<tr>
-								<td>footer.label</td>
-								<td>black</td>
-							</tr>
-							<tr>
-								<td>header.title</td>
-								<td>red</td>
-							</tr>
-							<tr>
-								<td>header</td>
-								<td>white</td>
-							</tr>
-							<tr>
-								<td>content</td>
-								<td>#eeeeee</td>
-							</tr>
-							<tr>
-								<td>content.main</td>
-								<td>none</td>
-							</tr>
-							<tr>
-								<td>content.sidebar</td>
-								<td>green</td>
-							</tr>
-							<tr>
-								<td>content.sidebar.button</td>
-								<td>gray</td>
-							</tr>
-							<tr>
-								<td>footer</td>
-								<td>white</td>
-							</tr>
-							<tr>
-								<td>footer.label</td>
-								<td>black</td>
-							</tr>
-							<tr>
-								<td>header.title</td>
-								<td>red</td>
-							</tr>
-							<tr>
-								<td>header</td>
-								<td>white</td>
-							</tr>
-							<tr>
-								<td>content</td>
-								<td>#eeeeee</td>
-							</tr>
-							<tr>
-								<td>content.main</td>
-								<td>none</td>
-							</tr>
-							<tr>
-								<td>content.sidebar</td>
-								<td>green</td>
-							</tr>
-							<tr>
-								<td>content.sidebar.button</td>
-								<td>gray</td>
-							</tr>
-							<tr>
-								<td>footer</td>
-								<td>white</td>
-							</tr>
-							<tr>
-								<td>footer.label</td>
-								<td>black</td>
-							</tr>
+						}
 						</tbody>
 					</table>
 				</div>

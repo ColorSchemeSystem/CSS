@@ -13,7 +13,7 @@ import com.avaje.ebean.Query;
 import views.html.*;
 import models.*;
 import services.*;
-
+import java.io.*;
 import flexjson.JSONSerializer;
 import flexjson.JSONDeserializer;
 
@@ -25,12 +25,36 @@ public class Application extends Controller {
 
 	public static Result index() {
 		Member mem = (Member)getObjectFormSession("Member");
+		File file = new File(Play.application().path().getPath() + "/public/iframes/iframe1.html");
+		String html = appS.readHtmlFile(file);
+		List<String> htmlTag = appS.extractClasses(html);
+		System.out.println(html);
+		System.out.println(htmlTag);
+		String path = "iframes/iframe1.html";
 		if(mem != null) {
-			return ok(index.render(mem));
+			return ok(index.render(mem, path, htmlTag));
 		}
-		return ok(index.render(null));
+		return ok(index.render(null, path, htmlTag));
 	}
-	
+
+	public static Result indexWithId(Long id){
+		Member mem = (Member)getObjectFormSession("Member");
+		Template temp = appS.getTemp(id);
+		String path;
+		if(temp != null){
+			path = "iframes/iframe" + id + ".html";
+		}else{
+			path = "iframes/iframe1.html";
+		}
+		File file = new File(Play.application().path().getPath() + "/public/" + path);
+		String html = appS.readHtmlFile(file);
+		List<String> htmlTag = appS.extractClasses(html);
+		if(mem != null) {
+			return ok(index.render(mem, path, htmlTag));
+		}
+		return ok(index.render(null, path, htmlTag));
+	}
+
 	public static Result templates() {
 		List<Template> templatesList = appS.findAllTemplates();
 		final double zoom = 0.25;

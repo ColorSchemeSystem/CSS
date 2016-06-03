@@ -6,6 +6,7 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.io.*;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -15,7 +16,7 @@ import org.jsoup.select.Elements;
 import models.Template;
 
 public class AppService {
-	
+
 	public List<Template> findAllTemplates() {
 		return Template.find.all();
 	}
@@ -47,5 +48,24 @@ public class AppService {
 			classes.add((String) entry.getKey());
 		}
 		return classes;
+	}
+
+	public String readHtmlFile(File file){
+		StringBuilder contentBuilder = new StringBuilder();
+		try {
+		    BufferedReader in = new BufferedReader(new FileReader(file));
+		    String str;
+		    while ((str = in.readLine()) != null) {
+		        contentBuilder.append(str);
+		    }
+		    in.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return contentBuilder.toString();
+	}
+
+	public Template getTemp(Long id){
+		return Template.findById(id);
 	}
 }
