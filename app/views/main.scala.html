@@ -37,16 +37,6 @@
     			});
   			}
 			});
-
-			function fixFrameSize() {
-				if (window.parent) {
-					var body = document.body;
-					var height = body.scrollHeight;
-					var iframe = window.parent.document.getElementsByTagName("iframe")[0];
-					iframe.style.height = height + "px";
-					iframe.scrolling = "no";
-				}
-			}
 		</script>
 		<style>
 

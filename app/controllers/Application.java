@@ -28,8 +28,6 @@ public class Application extends Controller {
 		File file = new File(Play.application().path().getPath() + "/public/iframes/iframe1.html");
 		String html = appS.readHtmlFile(file);
 		List<String> htmlTag = appS.extractClasses(html);
-		System.out.println(html);
-		System.out.println(htmlTag);
 		String path = "iframes/iframe1.html";
 		if(mem != null) {
 			return ok(index.render(mem, path, htmlTag));

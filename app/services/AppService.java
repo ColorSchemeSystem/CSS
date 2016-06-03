@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.io.*;
+import java.util.regex.Pattern;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -27,11 +28,14 @@ public class AppService {
 		Map<String, Integer> classesMap = new HashMap<String, Integer>();
 		for (Element e : elements) {
 			String classValue = e.attr("class");
-			for (String c : classValue.split(" ")) {
-				if (classesMap.containsKey(c)) {
-					classesMap.put(c, classesMap.get(c) + 1);
-				} else {
-					classesMap.put(c, 1);
+			Pattern p = Pattern.compile("[\\s]+");
+			if(!classValue.trim().isEmpty()){
+				for (String c : p.split(classValue)) {
+					if (classesMap.containsKey(c)) {
+						classesMap.put(c, classesMap.get(c) + 1);
+					} else {
+						classesMap.put(c, 1);
+					}
 				}
 			}
 		}
