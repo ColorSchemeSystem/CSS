@@ -1,0 +1,21 @@
+@(templates : List[Template],zoom : String)
+
+@main("Color Scheme"){ 
+	<table>
+	<tr>
+	@for(t <- templates) {
+		<td>
+			<iframe width='300px' height='300px' style='border : 1px solid black; transform:scale(@zoom);-o-transform:scale(@zoom);-webkit-transform:scale(@zoom);-moz-transform:scale(@zoom);-ms-transform:scale(@zoom);' src='/assets/templates/@(t.templateId).html'>
+			</iframe>
+			@*
+			<a href='/assets/templates/@(t.templateId).html'>
+			@t.templateName
+			*@
+			</a>
+		</td>
+	}
+	</tr>
+	</table>
+}
+
+				
