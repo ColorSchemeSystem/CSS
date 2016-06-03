@@ -1,17 +1,19 @@
 @(templates : List[Template],zoom : String)
 
 @main("Color Scheme",null){ 
-	<table>
+	<table style='margin-top : 20px;'>
 	<tr>
 	@for(t <- templates) {
-		<td>
-			<iframe width='300px' height='300px' style='border : 1px solid black; transform:scale(@zoom);-o-transform:scale(@zoom);-webkit-transform:scale(@zoom);-moz-transform:scale(@zoom);-ms-transform:scale(@zoom);' src='/assets/templates/@(t.templateId).html'>
-			</iframe>
-			@*
-			<a href='/assets/templates/@(t.templateId).html'>
-			@t.templateName
-			*@
+		<td style='margin-top : 0px;'>
+			<div></div>
+			<img width='120' height='120' src='/assets/images/html.png'/>
+			<a href='/assets/templates/@(t.templateId).html' target='_blank'>
+				@t.templateName
 			</a>
+			@*
+			<iframe style='width : 500px; height : 500px; border : 1px solid black; transform:scale(@zoom);-o-transform:scale(@zoom);-webkit-transform:scale(@zoom);-moz-transform:scale(@zoom);-ms-transform:scale(@zoom);' src='/assets/templates/@(t.templateId).html'>
+			</iframe>	
+			*@		
 		</td>
 	}
 	</tr>

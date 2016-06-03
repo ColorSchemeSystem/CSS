@@ -52,6 +52,6 @@ public class AdminController extends Controller {
 		    File newFile = new File(path + fileName);
 		    picture.getFile().renameTo(newFile);
 	    }
-		return ok(upload.render(form));
+	    return redirect(routes.Application.templates());
 	}
 }
