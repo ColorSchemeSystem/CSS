@@ -24,11 +24,12 @@ public class Application extends Controller {
 	private static AppService appS = new AppService();
 
 	public static Result index() {
+		Chooser chooser = new Chooser();
 		Member mem = (Member)getObjectFormSession("Member");
 		if(mem != null) {
-			return ok(index.render(mem));
+			return ok(index.render(mem,chooser));
 		}
-		return ok(index.render(null));
+		return ok(index.render(null,chooser));
 	}
 
 	/*
@@ -60,7 +61,7 @@ public class Application extends Controller {
 			String name = form.get().memberName;
 			Query<Member> query = finder.where("memberName='"+name+"'");
 			List<Member> members = query.findList();
-			if(members.size() == 0) return ok(login.render(null, "ログインに失敗しました", form));
+			if(members.size() == 0) return badRequest(login.render(null, "ログインに失敗しました", form));
 
 			// パスワード確認
 			String password = form.get().password;
@@ -72,12 +73,12 @@ public class Application extends Controller {
 			}
 
 			// 一致していなかったらログイン画面へ
-			if(mem == null) return ok(login.render(null, "ログインに失敗しました", form));
+			if(mem == null) return badRequest(login.render(null, "ログインに失敗しました", form));
 
 			// ログインする
 			writeObjectOnSession("Member", mem);
 		} else {
-			return ok(login.render(null, "ログインに失敗しました", form));
+			return badRequest(login.render(null, "ログインに失敗しました", form));
 		}
 		return redirect("/");
 	}
@@ -109,8 +110,11 @@ public class Application extends Controller {
 				Query<Member> query = finder.where("memberName='"+mem.memberName+"'");
 				List<Member> members = query.findList();
 				for(Member m:members) {
-					if(mem.password.equals(m.password)) return ok(createAccount.render(null, "名前とパスワードが同一のものがあります", form));
+					if(mem.password.equals(m.password)) return badRequest(createAccount.render(null, "名前とパスワードが同一のものがあります", form));
 				}
+				Chooser chooser = new Chooser();
+				chooser.save();
+				mem.chooserId = chooser.chooserId;
 				mem.save();
 			}
 
@@ -123,7 +127,7 @@ public class Application extends Controller {
 			}
 		} else {
 			// 新規アカウント登録画面へ
-			return ok(createAccount.render(null, "ERROR!　もう一度入力してください", form));
+			return badRequest(createAccount.render(null, "ERROR!　もう一度入力してください", form));
 		}
 		String id = mem.memberId.toString();
 		writeObjectOnSession("Member", mem);

@@ -1,4 +1,4 @@
-@(user: Member)
+@(user: Member, chooser: Chooser)
 
 @main("Color Scheme", user){ 
 	<div class="main">
@@ -128,12 +128,15 @@
 					</table>
 				</div>
 			</div>
-    	</div>
-    </div>
+		</div>
+	</div>
 
-    <script>
+	<div data-chooser="'@chooser.placement'"></div>
+	<div data-role='{"voice":"こんにちワン", "age":"12"}'>太郎</div>
+	<script>
+	//$('div').data('role').voice;
 		$("input#full-popover").ColorPickerSliders({
-			placement: 'auto',
+			placement: $('div').data('chooser'),
 			hsvpanel: true,
 			sliders: true,
 			previewformat: 'hex'

@@ -8,7 +8,6 @@ create table choosers (
   create_ts                 date,
   update_ts                 date,
   versions                  bigint,
-  member_id                 bigint,
   placement                 varchar(255),
   hsvpanel                  boolean,
   slider                    boolean,
@@ -36,6 +35,7 @@ create table Members (
   member_name               varchar(255),
   password                  varchar(255),
   mail                      varchar(255),
+  chooser_id                bigint,
   constraint pk_Members primary key (member_id))
 ;
 

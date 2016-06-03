@@ -18,4 +18,6 @@ public class Member extends BaseModel {
 	public String password;
 
 	public String mail;
+
+	public Long chooserId;
 }
