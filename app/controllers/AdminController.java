@@ -8,6 +8,7 @@ import play.db.ebean.Model.Finder;
 
 import views.html.admin.*;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -37,19 +38,15 @@ public class AdminController extends Controller {
 	    FilePart picture = body.getFile("templateFile");
 	    if(!form.hasErrors() && 
 	    		picture != null && picture.getFile() != null) {
-	    	try {
-	    		byte[] blobFile = IOUtils.toByteArray(
-		    			new FileInputStream(picture.getFile()));
-		    	Template template = new Template();
-		    	template.templateName = form.get().templateName;
-		    	template.templateMessage = form.get().templateMessage;
-		    	template.html = blobFile;
-		    	adminService.saveTemplate(template);
-	    	} catch(FileNotFoundException e1) {
-	    		e1.printStackTrace();
-	    	} catch(IOException e2) {
-	    		e2.printStackTrace();
-	    	}
+		    Template template = new Template();
+		    template.templateName = form.get().templateName;
+		    template.templateMessage = form.get().templateMessage;
+		    adminService.saveTemplate(template);
+		    final String path = Play.application().path().getPath() +
+		    		"/public/templates/";
+		    final String fileName = String.valueOf(template.templateId) + ".html";
+		    File newFile = new File(path + fileName);
+		    picture.getFile().renameTo(newFile);
 	    }
 		return ok(upload.render(form));
 	}

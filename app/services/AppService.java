@@ -12,7 +12,13 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
+import models.Template;
+
 public class AppService {
+	
+	public List<Template> findAllTemplates() {
+		return Template.find.all();
+	}
 
 	public static List<String> extractClasses(String html) {
 		Document document = Jsoup.parse(html);

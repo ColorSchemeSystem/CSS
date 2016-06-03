@@ -30,6 +30,12 @@ public class Application extends Controller {
 		}
 		return ok(index.render(null));
 	}
+	
+	public static Result templates() {
+		List<Template> templatesList = appS.findAllTemplates();
+		final double zoom = 0.25;
+		return ok(templates.render(templatesList,String.valueOf(zoom)));
+	}
 
 	/*
 	*  ログイン画面へ
