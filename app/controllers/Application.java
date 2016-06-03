@@ -16,6 +16,7 @@ import services.*;
 
 import flexjson.JSONSerializer;
 import flexjson.JSONDeserializer;
+import forms.*;
 
 public class Application extends Controller {
 
@@ -141,6 +142,7 @@ public class Application extends Controller {
 	}
 
 	public static Result myPage() {
+		Form form = Form.form(ChooserAdvancedSetting.class);
 		Member mem = (Member)getObjectFormSession("Member");
 		if(mem == null) return badRequest("/");
 		return ok(myPage.render(mem));

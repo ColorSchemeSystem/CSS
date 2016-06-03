@@ -145,14 +145,13 @@ function fixFrameSize() {
 		</div>
 	</div>
 
-	<div data-chooser="'@chooser.placement'"></div>
-	<div data-role='{"voice":"こんにちワン", "age":"12"}'>太郎</div>
+	<div id="chooser" data-placement="'@chooser.placement'" data-hsvpanel="@chooser.hsvpanel" data-sliders="@chooser.slider" data-swatches="@chooser.swatche"></div>
 	<script>
-	//$('div').data('role').voice;
 		$("input#full-popover").ColorPickerSliders({
-			placement: $('div').data('chooser'),
-			hsvpanel: true,
-			sliders: true,
+			placement: $('#chooser').data('placement'),
+			hsvpanel: $('#chooser').data('hsvpanel'),
+			sliders: $('#chooser').data('sliders'),
+			swatches: $('#chooser').data('swatches'),
 			previewformat: 'hex'
 		});
 	</script>
