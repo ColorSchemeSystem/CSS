@@ -27,6 +27,8 @@
 		<script src='@routes.Assets.at("javascripts/bootstrap.colorpickersliders.js")'></script>
 		<script>
 			$(window).load(function(){
+				fixFrameSize();
+
   			var navi = $('.fixnav');
   			var main  = $('.main');
 				var target_top = navi.offset().top - parseInt(navi.css('margin-top'),10);
@@ -93,6 +95,7 @@
 				max-width: 1300px;
 				margin: 0px;
 				overflow: hidden;
+				min-height: 510px;
 			}
 
 			.main {
@@ -152,7 +155,6 @@
 				margin-top: 0px;
 				text-align: center;
 				background: #FFF;
-				height: 90px;
 			}
 		</style>
 	</head>
