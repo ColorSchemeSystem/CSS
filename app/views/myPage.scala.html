@@ -7,6 +7,41 @@
 	<p>name : @member.memberName</p>
 	<p>password : @member.password</p>
 	<p>mail : @member.mail</p>
+
+	<div id="hsvflat"></div>
+	<script>
+	$("#hsvflat").ColorPickerSliders({
+			color: "rgb(36, 170, 242)",
+			flat: true,
+			sliders: false,
+			swatches: false,
+			hsvpanel: true
+	});
+	</script>
+
+	<div id="hslflat"></div>
+	<script>
+	$("#hslflat").ColorPickerSliders({
+			color: "rgb(36, 170, 242)",
+			flat: true,
+			order: {
+					hsl: 1,
+					cie: 2,
+					preview: 3
+			},
+			swatches: false
+	});
+	</script>
+
+	<div id="flat"></div>
+	<script>
+	$("#flat").ColorPickerSliders({
+			flat: true,
+			sliders: false,
+			invalidcolorsopacity: 0
+	});
+	</script>
+
 	<a href="/"><input type="button" value="TOPへ"></a>
 	<a href="/logout"><input type="button" value="ログアウト"></a>
 }

@@ -28,7 +28,9 @@
 						<tbody>
 							<tr>
 								<td>header.title</td>
-								<td>red</td>
+								<td>
+									<input type="text" class="form-control" id="full-popover" value="#A6FF00" data-color-format="hex">
+								</td>
 							</tr>
 							<tr>
 								<td>header</td>
@@ -128,6 +130,15 @@
 			</div>
     	</div>
     </div>
+
+    <script>
+		$("input#full-popover").ColorPickerSliders({
+			placement: 'auto',
+			hsvpanel: true,
+			sliders: true,
+			previewformat: 'hex'
+		});
+	</script>
 }
 
 				
