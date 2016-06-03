@@ -2,21 +2,24 @@
 
 @main("Color Scheme",null){ 
 	<table style='margin-top : 20px;'>
-	<tr>
+	<div id='templates_list' style='margin-left : 40px; margin-top : 40px;' class='clearfix'>
 	@for(t <- templates) {
-		<td style='margin-top : 0px;'>
-			<div></div>
-			<img width='120' height='120' src='/assets/images/html.png'/>
-			<a href='/assets/templates/@(t.templateId).html' target='_blank'>
+		<div style='float : left;'>
+		<a href='/assets/templates/@(t.templateId).html' target='_blank'>
+			<div>
+				<img width='120' height='120' src='/assets/images/html.png'/>
+			</div>
+			<div style='margin-left : 50px; margin-top : 10px;'>
 				@t.templateName
-			</a>
+			</div>
+		</a>
 			@*
 			<iframe style='width : 500px; height : 500px; border : 1px solid black; transform:scale(@zoom);-o-transform:scale(@zoom);-webkit-transform:scale(@zoom);-moz-transform:scale(@zoom);-ms-transform:scale(@zoom);' src='/assets/templates/@(t.templateId).html'>
 			</iframe>	
 			*@		
-		</td>
+		</div>
 	}
-	</tr>
+	</div>
 	</table>
 }
 
