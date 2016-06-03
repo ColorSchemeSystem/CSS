@@ -44,7 +44,7 @@ public class AppService {
 		});
 		List<String> classes = new ArrayList<String>();
 		for (Map.Entry entry : entries) {
-			classes.add((String) entry.getKey() + " : " + entry.getValue());
+			classes.add((String) entry.getKey());
 		}
 		return classes;
 	}
