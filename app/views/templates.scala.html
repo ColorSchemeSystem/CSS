@@ -5,7 +5,7 @@
 	<div id='templates_list' style='margin-left : 40px; margin-top : 40px;' class='clearfix'>
 	@for(t <- templates) {
 		<div style='float : left;'>
-		<a href='/assets/templates/@(t.templateId).html' target='_blank'>
+		<a href='@routes.Application.indexWithId(t.templateId)' target='_blank'>
 			<div>
 				<img width='120' height='120' src='/assets/images/html.png'/>
 			</div>
@@ -21,6 +21,4 @@
 	}
 	</div>
 	</table>
-}
-
-				
+}				
