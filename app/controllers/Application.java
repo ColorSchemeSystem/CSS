@@ -32,6 +32,8 @@ public class Application extends Controller {
 		List<String> htmlTag = appS.extractClasses(html);
 		String path = "iframes/iframe1.html";
 		if(mem != null) {
+			Query<Chooser> query = Chooser.find.where("chooserId = '"+mem.chooserId+"'");
+			chooser = query.findUnique();
 			return ok(index.render(mem, chooser, path, htmlTag));
 		}
 		return ok(index.render(null, chooser, path, htmlTag));
@@ -51,6 +53,8 @@ public class Application extends Controller {
 		String html = appS.readHtmlFile(file);
 		List<String> htmlTag = appS.extractClasses(html);
 		if(mem != null) {
+			Query<Chooser> query = Chooser.find.where("chooserId = '"+mem.chooserId+"'");
+			chooser = query.findUnique();
 			return ok(index.render(mem, chooser, path, htmlTag));
 		}
 		return ok(index.render(null, chooser, path, htmlTag));
@@ -165,18 +169,34 @@ public class Application extends Controller {
 	}
 
 	public static Result myPage() {
-		//Form<ChooserAdvancedSetting> form = Form.form(ChooserAdvancedSetting.class);
+		Form<ChooserAdvancedSetting> form = Form.form(ChooserAdvancedSetting.class);
 		Member mem = (Member)getObjectFormSession("Member");
-		System.out.println("asddfghjgklkh");
-		//if(mem == null) return badRequest("/");
-		return ok(myPage.render(mem));
+		if(mem == null) return badRequest("/");
+		Query<Chooser> query = Chooser.find.where("chooserId = '"+mem.chooserId+"'");
+		Chooser chooser = query.findUnique();
+		ChooserAdvancedSetting setting = new ChooserAdvancedSetting();
+		setting.hsvpanel	= chooser.hsvpanel;
+		setting.slider		= chooser.slider;
+		setting.swatche		= chooser.swatche;
+		form = form.fill(setting);
+		return ok(myPage.render(mem, form));
 	}
 
-/*	public static Result SaveChooserSetting() {
+	public static Result SaveChooserSetting() {
 		Form<ChooserAdvancedSetting> form = Form.form(ChooserAdvancedSetting.class).bindFromRequest();
 		Member mem = (Member)getObjectFormSession("Member");
+		if(!form.hasErrors()) {
+			Query<Chooser> query = Chooser.find.where("chooserId = '"+mem.chooserId+"'");
+			Chooser chooser = query.findUnique();
+			chooser.hsvpanel	= form.get().hsvpanel;
+			chooser.slider		= form.get().slider;
+			chooser.swatche		= form.get().swatche;
+			chooser.save();
+		} else {
+			return badRequest(myPage.render(mem, form));
+		}
 		return ok(myPage.render(mem, form));
-	}*/
+	}
 
 	/**
 	 * @param key

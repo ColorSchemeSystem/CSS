@@ -4,7 +4,7 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
 import play.data.validation.Constraints.Required;
-import javax.persistence.OneToOne;
+import play.db.ebean.Model.Finder;
 
 import java.util.List;
 
@@ -28,4 +28,7 @@ public class Chooser extends BaseModel {
 
 	// テンプレートに表示するリスト
 	public List<Integer> swatches;
+
+	public static Finder<Long, Chooser> find = 
+						new Finder<Long, Chooser>(Long.class, Chooser.class);
 }

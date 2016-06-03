@@ -1,4 +1,4 @@
-@(member: models.Member)
+@(member: models.Member, setting: Form[forms.ChooserAdvancedSetting])
 
 @import helper._
 
@@ -8,10 +8,11 @@
 	<p>password : @member.password</p>
 	<p>mail : @member.mail</p>
 
+	@helper.form(action = routes.Application.SaveChooserSetting()) {
 		<div class="container">
 			<div class="row">
 				<div class="col-xs-4">
-					
+					@checkbox(setting("hsvpanel"),'_label -> "表示する")
 					<div id="hsvflat"></div>
 					<script>
 					$("#hsvflat").ColorPickerSliders({
@@ -25,6 +26,7 @@
 				</div>
 
 				<div class="col-xs-4">
+					@checkbox(setting("slider"),'_label -> "表示する")
 					<div id="hslflat"></div>
 					<script>
 					$("#hslflat").ColorPickerSliders({
@@ -41,6 +43,7 @@
 				</div>
 
 				<div class="col-xs-4">
+					@checkbox(setting("swatche"),'_label -> "表示する")
 					<div id="flat"></div>
 					<script>
 					$("#flat").ColorPickerSliders({
@@ -53,6 +56,9 @@
 
 			</div>
 		</div>
+
+		<input type="submit" value="設定を保存">
+	}
 
 	<a href="/"><input type="button" value="TOPへ"></a>
 	<a href="/logout"><input type="button" value="ログアウト"></a>
