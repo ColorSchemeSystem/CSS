@@ -1,6 +1,20 @@
 @(user: Member, chooser: Chooser)
 
 @main("Color Scheme", user){ 
+<script>
+$(function(){
+	fixFrameSize();
+});
+function fixFrameSize() {
+	if (window.parent) {
+		var body = document.body;
+		var height = body.scrollHeight;
+		var iframe = window.parent.document.getElementsByTagName("iframe")[0];
+		iframe.style.height = height + "px";
+		iframe.scrolling = "no";
+	}
+}
+</script>
 	<div class="main">
 		<div class="inHtml">
 			<iframe src="@routes.Assets.at("iframe/iframe.html")" width="920px" name="template"></iframe>

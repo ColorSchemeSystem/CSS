@@ -6,13 +6,20 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Pattern;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
+import models.Template;
+
 public class AppService {
+	
+	public List<Template> findAllTemplates() {
+		return Template.find.all();
+	}
 
 	public static List<String> extractClasses(String html) {
 		Document document = Jsoup.parse(html);
@@ -20,7 +27,8 @@ public class AppService {
 		Map<String, Integer> classesMap = new HashMap<String, Integer>();
 		for (Element e : elements) {
 			String classValue = e.attr("class");
-			for (String c : classValue.split(" ")) {
+			Pattern p = Pattern.compile("[\\s]+");
+			for (String c : p.split(classValue)) {
 				if (classesMap.containsKey(c)) {
 					classesMap.put(c, classesMap.get(c) + 1);
 				} else {
@@ -38,7 +46,7 @@ public class AppService {
 		});
 		List<String> classes = new ArrayList<String>();
 		for (Map.Entry entry : entries) {
-			classes.add((String) entry.getKey() + " : " + entry.getValue());
+			classes.add((String) entry.getKey());
 		}
 		return classes;
 	}
