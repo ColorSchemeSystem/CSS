@@ -98,6 +98,10 @@ public class Application extends BaseController {
 		    Template template = new Template();
 		    template.templateName = form.get().templateName;
 		    template.templateMessage = form.get().templateMessage;
+		    Member member = isLoggedIn();
+		    if(member != null) {
+		    	template.member = member;
+		    }
 		    appS.saveTemplate(template);
 		    final String path = Play.application().path().getPath() +
 		    		"/public/templates/";

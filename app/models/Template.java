@@ -11,7 +11,7 @@ public class Template extends BaseModel {
 	@Id
 	public Long templateId;
 
-	public Long memberId;
+	public Member member;
 
 	public String templateName;
 
