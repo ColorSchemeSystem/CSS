@@ -2,6 +2,7 @@ package services;
 
 import org.mindrot.jbcrypt.BCrypt;
 
+import models.Chooser;
 import models.Member;
 import models.Template;
 
@@ -62,5 +63,14 @@ public class AdminService {
 	 */
 	public String passwordHash(String password) {
 		return BCrypt.hashpw(password, BCrypt.gensalt());
+	}
+	
+	/**
+	 * 
+	 * @param chooserId
+	 * @return
+	 */
+	public Chooser findChooserByChooserId(Long chooserId) {
+		return Chooser.find.byId(chooserId);
 	}
 }

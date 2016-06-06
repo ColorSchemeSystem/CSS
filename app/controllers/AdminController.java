@@ -121,10 +121,9 @@ public class AdminController extends BaseController {
 	 */
 	public static Result myPage() {
 		Form<ChooserAdvancedSetting> form = Form.form(ChooserAdvancedSetting.class);
-		Member mem = (Member)getObjectFormSession("Member");
+		Member mem = isLoggedIn();
 		if(mem == null) return badRequest("/");
-		Query<Chooser> query = Chooser.find.where("chooserId = '"+mem.chooserId+"'");
-		Chooser chooser = query.findUnique();
+		Chooser chooser = adminS.findChooserByChooserId(mem.chooserId);
 		ChooserAdvancedSetting setting = new ChooserAdvancedSetting();
 		setting.hsvpanel	= chooser.hsvpanel;
 		setting.slider		= chooser.slider;

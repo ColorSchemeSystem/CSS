@@ -1,5 +1,7 @@
 package models;
 
+import java.sql.Timestamp;
+
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
@@ -21,6 +23,8 @@ public class Member extends BaseModel {
 	public String mail;
 
 	public Long chooserId;
+		
+	public Timestamp lastLogin;
 	
 	public static final Finder<Long, Member> find = new Finder<Long, Member>(Long.class,Member.class);
 }

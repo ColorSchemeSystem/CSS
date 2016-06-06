@@ -36,6 +36,7 @@ create table Members (
   password                  varchar(255),
   mail                      varchar(255),
   chooser_id                bigint,
+  last_login                timestamp,
   constraint pk_Members primary key (member_id))
 ;
 
