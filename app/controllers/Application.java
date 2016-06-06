@@ -29,7 +29,7 @@ import forms.*;
 public class Application extends BaseController {
 
 	private static AppService appS = new AppService();
-	
+
 	private static ImageService imageS = new ImageService();
 
 	public static Result index() {
@@ -72,18 +72,18 @@ public class Application extends BaseController {
 		}
 		return ok(index.render(null, chooser, path, htmlTag));
 	}
-	
+
 	/**
-	 * 
+	 *
 	 * @return
 	 */
 	public static Result upload() {
 		Form<TemplateUpload> form = Form.form(TemplateUpload.class);
 		return ok(upload.render(form));
 	}
-	
+
 	/**
-	 * 
+	 *
 	 * @return
 	 */
 	public static Result doUpload() {
@@ -92,7 +92,7 @@ public class Application extends BaseController {
 		MultipartFormData body = request().body().
 				asMultipartFormData();
 	    FilePart picture = body.getFile("templateFile");
-	    if(!form.hasErrors() && 
+	    if(!form.hasErrors() &&
 	    		picture != null && picture.getFile() != null) {
 		    Template template = new Template();
 		    template.templateName = form.get().templateName;
@@ -108,7 +108,7 @@ public class Application extends BaseController {
 			String base64ImageData = response.get().getBody();
 			final String imageFilePath = Play.application().path().getPath() + "/public/snapshots/";
 			final String imageFileName = String.valueOf(template.templateId) + ".png";
-			imageS.saveBase64ImageDataAsImage(base64ImageData, "png", 
+			imageS.saveBase64ImageDataAsImage(base64ImageData, "png",
 					imageFilePath + imageFileName);
 	    }
 	    return redirect(routes.Application.templates());
@@ -118,5 +118,23 @@ public class Application extends BaseController {
 		List<Template> templatesList = appS.findAllTemplates();
 		final double zoom = 0.25;
 		return ok(templates.render(templatesList,String.valueOf(zoom)));
+	}
+
+	public static Result download(){
+		Form<TemplateDownload> form = Form.form(TemplateDownload.class).bindFromRequest();
+		TemplateDownload html = form.get();
+		html.tempHtml = "<html>" + html.tempHtml + "</html>";
+		try{
+			File file = new File("template.html");
+			FileWriter filewriter = new FileWriter(file);
+			filewriter.write(html.tempHtml);
+			filewriter.close();
+			response().setContentType("application/x-download");
+			response().setHeader("Content-disposition","attachment; filename=template.html");
+			return ok(file);
+		}catch(Exception e){
+			e.printStackTrace();
+		}
+		return redirect("/");
 	}
 }
