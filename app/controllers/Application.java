@@ -15,6 +15,7 @@ import java.util.List;
 import javax.imageio.ImageIO;
 
 import org.apache.commons.codec.binary.Base64;
+import org.apache.commons.lang3.StringUtils;
 
 import com.avaje.ebean.Query;
 
@@ -113,10 +114,19 @@ public class Application extends BaseController {
 	    }
 	    return redirect(routes.Application.templates());
 	}
-
+	
+	/**
+	 * @return
+	 */
 	public static Result templates() {
-		List<Template> templatesList = appS.findAllTemplates();
-		final double zoom = 0.25;
-		return ok(templates.render(templatesList,String.valueOf(zoom)));
+		Member member = isLoggedIn();
+		String type = request().getQueryString("type");
+		List<Template> templatesList;
+		if(StringUtils.isNotEmpty(type) && type.equals("member") && member != null) {
+			templatesList = appS.findAllTemplates(member.memberId);
+		}	else	{
+			templatesList = appS.findAllTemplates();
+		}
+		return ok(templates.render(templatesList,member));
 	}
 }
