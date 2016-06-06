@@ -106,6 +106,7 @@ public class AdminController extends BaseController {
 				mem.memberName = form.get().memberName;
 				mem.password = adminS.passwordHash(form.get().password);
 				mem.mail = form.get().mail;
+				mem.chooser = new Chooser();
 				adminS.storeMember(mem);
 				writeObjectOnSession("Member", mem);
 				return redirect("/");
@@ -123,7 +124,7 @@ public class AdminController extends BaseController {
 		Form<ChooserAdvancedSetting> form = Form.form(ChooserAdvancedSetting.class);
 		Member mem = isLoggedIn();
 		if(mem == null) return badRequest("/");
-		Chooser chooser = adminS.findChooserByChooserId(mem.chooserId);
+		Chooser chooser = adminS.findChooserByChooserId(mem.chooser.chooserId);
 		ChooserAdvancedSetting setting = new ChooserAdvancedSetting();
 		setting.hsvpanel	= chooser.hsvpanel;
 		setting.slider		= chooser.slider;
@@ -139,7 +140,7 @@ public class AdminController extends BaseController {
 		Form<ChooserAdvancedSetting> form = Form.form(ChooserAdvancedSetting.class).bindFromRequest();
 		Member mem = (Member)getObjectFormSession("Member");
 		if(!form.hasErrors()) {
-			Query<Chooser> query = Chooser.find.where("chooserId = '"+mem.chooserId+"'");
+			Query<Chooser> query = Chooser.find.where("chooserId = '"+mem.chooser.chooserId+"'");
 			Chooser chooser = query.findUnique();
 			chooser.hsvpanel	= form.get().hsvpanel;
 			chooser.slider		= form.get().slider;

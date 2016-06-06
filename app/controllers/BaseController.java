@@ -4,6 +4,7 @@ import play.Logger;
 import play.libs.F.Promise;
 import play.mvc.Controller;
 import play.mvc.SimpleResult;
+import services.AdminService;
 import flexjson.JSONSerializer;
 import models.Member;
 import flexjson.JSONDeserializer;
@@ -44,6 +45,20 @@ public class BaseController extends Controller {
 	 */
 	protected static Member isLoggedIn() {
 		Member member = (Member) getObjectFormSession("Member");
-		return member;
+		if(member == null) {
+			return null;
+		}
+		AdminService adminS = new AdminService();
+		Member newMember = adminS.findMemberById(member.memberId);
+		if(newMember == null) {
+			removeObjectSession("Member");
+			return null;
+		}
+		if(member.password.equals(newMember.password)) {
+			return newMember;
+		}	else	{
+			removeObjectSession("Member");
+			return null;
+		}
 	}
 }

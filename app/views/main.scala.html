@@ -139,7 +139,11 @@
 				<p>Title</p>
 			</div>
 			<div class="menuBar">
+			@if(user == null) {
 				@template.menuBar(user)
+			}	else	{
+				@template.loggedInMenuBar(user)
+			}
 			</div>
 		</div>
 		<div class="wrapper clearfix">
