@@ -3,24 +3,10 @@
 @import helper._
 
 @main("myPage", member) {
-	<p>id : @member.memberId</p>
-	<p>name : @member.memberName</p>
-	<p>password : @member.password</p>
-	<p>mail : @member.mail</p>
-
-	@helper.form(action = routes.AdminController.saveChooserSetting()) {
-	<div class="dropdown">
-		<button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown">
-			ドロップダウン
-			<span class="caret"></span>
-		</button>
-		<ul class="dropdown-menu" role="menu">
-			<li role="presentation"><a href="#">リンクのリスト１</a></li>
-			<li role="presentation"><a href="#">リンクのリスト２</a></li>
-			<li role="presentation"><a href="#">リンクのリスト３</a></li>
-		</ul>
-	</div>
-
+	<p>@(member.memberName)さん</p>
+	<p>メールアドレス : @member.mail</p><button>編集</button>
+	<p><a href='@routes.AdminController.modifyPassword()'>パスワードを変更</a></p>
+	
 	@helper.form(action = routes.AdminController.saveChooserSetting()) {
 		<div class="container">
 			<div class="row">
@@ -69,11 +55,6 @@
 
 			</div>
 		</div>
-
 		<input type="submit" value="設定を保存">
 	}
-
-	<a href="/"><input type="button" value="TOPへ"></a>
-	<a href="/logout"><input type="button" value="ログアウト"></a>
-}
 }

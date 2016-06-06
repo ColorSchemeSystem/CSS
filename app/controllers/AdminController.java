@@ -11,6 +11,7 @@ import views.html.createAccount;
 import views.html.login;
 import views.html.myPage;
 import views.html.admin.*;
+import views.html.*;
 
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
@@ -25,10 +26,13 @@ import javax.imageio.ImageIO;
 
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.mindrot.jbcrypt.BCrypt;
 
 import com.avaje.ebean.Query;
 
 import forms.ChooserAdvancedSetting;
+import forms.ModifyPassword;
 import forms.TemplateUpload;
 import models.*;
 
@@ -150,5 +154,50 @@ public class AdminController extends BaseController {
 			return badRequest(myPage.render(mem, form));
 		}
 		return ok(myPage.render(mem, form));
+	}
+	
+	/**
+	 * 
+	 * @return
+	 */
+	public static Result modifyPassword() {
+		Member member = isLoggedIn();
+		if(member == null) {
+			return redirect(routes.AdminController.login());
+		}
+		Form<ModifyPassword> form = Form.form(ModifyPassword.class);
+		return ok(modifyPassword.render(form,member,""));
+	}
+	
+	/**
+	 * @return
+	 */
+	public static Result doModifyPassword() {
+		Form<ModifyPassword> form = Form.form(ModifyPassword.class).bindFromRequest();
+		Member member = isLoggedIn();
+		if(member == null) {
+			return redirect(routes.AdminController.login());
+		}
+		if(!form.hasErrors()) {
+			boolean changeable = true;
+			if(!adminS.checkpw(form.get().password,member.password)) {
+				changeable = false;
+			}
+			if(!form.get().newPassword.equals(form.get().confirmNewPassword)) {
+				changeable = false;
+			}
+			if(changeable) {
+				member = adminS.findMemberById(member.memberId);
+				member.password = form.get().newPassword;
+				adminS.storeMember(member);
+				removeObjectSession("Member");
+				writeObjectOnSession("Member", member);
+				return redirect(routes.AdminController.myPage());
+			}	else	{
+				return ok(modifyPassword.render(form,member,"入力値が不正です。"));
+			}
+		}	else	{
+			return ok(modifyPassword.render(form,member,"入力値が不正です。"));
+		}
 	}
 }
