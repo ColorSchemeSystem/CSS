@@ -1,0 +1,31 @@
+@(images : List[Image], member : Member)
+
+@main("Color Scheme",member){ 
+	<h1>
+	@(member.memberName)さんが保存した画像一覧
+	</h1>
+	<div id='templates_list' style='margin-left : 40px; margin-top : 40px;'>
+	@for((image, index) <- images.zipWithIndex) {
+		@if((index + 1) == 1 || ((index + 1) % 6 == 1)) {
+			<div class='clearfix' style='margin-top : 10px;'>
+		}
+				<div style='float : left;'>
+					<div style='margin-left : 20px;'>
+						<div>
+							<img width='120' height='120' src='/assets/member-images/@(image.imageId).png'/>
+						</div>
+						<div style='margin-left : 50px; margin-top : 10px;'>
+							@image.imageName
+						</div>
+					</a>	
+					</div>
+				</div>
+		@if((index + 1) % 6 == 0) {
+			</div>
+		}
+	}
+	@if(images.size == 0 || images.size / 6 != 0) {
+		</div>
+	}
+	</div>
+}				
