@@ -33,6 +33,8 @@ public class Application extends Controller {
 	private static final Finder<Long, Member> finder = new Finder<Long, Member>(Long.class,Member.class);
 
 	private static AppService appS = new AppService();
+	
+	private static ImageService imageS = new ImageService();
 
 	public static Result index() {
 		Chooser chooser = new Chooser();
@@ -101,21 +103,12 @@ public class Application extends Controller {
 		    File newFile = new File(path + fileName);
 		    picture.getFile().renameTo(newFile);
 		    String target = "https://www.google.co.jp/";
-		    try {
-				Promise<WS.Response> response = WS.url(ImageService.webShotUrl).setQueryParameter("target", target).setTimeout(300000).get();
-				String base64ImageData = response.get().getBody();
-				byte[] binaryImage = Base64.decodeBase64(base64ImageData);
-				BufferedImage image = ImageIO.read(new ByteArrayInputStream(binaryImage));
-				final String imageFilePath = Play.application().path().getPath() +
-			    		"/public/snapshots/";
-				final String imageFileName = String.valueOf(template.templateId) +
-						".png";
-				ImageIO.write(image, "png", new File(imageFilePath + imageFileName));
-			} catch (UnsupportedEncodingException e1) {
-				e1.printStackTrace();
-			} catch (IOException e2) {
-				e2.printStackTrace();
-			}
+		    Promise<WS.Response> response = WS.url(ImageService.webShotUrl).setQueryParameter("target", target).setTimeout(300000).get();
+			String base64ImageData = response.get().getBody();
+			final String imageFilePath = Play.application().path().getPath() + "/public/snapshots/";
+			final String imageFileName = String.valueOf(template.templateId) + ".png";
+			imageS.saveBase64ImageDataAsImage(base64ImageData, "png", 
+					imageFilePath + imageFileName);
 	    }
 	    return redirect(routes.Application.templates());
 	}
