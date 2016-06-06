@@ -5,18 +5,16 @@
 # Home page
 GET     /                           controllers.Application.index()
 GET		/template/:id             			controllers.Application.indexWithId(id: Long)
-GET     /login                      controllers.Application.login()
-GET     /logout                     controllers.Application.logout()
-GET     /loginEntry                 controllers.Application.loginEntry()
-GET     /createAccount              controllers.Application.createAccount()
-GET     /saveAccount                controllers.Application.saveAccount()
-GET     /myPage                     controllers.Application.myPage()
-GET     /SaveChooserSetting         controllers.Application.SaveChooserSetting()
+GET     /login                      controllers.AdminController.login()
+GET     /logout                     controllers.AdminController.logout()
+GET     /loginEntry                 controllers.AdminController.loginEntry()
+GET     /createAccount              controllers.AdminController.createAccount()
+GET     /saveAccount                controllers.AdminController.saveAccount()
+GET     /myPage                     controllers.AdminController.myPage()
+GET     /SaveChooserSetting         controllers.AdminController.saveChooserSetting()
 
 GET     /upload             controllers.Application.upload()
 POST    /upload             controllers.Application.doUpload()
-GET     /admin/upload             controllers.AdminController.upload()
-POST    /admin/upload             controllers.AdminController.doUpload()
 GET     /templates          controllers.Application.templates()
 
 # Map static resources from the /public folder to the /assets URL path
