@@ -182,6 +182,7 @@
         }
       }
 
+      // 違う
       function updateColor(newcolor, disableinputupdate) {
         var updatedcolor = tinycolor(newcolor);
 
@@ -210,6 +211,7 @@
         }
       }
 
+      // カラーチューザー表示
       function show(disableLastlyUsedGroupUpdate) {
         if (settings.flat) {
           return;
@@ -228,11 +230,13 @@
         visible = true;
       }
 
+      // カラーチューザー非表示
       function hide() {
         visible = false;
         hidePopover();
       }
 
+      // カラーチューザー表示
       function showPopover(disableLastlyUsedGroupUpdate) {
         if (popover_container instanceof jQuery) {
           return;
@@ -277,6 +281,7 @@
         triggerelement.popover('show');
       }
 
+      // カラーチューザー非表示
       function hidePopover() {
         popover_container.remove();
         popover_container = null;
@@ -284,6 +289,7 @@
         triggerelement.popover('destroy');
       }
 
+      // 違う
       function _getControllerHtml() {
         var sliders = [],
             color_picker_html = '';
@@ -363,6 +369,7 @@
         return color_picker_html;
       }
 
+      // 違う
       function _initElements() {
         elements = {
           actualswatch: false,
@@ -418,6 +425,7 @@
         }
       }
 
+      // 違う
       function showFlat() {
         if (settings.flat) {
           if (triggerelementisinput) {
@@ -436,6 +444,7 @@
         }
       }
 
+      // 違う
       function _initConnectedElements() {
         if (settings.connectedinput instanceof jQuery) {
           settings.connectedinput.add(triggerelement);
@@ -448,6 +457,7 @@
         }
       }
 
+      // 違う
       function _bindEvents() {
         triggerelement.on('colorpickersliders.updateColor', function(e, newcolor) {
           updateColor(newcolor);
@@ -517,6 +527,7 @@
 
       }
 
+      // 違う
       function _bindControllerEvents() {
         container.on('contextmenu', function(ev) {
           ev.preventDefault();
@@ -820,6 +831,7 @@
         }
       }
 
+      // 違う
       function setConfig(name, value) {
         try {
           localStorage.setItem('cp-userdata-' + name, JSON.stringify(value));
@@ -828,6 +840,7 @@
         }
       }
 
+      // 違う
       function getConfig(name) {
         try {
           var r = JSON.parse(localStorage.getItem('cp-userdata-' + name));
@@ -839,6 +852,7 @@
         }
       }
 
+      // 違う
       function getUsedGroupName() {
         if (groupingname !== '') {
           return groupingname;
@@ -892,6 +906,7 @@
         }
       }
 
+      // HSV使用中
       function activateGroupHsvpanel() {
         if (elements.pills.hsvpanel.length === 0) {
           return false;
@@ -911,6 +926,7 @@
         return true;
       }
 
+      // Sliders使用中
       function activateGroupSliders() {
         if (elements.pills.sliders.length === 0) {
           return false;
@@ -930,6 +946,7 @@
         return true;
       }
 
+      // Swarches使用中
       function activateGroupSwatches() {
         if (elements.pills.swatches.length === 0) {
           return false;
@@ -949,6 +966,7 @@
         return true;
       }
 
+      // ここ関連してるっぽい
       function setMoveHandlerTimer(dragTarget, ev) {
         clearTimeout(_moveThrottleTimer);
         _moveThrottleTimer = setTimeout(function() {
@@ -1239,6 +1257,7 @@
         }, settings.updateinterval);
       }
 
+      // 違う
       function _updateAllElements(disableinputupdate) {
         clearTimeout(updateAllElementsTimeout);
 
@@ -1317,6 +1336,7 @@
         triggerelement.data('color', color);
       }
 
+      // 違う
       function _updateTriggerelementColor() {
         if (triggerelementisinput && settings.previewontriggerelement) {
           if ((100 - color.cielch.l) * color.cielch.a < settings.previewcontrasttreshold) {
@@ -1328,6 +1348,9 @@
         }
       }
 
+      // TODO $('iframe').contents().find('.content').css('backgroundColor',color.tiny.toRgbString());
+      // TODO の.find('.content')部分を変更できる様に
+      // ここでtextエリア内の表示文字をセット
       function _updateConnectedInput() {
         if (connectedinput) {
           connectedinput.each(function(index, element) {
@@ -1338,30 +1361,36 @@
               case 'hex':
                 if (color.hsla.a < 1) {
                   $element.val(color.tiny.toRgbString());
+                  $('iframe').contents().find('.content').css('backgroundColor',color.tiny.toRgbString());
                 }
                 else {
                   $element.val(color.tiny.toHexString());
+                  $('iframe').contents().find('.content').css('backgroundColor',color.tiny.toHexString());
                 }
                 break;
               case 'hsl':
                 $element.val(color.tiny.toHslString());
+                $('iframe').contents().find('.content').css('backgroundColor',color.tiny.toHslString());
                 break;
               case 'rgb':
                 /* falls through */
               default:
                 $element.val(color.tiny.toRgbString());
+                $('iframe').contents().find('.content').css('backgroundColor',color.tiny.toRgbString());
                 break;
             }
           });
         }
       }
 
+      // 違う
       function _renderHsvsv() {
         elements.hsvpanel.sv.css('background', tinycolor('hsv(' + color.hsv.h + ',100%,100%)').toRgbString());
 
         elements.hsvpanel.sv_marker.css('left', color.hsv.s * 100 + '%').css('top', 100 - color.hsv.v * 100 + '%');
       }
 
+      // 違う
       function _renderHsvh() {
         elements.hsvpanel.h_marker.css('top', color.hsv.h / 360 * 100 + '%');
       }
