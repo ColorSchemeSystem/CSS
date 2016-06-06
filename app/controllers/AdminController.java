@@ -144,8 +144,7 @@ public class AdminController extends BaseController {
 		Form<ChooserAdvancedSetting> form = Form.form(ChooserAdvancedSetting.class).bindFromRequest();
 		Member mem = (Member)getObjectFormSession("Member");
 		if(!form.hasErrors()) {
-			Query<Chooser> query = Chooser.find.where("chooserId = '"+mem.chooser.chooserId+"'");
-			Chooser chooser = query.findUnique();
+			Chooser chooser = adminS.findChooserByChooserId(mem.chooser.chooserId);
 			chooser.hsvpanel	= form.get().hsvpanel;
 			chooser.slider		= form.get().slider;
 			chooser.swatche		= form.get().swatche;

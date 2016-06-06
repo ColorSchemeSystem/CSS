@@ -3,9 +3,9 @@ package forms;
 import java.util.List;
 
 public class ChooserAdvancedSetting {
-	public Boolean hsvpanel;
-	public Boolean slider;
-	public Boolean swatche;
+	public Integer hsvpanel;
+	public Integer slider;
+	public Integer swatche;
 
 	List<String> listSwatches;
 }
