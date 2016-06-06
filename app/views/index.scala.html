@@ -64,13 +64,12 @@ function hoverOut(){
 	$('iframe').contents().find('.hoverImage').remove();
 }
 
-/*$(function() {
-	$('tr').click(function(){
-		$('#data').toggle();
-	});
-});*/
-
+function display(name) {
+	$(name).toggle();
+}
 </script>
+
+<div id="chooser" data-placement="'@chooser.placement'" data-hsvpanel="@chooser.hsvpanel" data-sliders="@chooser.slider" data-swatches="@chooser.swatche"></div>
 	<div class="main">
 		<div class="inHtml">
 			<iframe src="@routes.Assets.at(path)" width="920px" name="template" id="iframe"></iframe>
@@ -156,13 +155,6 @@ function hoverOut(){
 			</div>
 		</div>
 	</div>
-
-	<div id="chooser" data-placement="'@chooser.placement'" data-hsvpanel="@chooser.hsvpanel" data-sliders="@chooser.slider" data-swatches="@chooser.swatche"></div>
-	<script type="text/javascript">
-		function display(name) {
-			$(name).toggle();
-		}
-	</script>
 }
 
 				
