@@ -67,6 +67,16 @@ public class AdminService {
 	
 	/**
 	 * 
+	 * @param password
+	 * @param hashedPassword
+	 * @return
+	 */
+	public boolean checkpw(String password, String hashedPassword) {
+		return BCrypt.checkpw(password, hashedPassword);
+	}
+	
+	/**
+	 * 
 	 * @param chooserId
 	 * @return
 	 */
