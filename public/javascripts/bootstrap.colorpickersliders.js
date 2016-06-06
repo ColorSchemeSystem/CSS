@@ -2,7 +2,7 @@
 (function($) {
   'use strict';
 
-  $.fn.ColorPickerSliders = function(options) {
+  $.fn.ColorPickerSliders = function(options,contentName) {
 
     return this.each(function() {
 
@@ -34,9 +34,9 @@
           },
       MAXVALIDCHROMA = 144;   // maximum valid chroma value found convertible to rgb (blue)
 
-      init();
+      init(contentName);
 
-      function _initSettings() {
+      function _initSettings(contentName) {
         if (typeof options === 'undefined') {
           options = {};
         }
@@ -109,7 +109,7 @@
         }, options.labels);
       }
 
-      function init() {
+      function init(contentName) {
         if (alreadyinitialized) {
           return;
         }
@@ -126,7 +126,7 @@
           rendermode = 'svg';
         }
 
-        _initSettings();
+        _initSettings(contentName);
 
         // force preview when browser doesn't support css gradients
         if ((!settings.order.hasOwnProperty('preview') || settings.order.preview === false) && !rendermode) {
@@ -135,15 +135,15 @@
 
         _initConnectedElements();
         _initColor();
-        _initConnectedinput();
+        _initConnectedinput(contentName);
         _updateTriggerelementColor();
-        _updateConnectedInput();
+        _updateConnectedInput(contentName);
 
         if (settings.flat) {
           showFlat();
         }
 
-        _bindEvents();
+        _bindEvents(contentName);
       }
 
       function _buildComponent() {
@@ -171,7 +171,7 @@
         color.cielch = $.fn.ColorPickerSliders.rgb2lch(color.rgba);
       }
 
-      function _initConnectedinput() {
+      function _initConnectedinput(contentName) {
         if (settings.connectedinput) {
           if (settings.connectedinput instanceof jQuery) {
             connectedinput = settings.connectedinput;
@@ -183,7 +183,7 @@
       }
 
       // 違う
-      function updateColor(newcolor, disableinputupdate) {
+      function updateColor(newcolor, disableinputupdate, contentName) {
         var updatedcolor = tinycolor(newcolor);
 
         if (updatedcolor.isValid()) {
@@ -199,7 +199,7 @@
           }
           else {
             if (!disableinputupdate) {
-              _updateConnectedInput();
+              _updateConnectedInput(contentName);
             }
             _updateTriggerelementColor();
           }
@@ -458,7 +458,7 @@
       }
 
       // 違う
-      function _bindEvents() {
+      function _bindEvents(contentName) {
         triggerelement.on('colorpickersliders.updateColor', function(e, newcolor) {
           updateColor(newcolor);
         });
@@ -521,7 +521,7 @@
           connectedinput.on('keyup change', function() {
             var $input = $(this);
 
-            updateColor($input.val(), true);
+            updateColor($input.val(), true, contentName);
           });
         }
 
@@ -1311,7 +1311,7 @@
         }
 
         if (!disableinputupdate) {
-          _updateConnectedInput();
+          _updateConnectedInput(contentName);
         }
 
         if ((100 - color.cielch.l) * color.cielch.a < settings.previewcontrasttreshold) {
@@ -1351,7 +1351,7 @@
       // TODO $('iframe').contents().find('.content').css('backgroundColor',color.tiny.toRgbString());
       // TODO の.find('.content')部分を変更できる様に
       // ここでtextエリア内の表示文字をセット
-      function _updateConnectedInput() {
+      function _updateConnectedInput(contentName) {
         if (connectedinput) {
           connectedinput.each(function(index, element) {
             var $element = $(element),
@@ -1361,21 +1361,25 @@
               case 'hex':
                 if (color.hsla.a < 1) {
                   $element.val(color.tiny.toRgbString());
-                  $('iframe').contents().find('.content').css('backgroundColor',color.tiny.toRgbString());
+                  $element.val(contentName);
+                  $('iframe').contents().find(contentName).css('backgroundColor',color.tiny.toRgbString());
                 }
                 else {
                   $element.val(color.tiny.toHexString());
-                  $('iframe').contents().find('.content').css('backgroundColor',color.tiny.toHexString());
+                  $element.val(contentName);
+                  $('iframe').contents().find(contentName).css('backgroundColor',color.tiny.toHexString());
                 }
                 break;
               case 'hsl':
                 $element.val(color.tiny.toHslString());
-                $('iframe').contents().find('.content').css('backgroundColor',color.tiny.toHslString());
+                $element.val(contentName);
+                $('iframe').contents().find(contentName).css('backgroundColor',color.tiny.toHslString());
                 break;
               case 'rgb':
                 /* falls through */
               default:
                 $element.val(color.tiny.toRgbString());
+                $element.val(contentName);
                 $('iframe').contents().find('.content').css('backgroundColor',color.tiny.toRgbString());
                 break;
             }
