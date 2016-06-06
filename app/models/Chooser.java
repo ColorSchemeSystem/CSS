@@ -18,13 +18,13 @@ public class Chooser extends BaseModel {
 	public String placement = "auto";
 
 	// hsvPanelの表示・非表示
-	public Boolean hsvpanel = true;
+	public Integer hsvpanel = 1;
 
 	// slidersの表示・非表示
-	public Boolean slider = true;
+	public Integer slider = 1;
 
 	// テンプレートの表示・非表示	
-	public Boolean swatche = true;
+	public Integer swatche = 1;
 
 	// テンプレートに表示するリスト
 	public List<Integer> swatches;

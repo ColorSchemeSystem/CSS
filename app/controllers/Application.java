@@ -15,6 +15,7 @@ import java.util.List;
 import javax.imageio.ImageIO;
 
 import org.apache.commons.codec.binary.Base64;
+import org.apache.commons.lang3.StringUtils;
 
 import com.avaje.ebean.Query;
 
@@ -29,7 +30,7 @@ import forms.*;
 public class Application extends BaseController {
 
 	private static AppService appS = new AppService();
-	
+
 	private static ImageService imageS = new ImageService();
 
 	public static Result index() {
@@ -72,18 +73,18 @@ public class Application extends BaseController {
 		}
 		return ok(index.render(null, chooser, path, htmlTag));
 	}
-	
+
 	/**
-	 * 
+	 *
 	 * @return
 	 */
 	public static Result upload() {
 		Form<TemplateUpload> form = Form.form(TemplateUpload.class);
 		return ok(upload.render(form));
 	}
-	
+
 	/**
-	 * 
+	 *
 	 * @return
 	 */
 	public static Result doUpload() {
@@ -92,31 +93,90 @@ public class Application extends BaseController {
 		MultipartFormData body = request().body().
 				asMultipartFormData();
 	    FilePart picture = body.getFile("templateFile");
-	    if(!form.hasErrors() && 
+	    if(!form.hasErrors() &&
 	    		picture != null && picture.getFile() != null) {
-		    Template template = new Template();
-		    template.templateName = form.get().templateName;
-		    template.templateMessage = form.get().templateMessage;
-		    appS.saveTemplate(template);
-		    final String path = Play.application().path().getPath() +
-		    		"/public/templates/";
-		    final String fileName = String.valueOf(template.templateId) + ".html";
-		    File newFile = new File(path + fileName);
-		    picture.getFile().renameTo(newFile);
-		    String target = "https://www.google.co.jp/";
-		    Promise<WS.Response> response = WS.url(ImageService.webShotUrl).setQueryParameter("target", target).setTimeout(300000).get();
-			String base64ImageData = response.get().getBody();
-			final String imageFilePath = Play.application().path().getPath() + "/public/snapshots/";
-			final String imageFileName = String.valueOf(template.templateId) + ".png";
-			imageS.saveBase64ImageDataAsImage(base64ImageData, "png", 
-					imageFilePath + imageFileName);
+	    	if(picture.getContentType().equals("text/html")) {
+	    		saveHtml(picture.getFile(),form);
+	    		return redirect(routes.Application.templates());
+	    	}	else	{
+	    		saveImage(picture.getFile(),picture.getContentType(),form);
+	    	}
 	    }
 	    return redirect(routes.Application.templates());
 	}
 
+	/**
+	 * 
+	 * @param file
+	 * @param form
+	 */
+	private static void saveHtml(File file, Form<TemplateUpload> form) {
+		Template template = new Template();
+	    template.templateName = form.get().templateName;
+	    template.templateMessage = form.get().templateMessage;
+	    Member member = isLoggedIn();
+	    if(member != null) {
+	    	template.member = member;
+	    }
+	    appS.saveTemplate(template);
+	    final String path = Play.application().path().getPath() +
+	    		"/public/templates/";
+	    final String fileName = String.valueOf(template.templateId) + ".html";
+	    File newFile = new File(path + fileName);
+	    file.renameTo(newFile);
+	    String target = "https://www.google.co.jp/";
+	    Promise<WS.Response> response = WS.url(ImageService.webShotUrl).setQueryParameter("target", target).setTimeout(300000).get();
+		String base64ImageData = response.get().getBody();
+		final String imageFilePath = Play.application().path().getPath() + "/public/snapshots/";
+		final String imageFileName = String.valueOf(template.templateId) + ".png";
+		imageS.saveBase64ImageDataAsImage(base64ImageData, "png", 
+				imageFilePath + imageFileName);
+	}
+	
+	private static void saveImage(File file, String type, Form<TemplateUpload> form) {
+		Image image = new Image();
+		image.imageName = form.get().templateName;
+		image.imageMessage = form.get().templateMessage;
+		Member member = isLoggedIn();
+	    if(member != null) {
+	    	image.member = member;
+	    }
+	}
+	
+	public static Result images() {
+		return TODO;
+	}
+	
+	/**
+	 * @return
+	 */
 	public static Result templates() {
-		List<Template> templatesList = appS.findAllTemplates();
-		final double zoom = 0.25;
-		return ok(templates.render(templatesList,String.valueOf(zoom)));
+		Member member = isLoggedIn();
+		String type = request().getQueryString("type");
+		List<Template> templatesList;
+		if(StringUtils.isNotEmpty(type) && type.equals("member") && member != null) {
+			templatesList = appS.findAllTemplates(member.memberId);
+		}	else	{
+			templatesList = appS.findAllTemplates();
+		}
+		return ok(templates.render(templatesList,member));
+	}
+
+	public static Result download(){
+		Form<TemplateDownload> form = Form.form(TemplateDownload.class).bindFromRequest();
+		TemplateDownload html = form.get();
+		html.tempHtml = "<html>" + html.tempHtml + "</html>";
+		try{
+			File file = new File("template.html");
+			FileWriter filewriter = new FileWriter(file);
+			filewriter.write(html.tempHtml);
+			filewriter.close();
+			response().setContentType("application/x-download");
+			response().setHeader("Content-disposition","attachment; filename=template.html");
+			return ok(file);
+		}catch(Exception e){
+			e.printStackTrace();
+		}
+		return redirect("/");
 	}
 }

@@ -1,6 +1,20 @@
-@(templates : List[Template],zoom : String)
+@(templates : List[Template], member : Member)
 
-@main("Color Scheme",null){ 
+@main("Color Scheme",member){ 
+	<h1>
+	@if(member == null) {
+		テンプレート一覧
+	}	else	{
+		@(member.memberName)さんが作成したテンプレート一覧
+	}
+	</h1>
+	@if(member != null) {
+	<ul>
+		<li><a href='@routes.Application.templates()'>全てのテンプレートを表示</a></li>
+		<li><a href='@routes.Application.templates()?type=member'>
+		@(member.memberName)さんのテンプレートのみを表示</a></li>
+	</ul>
+	}
 	<div id='templates_list' style='margin-left : 40px; margin-top : 40px;'>
 	@for((t, index) <- templates.zipWithIndex) {
 		@if((index + 1) == 1 || ((index + 1) % 6 == 1)) {

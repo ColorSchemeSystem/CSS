@@ -39,7 +39,7 @@ function hover(name){
 	name = "." + name;
 	var content = $('iframe').contents().find(name);
 	var element = $("<div></div>", {
-  					"class": "hoverImage"
+  					"class" : "hoverImage"
 				});
 
 	var css = {
@@ -57,15 +57,28 @@ function hover(name){
 	element.css(css);
 	element.css("top", 0);
 	element.css("left", 0);
-	content.prepend(element);
+	element.css("z-index", 1000);
+	content.append(element);
 };
 
-function hoverOut(){
+function hoverOut(name){
+	name = "." + name;
+	var content = $('iframe').contents().find(name);
+	content.css("position", "");
 	$('iframe').contents().find('.hoverImage').remove();
 }
 
 function display(name) {
 	$(name).toggle();
+}
+
+function sendHTML(){
+	var ele = $("<input>", {
+					"type" : "hidden",
+					"name" : "tempHtml",
+					"value" : $('iframe').contents().find('html').html()
+				});
+	$('#sendForm').append(ele);
 }
 </script>
 
@@ -74,10 +87,12 @@ function display(name) {
 		<div class="inHtml">
 			<iframe src="@routes.Assets.at(path)" width="920px" name="template" id="iframe"></iframe>
 		</div>
-		<div class="button">
-			<a href="#"><input type="button" value="登録"></a>
-			<a href="#"><input type="button" value="CSSを書き出す"></a>
-		</div>
+		<form method="post" id="sendForm" name="sendForm" action="/template/download">
+			<div class="button">
+				<input type="button" value="登録">
+				<input type="submit" value="HTMLを書き出す" onClick="sendHTML();">
+			</div>
+		</form>
 	</div>
   <div class="side">
     <div class="fixnav">
@@ -96,7 +111,7 @@ function display(name) {
 						<!-- ここにスクライビングしてきたclassタグを入れる -->
 						<tbody>
 						@for(data <- tags){
-							<tr onClick="display(@data);" bgcolor="#AAA" onmouseover="hover('@data')" onmouseout="hoverOut()">
+							<tr onClick="display(@data);" bgcolor="#AAA" onmouseover="hover('@data')" onmouseout="hoverOut('@data')">
 								<td>@data</td>
 								<td>COLOR</td>
 							</tr>
