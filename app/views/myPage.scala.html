@@ -6,19 +6,7 @@
 	<p>@(member.memberName)さん</p>
 	<p>メールアドレス : @member.mail</p><button>編集</button>
 	<p><a href='@routes.AdminController.modifyPassword()'>パスワードを変更</a></p>
-
-	<div class="dropdown">
-		<button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown">
-			ドロップダウン
-			<span class="caret"></span>
-		</button>
-		<ul class="dropdown-menu" role="menu">
-			<li role="presentation"><a href="#">リンクのリスト１</a></li>
-			<li role="presentation"><a href="#">リンクのリスト２</a></li>
-			<li role="presentation"><a href="#">リンクのリスト３</a></li>
-		</ul>
-	</div>
-
+	
 	@helper.form(action = routes.AdminController.saveChooserSetting()) {
 		<div class="container">
 			<div class="row">
