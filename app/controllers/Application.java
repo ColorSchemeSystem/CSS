@@ -2,27 +2,37 @@ package controllers;
 
 import play.*;
 import play.mvc.*;
+import play.mvc.Http.MultipartFormData;
+import play.mvc.Http.MultipartFormData.FilePart;
 import play.data.Form;
 import play.cache.Cache;
 import play.db.ebean.Model.Finder;
+import play.libs.WS;
+import play.libs.F.Promise;
 
 import java.util.List;
+
+import javax.imageio.ImageIO;
+
+import org.apache.commons.codec.binary.Base64;
 
 import com.avaje.ebean.Query;
 
 import views.html.*;
 import models.*;
 import services.*;
+
+import java.awt.image.BufferedImage;
 import java.io.*;
-import flexjson.JSONSerializer;
-import flexjson.JSONDeserializer;
 import forms.*;
 
-public class Application extends Controller {
+public class Application extends BaseController {
 
 	private static final Finder<Long, Member> finder = new Finder<Long, Member>(Long.class,Member.class);
 
 	private static AppService appS = new AppService();
+	
+	private static ImageService imageS = new ImageService();
 
 	public static Result index() {
 		Chooser chooser = new Chooser();
@@ -59,6 +69,47 @@ public class Application extends Controller {
 			return ok(index.render(mem, chooser, path, htmlTag));
 		}
 		return ok(index.render(null, chooser, path, htmlTag));
+	}
+	
+	/**
+	 * 
+	 * @return
+	 */
+	public static Result upload() {
+		Form<TemplateUpload> form = Form.form(TemplateUpload.class);
+		return ok(upload.render(form));
+	}
+	
+	/**
+	 * 
+	 * @return
+	 */
+	public static Result doUpload() {
+		Form<TemplateUpload> form = Form.form(TemplateUpload.class)
+				.bindFromRequest();
+		MultipartFormData body = request().body().
+				asMultipartFormData();
+	    FilePart picture = body.getFile("templateFile");
+	    if(!form.hasErrors() && 
+	    		picture != null && picture.getFile() != null) {
+		    Template template = new Template();
+		    template.templateName = form.get().templateName;
+		    template.templateMessage = form.get().templateMessage;
+		    appS.saveTemplate(template);
+		    final String path = Play.application().path().getPath() +
+		    		"/public/templates/";
+		    final String fileName = String.valueOf(template.templateId) + ".html";
+		    File newFile = new File(path + fileName);
+		    picture.getFile().renameTo(newFile);
+		    String target = "https://www.google.co.jp/";
+		    Promise<WS.Response> response = WS.url(ImageService.webShotUrl).setQueryParameter("target", target).setTimeout(300000).get();
+			String base64ImageData = response.get().getBody();
+			final String imageFilePath = Play.application().path().getPath() + "/public/snapshots/";
+			final String imageFileName = String.valueOf(template.templateId) + ".png";
+			imageS.saveBase64ImageDataAsImage(base64ImageData, "png", 
+					imageFilePath + imageFileName);
+	    }
+	    return redirect(routes.Application.templates());
 	}
 
 	public static Result templates() {
@@ -198,35 +249,5 @@ public class Application extends Controller {
 			return badRequest(myPage.render(mem, form));
 		}
 		return ok(myPage.render(mem, form));
-	}
-
-	/**
-	 * @param key
-	 * @param value
-	 */
-	public static void writeObjectOnSession(String key, Object value) {
-		JSONSerializer jsonSerializer = new JSONSerializer();
-		if(value != null) {
-			session().put(key, jsonSerializer.deepSerialize(value));
-		} else {
-			Logger.error("Value for " + key + " is null");
-		}
-	}
-
-	/**
-	 * @param key
-	 * @return
-	 */
-	public static <T> T getObjectFormSession(String key) {
-		String value = session().get(key);
-		if(value == null) return null;
-		return new JSONDeserializer<T>().deserialize(value);
-	}
-
-	/**
-	 * @param key
-	 */
-	public static void removeObjectSession(String key) {
-		session().remove(key);
 	}
 }

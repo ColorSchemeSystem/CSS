@@ -7,6 +7,7 @@ import play.cache.Cache;
 import play.db.ebean.Model.Finder;
 import play.libs.F.Promise;
 import play.libs.WS;
+import views.html.login;
 import views.html.admin.*;
 
 import java.awt.image.BufferedImage;
@@ -28,11 +29,10 @@ import models.*;
 import play.mvc.Http.MultipartFormData;
 import play.mvc.Http.MultipartFormData.FilePart;
 import services.AdminService;
+import services.ImageService;
 
-public class AdminController extends Controller {
+public class AdminController extends BaseController {
 	private static AdminService adminService = new AdminService();
-	
-	private static final String webShotUrl = "https://salty-taiga-57624.herokuapp.com/";
 	
 	/**
 	 * 
@@ -40,7 +40,7 @@ public class AdminController extends Controller {
 	 */
 	public static Result upload() {
 		Form<TemplateUpload> form = Form.form(TemplateUpload.class);
-		return ok(upload.render(form));
+		return ok(adminUpload.render(form));
 	}
 	
 	/**
@@ -66,7 +66,7 @@ public class AdminController extends Controller {
 		    picture.getFile().renameTo(newFile);
 		    String target = "https://www.google.co.jp/";
 		    try {
-				Promise<WS.Response> response = WS.url(webShotUrl).setQueryParameter("target", target).get();
+				Promise<WS.Response> response = WS.url(ImageService.webShotUrl).setQueryParameter("target", target).setTimeout(300000).get();
 				String base64ImageData = response.get().getBody();
 				byte[] binaryImage = Base64.decodeBase64(base64ImageData);
 				BufferedImage image = ImageIO.read(new ByteArrayInputStream(binaryImage));
@@ -82,5 +82,21 @@ public class AdminController extends Controller {
 			}
 	    }
 	    return redirect(routes.Application.templates());
+	}
+	
+	/*
+	*  ログイン画面へ
+	*/
+	public static Result login() {
+		Form<Member> form = Form.form(Member.class);
+		return ok(login.render(null, "ログイン", form));
+	}
+
+	/*
+	*  ログアウト処理
+	*/
+	public static Result logout() {
+		removeObjectSession("Member");
+		return redirect("./");
 	}
 }

@@ -13,8 +13,10 @@ GET     /saveAccount                controllers.Application.saveAccount()
 GET     /myPage                     controllers.Application.myPage()
 GET     /SaveChooserSetting         controllers.Application.SaveChooserSetting()
 
-GET     /upload             controllers.AdminController.upload()
-POST    /upload             controllers.AdminController.doUpload()
+GET     /upload             controllers.Application.upload()
+POST    /upload             controllers.Application.doUpload()
+GET     /admin/upload             controllers.AdminController.upload()
+POST    /admin/upload             controllers.AdminController.doUpload()
 GET     /templates          controllers.Application.templates()
 
 # Map static resources from the /public folder to the /assets URL path
