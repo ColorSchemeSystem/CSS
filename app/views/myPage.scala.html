@@ -8,9 +8,7 @@
 	<p>password : @member.password</p>
 	<p>mail : @member.mail</p>
 
-<<<<<<< HEAD
 	@helper.form(action = routes.AdminController.saveChooserSetting()) {
-=======
 	<div class="dropdown">
 		<button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown">
 			ドロップダウン
@@ -23,8 +21,7 @@
 		</ul>
 	</div>
 
-	@helper.form(action = routes.Application.SaveChooserSetting()) {
->>>>>>> e48ecc3a96f26bc67a4e2972cef2a6c81d966670
+	@helper.form(action = routes.AdminController.saveChooserSetting()) {
 		<div class="container">
 			<div class="row">
 				<div class="col-xs-4">
@@ -78,4 +75,5 @@
 
 	<a href="/"><input type="button" value="TOPへ"></a>
 	<a href="/logout"><input type="button" value="ログアウト"></a>
+}
 }
