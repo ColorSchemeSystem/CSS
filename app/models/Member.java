@@ -1,10 +1,14 @@
 package models;
 
+import java.sql.Timestamp;
+
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import play.data.validation.Constraints.Required;
-import play.db.ebean.Model.Finder;
 
 @Entity
 @Table(name="Members")
@@ -19,8 +23,11 @@ public class Member extends BaseModel {
 	public String password;
 
 	public String mail;
-
-	public Long chooserId;
+	
+	@ManyToOne(cascade = CascadeType.PERSIST)
+	public Chooser chooser;
+		
+	public Timestamp lastLogin;
 	
 	public static final Finder<Long, Member> find = new Finder<Long, Member>(Long.class,Member.class);
 }

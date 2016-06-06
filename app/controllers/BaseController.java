@@ -1,9 +1,12 @@
 package controllers;
 
 import play.Logger;
+import play.libs.F.Promise;
 import play.mvc.Controller;
-
+import play.mvc.SimpleResult;
+import services.AdminService;
 import flexjson.JSONSerializer;
+import models.Member;
 import flexjson.JSONDeserializer;
 
 public class BaseController extends Controller {
@@ -11,7 +14,7 @@ public class BaseController extends Controller {
 	 * @param key
 	 * @param value
 	 */
-	public static void writeObjectOnSession(String key, Object value) {
+	protected static void writeObjectOnSession(String key, Object value) {
 		JSONSerializer jsonSerializer = new JSONSerializer();
 		if(value != null) {
 			session().put(key, jsonSerializer.deepSerialize(value));
@@ -24,7 +27,7 @@ public class BaseController extends Controller {
 	 * @param key
 	 * @return
 	 */
-	public static <T> T getObjectFormSession(String key) {
+	protected static <T> T getObjectFormSession(String key) {
 		String value = session().get(key);
 		if(value == null) return null;
 		return new JSONDeserializer<T>().deserialize(value);
@@ -33,7 +36,29 @@ public class BaseController extends Controller {
 	/**
 	 * @param key
 	 */
-	public static void removeObjectSession(String key) {
+	protected static void removeObjectSession(String key) {
 		session().remove(key);
+	}
+	
+	/**
+	 * @return
+	 */
+	protected static Member isLoggedIn() {
+		Member member = (Member) getObjectFormSession("Member");
+		if(member == null) {
+			return null;
+		}
+		AdminService adminS = new AdminService();
+		Member newMember = adminS.findMemberById(member.memberId);
+		if(newMember == null) {
+			removeObjectSession("Member");
+			return null;
+		}
+		if(member.password.equals(newMember.password)) {
+			return newMember;
+		}	else	{
+			removeObjectSession("Member");
+			return null;
+		}
 	}
 }

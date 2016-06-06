@@ -35,7 +35,8 @@ create table Members (
   member_name               varchar(255),
   password                  varchar(255),
   mail                      varchar(255),
-  chooser_id                bigint,
+  chooser_chooser_id        bigint,
+  last_login                timestamp,
   constraint pk_Members primary key (member_id))
 ;
 
@@ -59,6 +60,8 @@ create sequence Members_seq;
 
 create sequence Templates_seq;
 
+alter table Members add constraint fk_Members_chooser_1 foreign key (chooser_chooser_id) references choosers (chooser_id) on delete restrict on update restrict;
+create index ix_Members_chooser_1 on Members (chooser_chooser_id);
 
 
 

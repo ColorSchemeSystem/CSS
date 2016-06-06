@@ -14,6 +14,7 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
+import models.Chooser;
 import models.Template;
 
 public class AppService {
@@ -60,6 +61,14 @@ public class AppService {
 			classes.add((String) entry.getKey());
 		}
 		return classes;
+	}
+	
+	/** 
+	 * @param chooserId
+	 * @return
+	 */
+	public Chooser findChooserByChooserId(Long chooserId) {
+		return Chooser.find.byId(chooserId);
 	}
 
 	public String readHtmlFile(File file){

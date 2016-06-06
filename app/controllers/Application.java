@@ -40,9 +40,13 @@ public class Application extends BaseController {
 		List<String> htmlTag = appS.extractClasses(html);
 		String path = "iframes/iframe1.html";
 		if(mem != null) {
-			Query<Chooser> query = Chooser.find.where("chooserId = '"+mem.chooserId+"'");
-			chooser = query.findUnique();
-			if(chooser == null) chooser = new Chooser();
+			if(mem.chooser != null) {
+				chooser = appS.findChooserByChooserId(mem.chooser.chooserId);
+				if(chooser == null) chooser = new Chooser();
+			}	else	{
+				mem.chooser = new Chooser();
+				chooser = new Chooser();
+			}
 			return ok(index.render(mem, chooser, path, htmlTag));
 		}
 		return ok(index.render(null, chooser, path, htmlTag));
@@ -62,7 +66,7 @@ public class Application extends BaseController {
 		String html = appS.readHtmlFile(file);
 		List<String> htmlTag = appS.extractClasses(html);
 		if(mem != null) {
-			Query<Chooser> query = Chooser.find.where("chooserId = '"+mem.chooserId+"'");
+			Query<Chooser> query = Chooser.find.where("chooserId = '"+mem.chooser.chooserId+"'");
 			chooser = query.findUnique();
 			return ok(index.render(mem, chooser, path, htmlTag));
 		}
