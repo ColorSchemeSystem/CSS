@@ -13,6 +13,8 @@ GET     /saveAccount                controllers.AdminController.saveAccount()
 GET     /myPage                     controllers.AdminController.myPage()
 GET     /SaveChooserSetting         controllers.AdminController.saveChooserSetting()
 POST    /template/download			controllers.Application.download()
+GET     /modifyPassword             controllers.AdminController.modifyPassword()
+POST    /modifyPassword             controllers.AdminController.doModifyPassword()
 
 GET     /upload             controllers.Application.upload()
 POST    /upload             controllers.Application.doUpload()
