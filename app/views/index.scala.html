@@ -33,11 +33,41 @@ function fixFrameSize() {
 		iframe.style.height = height + "px";
 		iframe.scrolling = "no";
 	}
+};
+
+function hover(name){
+	name = "." + name;
+	var content = $('iframe').contents().find(name);
+	var element = $("<div></div>", {
+  					"class": "hoverImage"
+				});
+
+	var css = {
+		color : "red",
+		position : "absolute",
+		width : content.innerWidth(),
+		height : content.innerHeight(),
+		background : "red",
+		filter : "alpha(opacity = 30)",
+		MozOpacity : 0.3,
+		opacity : 0.3
+	};
+
+	content.css("position", "relative");
+	element.css(css);
+	element.css("top", 0);
+	element.css("left", 0);
+	content.prepend(element);
+};
+
+function hoverOut(){
+	$('iframe').contents().find('.hoverImage').remove();
 }
+
 </script>
 	<div class="main">
 		<div class="inHtml">
-			<iframe src="@routes.Assets.at(path)" width="920px" name="template"></iframe>
+			<iframe src="@routes.Assets.at(path)" width="920px" name="template" id="iframe"></iframe>
 		</div>
 		<div class="button">
 			<a href="#"><input type="button" value="登録"></a>
@@ -61,7 +91,7 @@ function fixFrameSize() {
 						<!-- ここにスクライビングしてきたclassタグを入れる -->
 						<tbody>
 						@for(data <- tags){
-							<tr>
+							<tr onmouseover="hover('@data')" onmouseout="hoverOut()">
 								<td>@data</td>
 								<td>COLOR</td>
 							</tr>
