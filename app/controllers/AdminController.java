@@ -67,7 +67,7 @@ public class AdminController extends BaseController {
 			}
 			// パスワード確認
 			String password = form.get().password;
-			if(!adminS.passwordHash(password).equals(mem.password)) {
+			if(!adminS.checkpw(password, mem.password)) {
 				// 一致していなかったらログイン画面へ
 				return badRequest(login.render(null, "ログインに失敗しました", form));
 			}
