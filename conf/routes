@@ -18,6 +18,7 @@ POST    /modifyPassword             controllers.AdminController.doModifyPassword
 GET     /upload             controllers.Application.upload()
 POST    /upload             controllers.Application.doUpload()
 GET     /templates          controllers.Application.templates()
+GET     /images             controllers.Application.images()
 
 # Map static resources from the /public folder to the /assets URL path
 GET     /assets/*file               controllers.Assets.at(path="/public", file)
