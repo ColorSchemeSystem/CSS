@@ -1,0 +1,21 @@
+@(templateForm: Form[forms.TemplateUpload])
+
+@adminMain("Color Scheme"){ 
+	<h1>編集画面</h1>
+	@helper.form(action = routes.AdminController.doUpload,
+	'enctype -> "multipart/form-data") {
+		<dl>
+    		<dt>
+    			<label for="img">
+    				テンプレートをアップロード
+    				<input type="file" name="templateFile">
+    			</label>
+			</dt>
+		</dl>
+		@helper.inputText(templateForm("templateName"),'_label -> "テンプレートの名前")
+		@helper.textarea(templateForm("templateMessage"),'_label -> "テンプレートの説明")
+		<input class='update-confirm' type="submit" value="アップロード">
+	}
+}
+
+				
