@@ -7,6 +7,7 @@ import play.cache.Cache;
 import play.db.ebean.Model.Finder;
 import play.libs.F.Promise;
 import play.libs.WS;
+import views.html.login;
 import views.html.admin.*;
 
 import java.awt.image.BufferedImage;
@@ -30,7 +31,7 @@ import play.mvc.Http.MultipartFormData.FilePart;
 import services.AdminService;
 import services.ImageService;
 
-public class AdminController extends Controller {
+public class AdminController extends BaseController {
 	private static AdminService adminService = new AdminService();
 	
 	/**
@@ -81,5 +82,21 @@ public class AdminController extends Controller {
 			}
 	    }
 	    return redirect(routes.Application.templates());
+	}
+	
+	/*
+	*  ログイン画面へ
+	*/
+	public static Result login() {
+		Form<Member> form = Form.form(Member.class);
+		return ok(login.render(null, "ログイン", form));
+	}
+
+	/*
+	*  ログアウト処理
+	*/
+	public static Result logout() {
+		removeObjectSession("Member");
+		return redirect("./");
 	}
 }

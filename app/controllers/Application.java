@@ -24,11 +24,9 @@ import services.*;
 
 import java.awt.image.BufferedImage;
 import java.io.*;
-import flexjson.JSONSerializer;
-import flexjson.JSONDeserializer;
 import forms.*;
 
-public class Application extends Controller {
+public class Application extends BaseController {
 
 	private static final Finder<Long, Member> finder = new Finder<Long, Member>(Long.class,Member.class);
 
@@ -249,35 +247,5 @@ public class Application extends Controller {
 			return badRequest(myPage.render(mem, form));
 		}
 		return ok(myPage.render(mem, form));
-	}
-
-	/**
-	 * @param key
-	 * @param value
-	 */
-	public static void writeObjectOnSession(String key, Object value) {
-		JSONSerializer jsonSerializer = new JSONSerializer();
-		if(value != null) {
-			session().put(key, jsonSerializer.deepSerialize(value));
-		} else {
-			Logger.error("Value for " + key + " is null");
-		}
-	}
-
-	/**
-	 * @param key
-	 * @return
-	 */
-	public static <T> T getObjectFormSession(String key) {
-		String value = session().get(key);
-		if(value == null) return null;
-		return new JSONDeserializer<T>().deserialize(value);
-	}
-
-	/**
-	 * @param key
-	 */
-	public static void removeObjectSession(String key) {
-		session().remove(key);
 	}
 }
