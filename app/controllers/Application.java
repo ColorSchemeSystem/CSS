@@ -34,6 +34,7 @@ public class Application extends Controller {
 		if(mem != null) {
 			Query<Chooser> query = Chooser.find.where("chooserId = '"+mem.chooserId+"'");
 			chooser = query.findUnique();
+			if(chooser == null) chooser = new Chooser();
 			return ok(index.render(mem, chooser, path, htmlTag));
 		}
 		return ok(index.render(null, chooser, path, htmlTag));
@@ -174,6 +175,7 @@ public class Application extends Controller {
 		if(mem == null) return badRequest("/");
 		Query<Chooser> query = Chooser.find.where("chooserId = '"+mem.chooserId+"'");
 		Chooser chooser = query.findUnique();
+		if(chooser == null) chooser = new Chooser();
 		ChooserAdvancedSetting setting = new ChooserAdvancedSetting();
 		setting.hsvpanel	= chooser.hsvpanel;
 		setting.slider		= chooser.slider;

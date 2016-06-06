@@ -8,6 +8,18 @@
 	<p>password : @member.password</p>
 	<p>mail : @member.mail</p>
 
+	<div class="dropdown">
+		<button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown">
+			ドロップダウン
+			<span class="caret"></span>
+		</button>
+		<ul class="dropdown-menu" role="menu">
+			<li role="presentation"><a href="#">リンクのリスト１</a></li>
+			<li role="presentation"><a href="#">リンクのリスト２</a></li>
+			<li role="presentation"><a href="#">リンクのリスト３</a></li>
+		</ul>
+	</div>
+
 	@helper.form(action = routes.Application.SaveChooserSetting()) {
 		<div class="container">
 			<div class="row">
