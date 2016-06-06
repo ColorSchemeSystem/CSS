@@ -33,7 +33,7 @@ public class AppService {
 	 * @return
 	 */
 	public List<Template> findAllTemplates(Long memberId) {
-		return Template.find.where().eq("memberId", memberId).findList();
+		return Template.find.where().eq("member.memberId", memberId).findList();
 	}
 	
 	/**

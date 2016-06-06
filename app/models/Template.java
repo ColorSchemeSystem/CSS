@@ -1,8 +1,10 @@
 package models;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Lob;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 @Entity
@@ -11,6 +13,7 @@ public class Template extends BaseModel {
 	@Id
 	public Long templateId;
 
+	@ManyToOne(cascade = CascadeType.PERSIST)
 	public Member member;
 
 	public String templateName;
