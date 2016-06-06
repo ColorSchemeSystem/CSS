@@ -9,9 +9,9 @@ create table choosers (
   update_ts                 date,
   versions                  bigint,
   placement                 varchar(255),
-  hsvpanel                  boolean,
-  slider                    boolean,
-  swatche                   boolean,
+  hsvpanel                  integer,
+  slider                    integer,
+  swatche                   integer,
   constraint pk_choosers primary key (chooser_id))
 ;
 
@@ -45,7 +45,7 @@ create table Templates (
   create_ts                 date,
   update_ts                 date,
   versions                  bigint,
-  member_id                 bigint,
+  member_member_id          bigint,
   template_name             varchar(255),
   template_message          varchar(255),
   access_flag               integer,
@@ -62,6 +62,8 @@ create sequence Templates_seq;
 
 alter table Members add constraint fk_Members_chooser_1 foreign key (chooser_chooser_id) references choosers (chooser_id) on delete restrict on update restrict;
 create index ix_Members_chooser_1 on Members (chooser_chooser_id);
+alter table Templates add constraint fk_Templates_member_2 foreign key (member_member_id) references Members (member_id) on delete restrict on update restrict;
+create index ix_Templates_member_2 on Templates (member_member_id);
 
 
 
