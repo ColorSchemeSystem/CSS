@@ -4,6 +4,7 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
 import play.data.validation.Constraints.Required;
+import play.db.ebean.Model.Finder;
 
 @Entity
 @Table(name="Members")
@@ -20,4 +21,6 @@ public class Member extends BaseModel {
 	public String mail;
 
 	public Long chooserId;
+	
+	public static final Finder<Long, Member> find = new Finder<Long, Member>(Long.class,Member.class);
 }

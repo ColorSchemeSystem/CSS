@@ -33,6 +33,35 @@ function fixFrameSize() {
 		iframe.style.height = height + "px";
 		iframe.scrolling = "no";
 	}
+};
+
+function hover(name){
+	name = "." + name;
+	var content = $('iframe').contents().find(name);
+	var element = $("<div></div>", {
+  					"class": "hoverImage"
+				});
+
+	var css = {
+		color : "red",
+		position : "absolute",
+		width : content.innerWidth(),
+		height : content.innerHeight(),
+		background : "red",
+		filter : "alpha(opacity = 30)",
+		MozOpacity : 0.3,
+		opacity : 0.3
+	};
+
+	content.css("position", "relative");
+	element.css(css);
+	element.css("top", 0);
+	element.css("left", 0);
+	content.prepend(element);
+};
+
+function hoverOut(){
+	$('iframe').contents().find('.hoverImage').remove();
 }
 
 /*$(function() {
@@ -67,52 +96,57 @@ function fixFrameSize() {
 						</thead>
 						<!-- ここにスクライビングしてきたclassタグを入れる -->
 						<tbody>
-						<!--@for(data <- tags){
-							<tr onClick="display(@data);" bgcolor="#AAA">
+						@for(data <- tags){
+							<tr onClick="display(@data);" bgcolor="#AAA" onmouseover="hover('@data')" onmouseout="hoverOut()">
 								<td>@data</td>
 								<td>COLOR</td>
 							</tr>
 							<tr id="@data" style="display: none;">
 								<td>background</td>
 								<td>
-									<a onClick="colorChange(@data);"><input type="text" class="form-control" id="full-popover" value="#A6FF00" data-color-format="hex"></a>
+									<input type="text" class="form-control" id="@data-back" value="#A6FF00" data-color-format="hex">
 								</td>
 							</tr>
 							<tr id="@data" style="display: none;">
 								<td>border</td>
 								<td>
-									<input type="text" class="form-control" id="full-popover" value="#A6FF00" data-color-format="hex">
+									<input type="text" class="form-control" id="@data-bor" value="#A6FF00" data-color-format="hex">
 								</td>
 							</tr>
 							<tr id="@data" style="display: none;">
 								<td>font</td>
 								<td>
-									<input type="text" class="form-control" id="full-popover" value="#A6FF00" data-color-format="hex">
+									<input type="text" class="form-control" id="@data-font" value="#A6FF00" data-color-format="hex">
 								</td>
 							</tr>
-						}-->
-							<tr onClick="display(content);" bgcolor="#AAA">
-								<td>content</td>
-								<td>COLOR</td>
-							</tr>
-							<tr id="content" style="display: none;">
-								<td>background</td>
-								<td>
-									<a onClick="colorChange('.content');"><input type="text" class="form-control" id="full-popover" value="#A6FF00" data-color-format="hex"></a>
-								</td>
-							</tr>
-							<tr id="content" style="display: none;">
-								<td>border</td>
-								<td>
-									<input type="text" class="form-control" id="full-popover" value="#A6FF00" data-color-format="hex">
-								</td>
-							</tr>
-							<tr id="content" style="display: none;">
-								<td>font</td>
-								<td>
-									<input type="text" class="form-control" id="full-popover" value="#A6FF00" data-color-format="hex">
-								</td>
-							</tr>
+							<script>
+							$("input#@data-back").ColorPickerSliders({
+								placement: $('#chooser').data('placement'),
+								hsvpanel: $('#chooser').data('hsvpanel'),
+								sliders: $('#chooser').data('sliders'),
+								swatches: $('#chooser').data('swatches'),
+								previewformat: 'hex'
+							},'.@data',"background");
+						</script>
+						<script>
+							$("input#@data-bor").ColorPickerSliders({
+								placement: $('#chooser').data('placement'),
+								hsvpanel: $('#chooser').data('hsvpanel'),
+								sliders: $('#chooser').data('sliders'),
+								swatches: $('#chooser').data('swatches'),
+								previewformat: 'hex'
+							},'.@data',"border");
+						</script>
+						<script>
+							$("input#@data-font").ColorPickerSliders({
+								placement: $('#chooser').data('placement'),
+								hsvpanel: $('#chooser').data('hsvpanel'),
+								sliders: $('#chooser').data('sliders'),
+								swatches: $('#chooser').data('swatches'),
+								previewformat: 'hex'
+							},'.@data',"font");
+						</script>
+						}
 						</tbody>
 					</table>
 				</div>
@@ -124,32 +158,6 @@ function fixFrameSize() {
 	<script type="text/javascript">
 		function display(name) {
 			$(name).toggle();
-		}
-
-		function colorChange(name) {
-			name = '.content';
-			$("input#full-popover").ColorPickerSliders({
-				placement: $('#chooser').data('placement'),
-				hsvpanel: $('#chooser').data('hsvpanel'),
-				sliders: $('#chooser').data('sliders'),
-				swatches: $('#chooser').data('swatches'),
-				previewformat: 'hex'
-			},name);
-		}
-	</script>
-	<!--<script>
-		$("input#full-popover").ColorPickerSliders({
-			placement: $('#chooser').data('placement'),
-			hsvpanel: $('#chooser').data('hsvpanel'),
-			sliders: $('#chooser').data('sliders'),
-			swatches: $('#chooser').data('swatches'),
-			previewformat: 'hex'
-		},'.content');
-	</script>-->
-	<script type="text/javascript">
-		function changeColor() {
-			document.getElementsById("full-popover");
-			$('iframe').contents().find('.content').css('backgroundColor','red');
 		}
 	</script>
 }

@@ -2,7 +2,7 @@
 (function($) {
   'use strict';
 
-  $.fn.ColorPickerSliders = function(options,contentName) {
+  $.fn.ColorPickerSliders = function(options,contentName,setTarget) {
 
     return this.each(function() {
 
@@ -34,9 +34,9 @@
           },
       MAXVALIDCHROMA = 144;   // maximum valid chroma value found convertible to rgb (blue)
 
-      init(contentName);
+      init(contentName,setTarget);
 
-      function _initSettings(contentName) {
+      function _initSettings(contentName,setTarget) {
         if (typeof options === 'undefined') {
           options = {};
         }
@@ -109,7 +109,7 @@
         }, options.labels);
       }
 
-      function init(contentName) {
+      function init(contentName,setTarget) {
         if (alreadyinitialized) {
           return;
         }
@@ -126,7 +126,7 @@
           rendermode = 'svg';
         }
 
-        _initSettings(contentName);
+        _initSettings(contentName,setTarget);
 
         // force preview when browser doesn't support css gradients
         if ((!settings.order.hasOwnProperty('preview') || settings.order.preview === false) && !rendermode) {
@@ -135,9 +135,9 @@
 
         _initConnectedElements();
         _initColor();
-        _initConnectedinput(contentName);
+        _initConnectedinput();
         _updateTriggerelementColor();
-        _updateConnectedInput(contentName);
+        _updateConnectedInput(contentName,setTarget);
 
         if (settings.flat) {
           showFlat();
@@ -171,7 +171,7 @@
         color.cielch = $.fn.ColorPickerSliders.rgb2lch(color.rgba);
       }
 
-      function _initConnectedinput(contentName) {
+      function _initConnectedinput() {
         if (settings.connectedinput) {
           if (settings.connectedinput instanceof jQuery) {
             connectedinput = settings.connectedinput;
@@ -199,7 +199,7 @@
           }
           else {
             if (!disableinputupdate) {
-              _updateConnectedInput(contentName);
+              _updateConnectedInput(contentName,setTarget);
             }
             _updateTriggerelementColor();
           }
@@ -1311,7 +1311,7 @@
         }
 
         if (!disableinputupdate) {
-          _updateConnectedInput(contentName);
+          _updateConnectedInput(contentName,setTarget);
         }
 
         if ((100 - color.cielch.l) * color.cielch.a < settings.previewcontrasttreshold) {
@@ -1351,7 +1351,7 @@
       // TODO $('iframe').contents().find('.content').css('backgroundColor',color.tiny.toRgbString());
       // TODO の.find('.content')部分を変更できる様に
       // ここでtextエリア内の表示文字をセット
-      function _updateConnectedInput(contentName) {
+      function _updateConnectedInput(contentName,setTarget) {
         if (connectedinput) {
           connectedinput.each(function(index, element) {
             var $element = $(element),
@@ -1362,29 +1362,36 @@
                 if (color.hsla.a < 1) {
                   $element.val(color.tiny.toRgbString());
                   $element.val(contentName);
-                  $('iframe').contents().find(contentName).css('backgroundColor',color.tiny.toRgbString());
+                  setTargetColor(contentName,setTarget,color.tiny.toRgbString());
                 }
                 else {
                   $element.val(color.tiny.toHexString());
                   $element.val(contentName);
-                  $('iframe').contents().find(contentName).css('backgroundColor',color.tiny.toHexString());
+                  setTargetColor(contentName,setTarget,color.tiny.toHexString());
                 }
                 break;
               case 'hsl':
                 $element.val(color.tiny.toHslString());
                 $element.val(contentName);
-                $('iframe').contents().find(contentName).css('backgroundColor',color.tiny.toHslString());
+                setTargetColor(contentName,setTarget,color.tiny.toHslString());
                 break;
               case 'rgb':
                 /* falls through */
               default:
                 $element.val(color.tiny.toRgbString());
                 $element.val(contentName);
-                $('iframe').contents().find('.content').css('backgroundColor',color.tiny.toRgbString());
+                setTargetColor(contentName,setTarget,color.tiny.toRgbString());
                 break;
             }
           });
         }
+      }
+
+      // targetに色設定
+      function setTargetColor(contentName,target,color) {
+        if(target == "background") $('iframe').contents().find(contentName).css('backgroundColor',color);
+        else if(target == "border") $('iframe').contents().find(contentName).css('border-color',color);
+        else if(target == "font") $('iframe').contents().find(contentName +"> *").css('color',color);
       }
 
       // 違う

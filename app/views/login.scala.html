@@ -4,12 +4,12 @@
 
 @main("login Page", user) {
 	<h1>@message</h1>
-	@helper.form(action = routes.Application.loginEntry()) {
+	@helper.form(action = routes.AdminController.loginEntry()) {
 		@inputText(myform("memberName"),'_label -> "name")
 		@inputText(myform("password"),'_label -> "password")
 		<input type="submit" value="ログイン">
 	}
 
 	<a href="/"><input type="button" value="TOPへ"></a>
-	<a href="@routes.Application.createAccount()"><input type="button" value="新規登録"></a>
+	<a href="@routes.AdminController.createAccount()"><input type="button" value="新規登録"></a>
 }
