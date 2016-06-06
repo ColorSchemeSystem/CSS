@@ -1,24 +1,29 @@
 @(templates : List[Template],zoom : String)
 
 @main("Color Scheme",null){ 
-	<table style='margin-top : 20px;'>
-	<div id='templates_list' style='margin-left : 40px; margin-top : 40px;' class='clearfix'>
-	@for(t <- templates) {
-		<div style='float : left;'>
-		<a href='@routes.Application.indexWithId(t.templateId)' target='_blank'>
-			<div>
-				<img width='120' height='120' src='/assets/images/html.png'/>
+	<div id='templates_list' style='margin-left : 40px; margin-top : 40px;'>
+	@for((t, index) <- templates.zipWithIndex) {
+		@if((index + 1) == 1 || ((index + 1) % 6 == 1)) {
+			<div class='clearfix' style='margin-top : 10px;'>
+		}
+				<div style='float : left;'>
+					<div style='margin-left : 20px;'>
+					<a href='@routes.Application.indexWithId(t.templateId)' target='_blank'>
+						<div>
+							<img width='120' height='120' src='/assets/snapshots/@(t.templateId).png'/>
+						</div>
+						<div style='margin-left : 50px; margin-top : 10px;'>
+							@t.templateName
+						</div>
+					</a>	
+					</div>
+				</div>
+		@if((index + 1) % 6 == 0) {
 			</div>
-			<div style='margin-left : 50px; margin-top : 10px;'>
-				@t.templateName
-			</div>
-		</a>
-			@*
-			<iframe style='width : 500px; height : 500px; border : 1px solid black; transform:scale(@zoom);-o-transform:scale(@zoom);-webkit-transform:scale(@zoom);-moz-transform:scale(@zoom);-ms-transform:scale(@zoom);' src='/assets/templates/@(t.templateId).html'>
-			</iframe>	
-			*@		
+		}
+	}
+	@if(templates.size == 0 || templates.size / 6 != 0) {
 		</div>
 	}
 	</div>
-	</table>
 }				
