@@ -5,24 +5,24 @@
 $(window).load(function(){
 	fixFrameSize();
 	var navi = $('.fixnav');
-  			var main  = $('.main');
-				var target_top = navi.offset().top - parseInt(navi.css('margin-top'),10);
-  			var sub_top = main.offset().top - parseInt(main.css('margin-top'),10);
-  			var sub_scroll = main.offset().top + main.outerHeight(true) - navi.outerHeight(true) - parseInt(navi.css('margin-top'),10);
+		var main  = $('.main');
+		var target_top = navi.offset().top - parseInt(navi.css('margin-top'),10);
+		var sub_top = main.offset().top - parseInt(main.css('margin-top'),10);
+		var sub_scroll = main.offset().top + main.outerHeight(true) - navi.outerHeight(true) - parseInt(navi.css('margin-top'),10);
 
-  			if (navi.outerHeight(true) + target_top < main.outerHeight(true) + sub_top) {
-    			$(window).scroll(function () {
-      			var ws = $(window).scrollTop();
-      			$('.scroll').text(ws);
-      			if (ws > sub_scroll) {
-        			navi.css({position:'fixed', top: sub_scroll - ws + 'px'});
-      			} else if(ws > target_top) {
-        			navi.css({position:'fixed', top: '0px'});
-      			} else {
-        			navi.css({position:'relative', top: '0px'});
-      			}
-    			});
-  			}
+		if (navi.outerHeight(true) + target_top < main.outerHeight(true) + sub_top) {
+		$(window).scroll(function () {
+			var ws = $(window).scrollTop();
+			$('.scroll').text(ws);
+			if (ws > sub_scroll) {
+			navi.css({position:'fixed', top: sub_scroll - ws + 'px'});
+			} else if(ws > target_top) {
+			navi.css({position:'fixed', top: '0px'});
+			} else {
+			navi.css({position:'relative', top: '0px'});
+			}
+		});
+	}
 });
 
 function fixFrameSize() {
@@ -64,6 +64,16 @@ function hoverOut(){
 	$('iframe').contents().find('.hoverImage').remove();
 }
 
+/*$(function() {
+	$('tr').click(function(){
+		$('#data').toggle();
+	});
+});*/
+
+function display(name) {
+	$(name).toggle();
+}
+
 </script>
 	<div class="main">
 		<div class="inHtml">
@@ -79,6 +89,7 @@ function hoverOut(){
 			<div class="tempButton">
 				<a href="#"><button class="button1">テンプレート表示</button></a>
 			</div>
+			<input type="button" value="背景色を変更" onClick="changeColor()">
       <div class="classTags">
 				<div class="table-responsive">
 					<table class="table table-hover">
@@ -91,16 +102,35 @@ function hoverOut(){
 						<!-- ここにスクライビングしてきたclassタグを入れる -->
 						<tbody>
 						@for(data <- tags){
-							<tr onmouseover="hover('@data')" onmouseout="hoverOut()">
+							<tr onClick="display(@data);" bgcolor="#AAA" onmouseover="hover('@data')" onmouseout="hoverOut()">
 								<td>@data</td>
 								<td>COLOR</td>
 							</tr>
-						}
-							<tr>
-								<td>header.title</td>
+							<tr id="@data" style="display: none;">
+								<td>background</td>
 								<td>
 									<input type="text" class="form-control" id="full-popover" value="#A6FF00" data-color-format="hex">
 								</td>
+							</tr>
+							<tr id="@data" style="display: none;">
+								<td>border</td>
+								<td>
+									<input type="text" class="form-control" id="full-popover" value="#A6FF00" data-color-format="hex">
+								</td>
+							</tr>
+							<tr id="@data" style="display: none;">
+								<td>font</td>
+								<td>
+									<input type="text" class="form-control" id="full-popover" value="#A6FF00" data-color-format="hex">
+								</td>
+							</tr>
+						}
+							<tr>
+								<td>コンテンツが変わるよ</td>
+								<td>
+									<input type="text" class="form-control" id="full-popover" value="#A6FF00" data-color-format="hex">
+								</td>
+								<body>
 							</tr>
 						</tbody>
 					</table>
@@ -118,6 +148,12 @@ function hoverOut(){
 			swatches: $('#chooser').data('swatches'),
 			previewformat: 'hex'
 		});
+	</script>
+	<script type="text/javascript">
+		function changeColor() {
+			document.getElementsById("full-popover");
+			$('iframe').contents().find('.content').css('backgroundColor','red');
+		}
 	</script>
 }
 

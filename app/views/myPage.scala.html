@@ -8,7 +8,20 @@
 	<p>password : @member.password</p>
 	<p>mail : @member.mail</p>
 
-	@helper.form(action = routes.Application.SaveChooserSetting()) {
+	@helper.form(action = routes.AdminController.saveChooserSetting()) {
+	<div class="dropdown">
+		<button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown">
+			ドロップダウン
+			<span class="caret"></span>
+		</button>
+		<ul class="dropdown-menu" role="menu">
+			<li role="presentation"><a href="#">リンクのリスト１</a></li>
+			<li role="presentation"><a href="#">リンクのリスト２</a></li>
+			<li role="presentation"><a href="#">リンクのリスト３</a></li>
+		</ul>
+	</div>
+
+	@helper.form(action = routes.AdminController.saveChooserSetting()) {
 		<div class="container">
 			<div class="row">
 				<div class="col-xs-4">
@@ -62,4 +75,5 @@
 
 	<a href="/"><input type="button" value="TOPへ"></a>
 	<a href="/logout"><input type="button" value="ログアウト"></a>
+}
 }

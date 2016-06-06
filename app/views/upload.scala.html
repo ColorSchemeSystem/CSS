@@ -1,8 +1,8 @@
 @(templateForm: Form[forms.TemplateUpload])
 
-@adminMain("Color Scheme"){ 
+@main("Color Scheme",null){ 
 	<h1>編集画面</h1>
-	@helper.form(action = routes.AdminController.doUpload,
+	@helper.form(action = routes.Application.doUpload,
 	'enctype -> "multipart/form-data") {
 		<dl>
     		<dt>

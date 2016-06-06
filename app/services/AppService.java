@@ -21,6 +21,14 @@ public class AppService {
 	public List<Template> findAllTemplates() {
 		return Template.find.all();
 	}
+	
+	/**
+	 * 
+	 * @param template
+	 */
+	public void saveTemplate(Template template) {
+		template.save();
+	}
 
 	public static List<String> extractClasses(String html) {
 		Document document = Jsoup.parse(html);
