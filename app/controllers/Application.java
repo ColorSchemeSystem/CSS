@@ -99,6 +99,10 @@ public class Application extends BaseController {
 	    		saveHtml(picture.getFile(),form);
 	    		return redirect(routes.Application.templates());
 	    	}	else	{
+	    		Member member = isLoggedIn();
+	    		if(member == null) {
+	    			return redirect(routes.Application.upload());
+	    		}
 	    		saveImage(picture.getFile(),picture.getContentType(),form);
 	    		return redirect(routes.Application.images());
 	    	}
@@ -155,13 +159,18 @@ public class Application extends BaseController {
 		file.renameTo(new File(imageFilePath + imageFileName));
 	}
 	
+	/**
+	 * 
+	 * @return
+	 */
 	public static Result images() {
 		Member member = isLoggedIn();
 		if(member != null) {
 			List<Image> imagesList = appS.findAllImages(member.memberId);
 			return ok(images.render(imagesList,member));
+		}	else	{
+			return redirect(routes.AdminController.login());
 		}
-		return TODO;
 	}
 	
 	/**
