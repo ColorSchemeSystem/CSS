@@ -37,11 +37,7 @@ function fixFrameSize() {
 };
 
 function display(name) {
-	if($(name).css("display") != "none") {
-		$(name).css("display", "none");
-	} else {
-		$(name).css("display", "show");
-	}
+	$(name).toggle();
 	console.log(name);
 }
 
@@ -55,7 +51,7 @@ function sendHTML(){
 };
 
 function addBackground(name) {
-	var tr = $("<tr id="+name+"></tr>");
+	var tr = $("<tr class=iframe"+name+"></tr>");
 	var td = $("<td>background</td>");
 	var td2 = $("<input type='text' class='form-control' id='"+name+"-back' value='#A6FF00' data-color-format='hex'>");
 
@@ -76,7 +72,7 @@ function addBackground(name) {
 };
 
 function addBorder(name) {
-	var tr = $("<tr id="+name+"></tr>");
+	var tr = $("<tr class='iframe"+name+"'></tr>");
 	var td = $("<td>border</td>");
 	var td2 = $("<input type='text' class='form-control' id='"+name+"-bor' value='#A6FF00' data-color-format='hex'>");
 
@@ -97,7 +93,7 @@ function addBorder(name) {
 }
 
 function addFont(name) {
-	var tr = $("<tr id="+name+"></tr>");
+	var tr = $("<tr class='iframe"+name+"'></tr>");
 	var td = $("<td>font</td>");
 	var td2 = $("<input type='text' class='form-control' id='"+name+"-font' value='#A6FF00' data-color-format='hex'>");
 
@@ -118,10 +114,6 @@ function addFont(name) {
 }
 
 </script>
-
-@for(data <- tags) {
-	<div class="tagData" data-name="@data"></div>
-}
 
 
 <div id="chooser" data-placement="'@chooser.placement'" data-hsvpanel="@chooser.hsvpanel" data-sliders="@chooser.slider" data-swatches="@chooser.swatche"></div>
@@ -183,19 +175,18 @@ function addFont(name) {
 										$('iframe').contents().find('.hoverImage').remove();
 									},
 									click : function(event) {
-										display(CN);
-										//$(test).toggle();
-										//display('header');
+										console.log($(".iframe"+CN).size());
+										$(".iframe"+CN).each(function() {
+											display($(this));
+										});
 									}
 								}
 							});
-							//console.log(tr);
 							tr.append(td);
 							tr.append(td2);
 							tr.css("background-color", "#AAA");
 							$('#classTable').append(tr);
 
-							//console.log(CN.toString());
 							addBackground(CN.toString());
 
 							addBorder(CN.toString());
@@ -222,26 +213,6 @@ function addFont(name) {
 				<div class="table-responsive">
 					<table class="table table-hover">
 						<thead>
-							<tr>
-								<th>className</th>
-								<th>color</th>
-							</tr>
-							<tr onClick="display(test);" bgcolor="#AAA">
-								<td>test</td>
-								<td>hoge</td>
-							</tr>
-							<tr id="test" style="display: none;">
-								<td>hoge</td>
-								<td>hage</td>
-							</tr>
-							<tr id="test" style="display: none;">
-								<td>hoge</td>
-								<td>hage</td>
-							</tr>
-							<tr id="test" style="display: none;">
-								<td>hoge</td>
-								<td>hage</td>
-							</tr>
 						</thead>
 						<tbody id="classTable">
 						</tbody>
