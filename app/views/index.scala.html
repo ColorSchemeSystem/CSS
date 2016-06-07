@@ -36,6 +36,15 @@ function fixFrameSize() {
 	}
 };
 
+function display(name) {
+	if($(name).css("display") != "none") {
+		$(name).css("display", "none");
+	} else {
+		$(name).css("display", "show");
+	}
+	console.log(name);
+}
+
 function sendHTML(){
 	var ele = $("<input>", {
 					"type" : "hidden",
@@ -44,6 +53,69 @@ function sendHTML(){
 				});
 	$('#sendForm').append(ele);
 };
+
+function addBackground(name) {
+	var tr = $("<tr id="+name+"></tr>");
+	var td = $("<td>background</td>");
+	var td2 = $("<input type='text' class='form-control' id='"+name+"-back' value='#A6FF00' data-color-format='hex'>");
+
+	tr.append(td);
+	tr.append(td2);
+	tr.css("display", "show");
+	$('#classTable').append(tr);
+	var classname = "." + name;
+
+	var dataBack = {contentName:classname, targetName:"background"};
+	$("input#"+name+"-back").ColorPickerSliders({
+		placement: $('#chooser').data('placement'),
+		hsvpanel: $('#chooser').data('hsvpanel'),
+		sliders: $('#chooser').data('sliders'),
+		swatches: $('#chooser').data('swatches'),
+		previewformat: 'hex'
+	},dataBack);
+};
+
+function addBorder(name) {
+	var tr = $("<tr id="+name+"></tr>");
+	var td = $("<td>border</td>");
+	var td2 = $("<input type='text' class='form-control' id='"+name+"-bor' value='#A6FF00' data-color-format='hex'>");
+
+	tr.append(td);
+	tr.append(td2);
+	tr.css("display", "show");
+	$('#classTable').append(tr);
+	var classname = "." + name;
+
+	var dataBorder = {contentName:classname, targetName:"border"};
+	$("input#"+name+"-bor").ColorPickerSliders({
+		placement: $('#chooser').data('placement'),
+		hsvpanel: $('#chooser').data('hsvpanel'),
+		sliders: $('#chooser').data('sliders'),
+		swatches: $('#chooser').data('swatches'),
+		previewformat: 'hex'
+	},dataBorder);
+}
+
+function addFont(name) {
+	var tr = $("<tr id="+name+"></tr>");
+	var td = $("<td>font</td>");
+	var td2 = $("<input type='text' class='form-control' id='"+name+"-font' value='#A6FF00' data-color-format='hex'>");
+
+	tr.append(td);
+	tr.append(td2);
+	tr.css("display", "show");
+	$('#classTable').append(tr);
+	var classname = "." + name;
+
+	var dataFont = {contentName:classname, targetName:"font"};
+	$("input#"+name+"-font").ColorPickerSliders({
+		placement: $('#chooser').data('placement'),
+		hsvpanel: $('#chooser').data('hsvpanel'),
+		sliders: $('#chooser').data('sliders'),
+		swatches: $('#chooser').data('swatches'),
+		previewformat: 'hex'
+	},dataFont);
+}
 
 </script>
 
@@ -68,6 +140,7 @@ function sendHTML(){
 							var td = $("<td></td>",{
 								text : classname
 							});
+							var CN = classname;
 							classname = "." + classname;
 							//console.log(td);
 							var td2 = $("<td>COLOR</td>");
@@ -75,12 +148,12 @@ function sendHTML(){
 							var tr = $("<tr></tr>",{
 								on : {
 									mouseover : function(event){
-										console.log(classname);
+										//console.log(classname);
 										var content = $('iframe').contents().find(classname);
 										var element = $("<div></div>", {
 	  										"class" : "hoverImage"
 										});
-										console.log("オブジェクト作成");
+										//console.log("オブジェクト作成");
 										var css = {
 											color : "red",
 											position : "absolute",
@@ -91,30 +164,43 @@ function sendHTML(){
 											MozOpacity : 0.3,
 											opacity : 0.3
 										};
-										console.log("css設定");
+										//console.log("css設定");
 										content.css("position", "relative");
 										element.css(css);
 										element.css("top", 0);
 										element.css("left", 0);
 										element.css("z-index", 1000);
-										console.log("cssセット")
+										//console.log("cssセット")
 										content.append(element);
-										console.log("要素代入")
+										//console.log("要素代入")
 									},
 									mouseout : function(classname){
-										console.log("マウスアウト");
+										//console.log("マウスアウト");
 										var content = $('iframe').contents().find(classname);
-										console.log("要素の見つける");
+										//console.log("要素の見つける");
 										content.css("position", "");
-										console.log("css削除");
+										//console.log("css削除");
 										$('iframe').contents().find('.hoverImage').remove();
+									},
+									click : function(event) {
+										display(CN);
+										//$(test).toggle();
+										//display('header');
 									}
 								}
 							});
 							//console.log(tr);
 							tr.append(td);
 							tr.append(td2);
+							tr.css("background-color", "#AAA");
 							$('#classTable').append(tr);
+
+							//console.log(CN.toString());
+							addBackground(CN.toString());
+
+							addBorder(CN.toString());
+
+							addFont(CN.toString());
 						}
 					});
 				});
@@ -139,6 +225,22 @@ function sendHTML(){
 							<tr>
 								<th>className</th>
 								<th>color</th>
+							</tr>
+							<tr onClick="display(test);" bgcolor="#AAA">
+								<td>test</td>
+								<td>hoge</td>
+							</tr>
+							<tr id="test" style="display: none;">
+								<td>hoge</td>
+								<td>hage</td>
+							</tr>
+							<tr id="test" style="display: none;">
+								<td>hoge</td>
+								<td>hage</td>
+							</tr>
+							<tr id="test" style="display: none;">
+								<td>hoge</td>
+								<td>hage</td>
 							</tr>
 						</thead>
 						<tbody id="classTable">
