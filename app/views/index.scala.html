@@ -36,39 +36,6 @@ function fixFrameSize() {
 	}
 };
 
-/*function hover(name){
-	name = "." + name;
-	var content = $('iframe').contents().find(name);
-	var element = $("<div></div>", {
-  					"class" : "hoverImage"
-				});
-
-	var css = {
-		color : "red",
-		position : "absolute",
-		width : content.innerWidth(),
-		height : content.innerHeight(),
-		background : "red",
-		filter : "alpha(opacity = 30)",
-		MozOpacity : 0.3,
-		opacity : 0.3
-	};
-
-	content.css("position", "relative");
-	element.css(css);
-	element.css("top", 0);
-	element.css("left", 0);
-	element.css("z-index", 1000);
-	content.append(element);
-};
-
-function hoverOut(name){
-	name = "." + name;
-	var content = $('iframe').contents().find(name);
-	content.css("position", "");
-	$('iframe').contents().find('.hoverImage').remove();
-};*/
-
 function sendHTML(){
 	var ele = $("<input>", {
 					"type" : "hidden",
@@ -97,57 +64,57 @@ function sendHTML(){
 					$.each(elements, function(index, item){
 						var classname = item.className.split(" ")[0];
 						if(classname != ""){
-						var td = $("<td></td>",{
-							text : classname
-						});
-						classname = "." + classname;
-						//console.log(td);
-						var td2 = $("<td>COLOR</td>");
-						//console.log(td2);
-						var tr = $("<tr></tr>",{
-							on : {
-								mouseover : function(event){
-									console.log(classname);
-									var content = $('iframe').contents().find(classname);
-									var element = $("<div></div>", {
-  										"class" : "hoverImage"
-									});
-									console.log("オブジェクト作成");
-									var css = {
-										color : "red",
-										position : "absolute",
-										width : content.innerWidth(),
-										height : content.innerHeight(),
-										background : "red",
-										filter : "alpha(opacity = 30)",
-										MozOpacity : 0.3,
-										opacity : 0.3
-									};
-									console.log("css設定");
-									content.css("position", "relative");
-									element.css(css);
-									element.css("top", 0);
-									element.css("left", 0);
-									element.css("z-index", 1000);
-									console.log("cssセット")
-									content.append(element);
-									console.log("要素代入")
-								},
-								mouseout : function(classname){
-									console.log("マウスアウト");
-									var content = $('iframe').contents().find(classname);
-									console.log("要素の見つける");
-									content.css("position", "");
-									console.log("css削除");
-									$('iframe').contents().find('.hoverImage').remove();
+							var td = $("<td></td>",{
+								text : classname
+							});
+							classname = "." + classname;
+							//console.log(td);
+							var td2 = $("<td>COLOR</td>");
+							//console.log(td2);
+							var tr = $("<tr></tr>",{
+								on : {
+									mouseover : function(event){
+										console.log(classname);
+										var content = $('iframe').contents().find(classname);
+										var element = $("<div></div>", {
+	  										"class" : "hoverImage"
+										});
+										console.log("オブジェクト作成");
+										var css = {
+											color : "red",
+											position : "absolute",
+											width : content.innerWidth(),
+											height : content.innerHeight(),
+											background : "red",
+											filter : "alpha(opacity = 30)",
+											MozOpacity : 0.3,
+											opacity : 0.3
+										};
+										console.log("css設定");
+										content.css("position", "relative");
+										element.css(css);
+										element.css("top", 0);
+										element.css("left", 0);
+										element.css("z-index", 1000);
+										console.log("cssセット")
+										content.append(element);
+										console.log("要素代入")
+									},
+									mouseout : function(classname){
+										console.log("マウスアウト");
+										var content = $('iframe').contents().find(classname);
+										console.log("要素の見つける");
+										content.css("position", "");
+										console.log("css削除");
+										$('iframe').contents().find('.hoverImage').remove();
+									}
 								}
-							}
-						});
-						//console.log(tr);
-						tr.append(td);
-						tr.append(td2);
-						$('#classTable').append(tr);
-					}
+							});
+							//console.log(tr);
+							tr.append(td);
+							tr.append(td2);
+							$('#classTable').append(tr);
+						}
 					});
 				});
 			</script>
@@ -201,33 +168,33 @@ function sendHTML(){
 								</td>
 							</tr>
 							<script>
-							$("input#@data-back").ColorPickerSliders({
-								placement: $('#chooser').data('placement'),
-								hsvpanel: $('#chooser').data('hsvpanel'),
-								sliders: $('#chooser').data('sliders'),
-								swatches: $('#chooser').data('swatches'),
-								previewformat: 'hex'
-							},'.@data',"background");
-						</script>
-						<script>
-							$("input#@data-bor").ColorPickerSliders({
-								placement: $('#chooser').data('placement'),
-								hsvpanel: $('#chooser').data('hsvpanel'),
-								sliders: $('#chooser').data('sliders'),
-								swatches: $('#chooser').data('swatches'),
-								previewformat: 'hex'
-							},'.@data',"border");
-						</script>
-						<script>
-							$("input#@data-font").ColorPickerSliders({
-								placement: $('#chooser').data('placement'),
-								hsvpanel: $('#chooser').data('hsvpanel'),
-								sliders: $('#chooser').data('sliders'),
-								swatches: $('#chooser').data('swatches'),
-								previewformat: 'hex'
-							},'.@data',"font");
-						</script>
-						}
+								$("input#@data-back").ColorPickerSliders({
+									placement: $('#chooser').data('placement'),
+									hsvpanel: $('#chooser').data('hsvpanel'),
+									sliders: $('#chooser').data('sliders'),
+									swatches: $('#chooser').data('swatches'),
+									previewformat: 'hex'
+								},'.@data',"background");
+							</script>
+							<script>
+								$("input#@data-bor").ColorPickerSliders({
+									placement: $('#chooser').data('placement'),
+									hsvpanel: $('#chooser').data('hsvpanel'),
+									sliders: $('#chooser').data('sliders'),
+									swatches: $('#chooser').data('swatches'),
+									previewformat: 'hex'
+								},'.@data',"border");
+							</script>
+							<script>
+								$("input#@data-font").ColorPickerSliders({
+									placement: $('#chooser').data('placement'),
+									hsvpanel: $('#chooser').data('hsvpanel'),
+									sliders: $('#chooser').data('sliders'),
+									swatches: $('#chooser').data('swatches'),
+									previewformat: 'hex'
+								},'.@data',"font");
+							</script>
+							}
 						</tbody>
 					</table>
 				</div>
