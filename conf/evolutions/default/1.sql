@@ -35,7 +35,6 @@ create table Images (
   member_member_id          bigint,
   image_name                varchar(255),
   image_message             varchar(255),
-  image_type                varchar(255),
   constraint pk_Images primary key (image_id))
 ;
 

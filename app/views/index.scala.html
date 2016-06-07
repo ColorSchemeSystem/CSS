@@ -45,13 +45,14 @@ function sendHTML(){
 	$('#sendForm').append(ele);
 };
 
-/*$(function() {
-	$('tr').click(function(){
-		$('#data').toggle();
-	});
-});*/
-
 </script>
+
+@for(data <- tags) {
+	<div class="tagData" data-name="@data"></div>
+}
+
+
+<div id="chooser" data-placement="'@chooser.placement'" data-hsvpanel="@chooser.hsvpanel" data-sliders="@chooser.slider" data-swatches="@chooser.swatche"></div>
 	<div class="main">
 		<div class="inHtml">
 			<iframe src="@routes.Assets.at(path)" width="920px" name="template" id="iframe"></iframe>
@@ -141,73 +142,12 @@ function sendHTML(){
 							</tr>
 						</thead>
 						<tbody id="classTable">
-
-
-
-						@for(data <- tags){
-							<tr onClick="display(@data);" bgcolor="#AAA" onmouseover="hover('@data')" onmouseout="hoverOut('@data')">
-								<td>@data</td>
-								<td>COLOR</td>
-							</tr>
-							<tr id="@data" style="display: none;">
-								<td>background</td>
-								<td>
-									<input type="text" class="form-control" id="@data-back" value="#A6FF00" data-color-format="hex">
-								</td>
-							</tr>
-							<tr id="@data" style="display: none;">
-								<td>border</td>
-								<td>
-									<input type="text" class="form-control" id="@data-bor" value="#A6FF00" data-color-format="hex">
-								</td>
-							</tr>
-							<tr id="@data" style="display: none;">
-								<td>font</td>
-								<td>
-									<input type="text" class="form-control" id="@data-font" value="#A6FF00" data-color-format="hex">
-								</td>
-							</tr>
-							<script>
-								$("input#@data-back").ColorPickerSliders({
-									placement: $('#chooser').data('placement'),
-									hsvpanel: $('#chooser').data('hsvpanel'),
-									sliders: $('#chooser').data('sliders'),
-									swatches: $('#chooser').data('swatches'),
-									previewformat: 'hex'
-								},'.@data',"background");
-							</script>
-							<script>
-								$("input#@data-bor").ColorPickerSliders({
-									placement: $('#chooser').data('placement'),
-									hsvpanel: $('#chooser').data('hsvpanel'),
-									sliders: $('#chooser').data('sliders'),
-									swatches: $('#chooser').data('swatches'),
-									previewformat: 'hex'
-								},'.@data',"border");
-							</script>
-							<script>
-								$("input#@data-font").ColorPickerSliders({
-									placement: $('#chooser').data('placement'),
-									hsvpanel: $('#chooser').data('hsvpanel'),
-									sliders: $('#chooser').data('sliders'),
-									swatches: $('#chooser').data('swatches'),
-									previewformat: 'hex'
-								},'.@data',"font");
-							</script>
-							}
 						</tbody>
 					</table>
 				</div>
 			</div>
 		</div>
 	</div>
-
-	<div id="chooser" data-placement="'@chooser.placement'" data-hsvpanel="@chooser.hsvpanel" data-sliders="@chooser.slider" data-swatches="@chooser.swatche"></div>
-	<script type="text/javascript">
-		function display(name) {
-			$(name).toggle();
-		}
-	</script>
 }
 
 				
