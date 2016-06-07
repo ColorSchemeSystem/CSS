@@ -11,10 +11,13 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.logging.Log;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
+
+import play.Logger;
 
 public class StyleParser {
 	/**
@@ -22,7 +25,7 @@ public class StyleParser {
 	 * @return
 	 */
 	private List<String> splitStyleIntoBlock(String style) {
-		Pattern p = Pattern.compile(".*?\\{.*?\\}");
+		Pattern p = Pattern.compile("[\\s\\S]*?\\{[\\s\\S]*?\\}");
 		Matcher m = p.matcher(style);
 		List<String> list = new ArrayList<String>();
 		while(m.find()) {
@@ -38,7 +41,7 @@ public class StyleParser {
 	private String[] blockToAttrsAndContent(String style) {
 		//時々先頭の文字が切れてしまう(body -> ody)問題があるので、とりあえず応急処置
 		style = "    " + style;
-		Pattern p = Pattern.compile("(.*?)\\{(.*?)\\}");
+		Pattern p = Pattern.compile("([\\s\\S]*?)\\{([\\s\\S]*?)\\}");
 		Matcher m = p.matcher(style);
 		String attrs = "";
 		if(m.find(1)) {
