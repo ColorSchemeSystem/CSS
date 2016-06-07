@@ -200,10 +200,15 @@ public class Application extends BaseController {
 		StyleCleaner styleCleaner = new StyleCleaner();
 		fileS.saveFile("style.css", styleParser.parse(html.tempHtml).toString());
 		fileS.saveFile("index.html", styleCleaner.removeStyleTagAndStyleAttrs(html.tempHtml));
-		File[] files = {new File("index.html"),new File("style.css")};
-		fileS.zip("template.zip",files);
-		response().setContentType("application/x-download");
-		response().setHeader("Content-disposition","attachment; filename=template.zip");
-		return ok(new File("template.zip"));
+		String[] files = {"index.html","style.css"};
+		try {
+			fileS.zip2("template.zip",files);
+			response().setContentType("application/x-download");
+			response().setHeader("Content-disposition","attachment; filename=template.zip");
+			return ok(new File("template.zip"));
+		} catch (IOException e) {
+			e.printStackTrace();
+			return redirect(routes.Application.index());
+		}
 	}
 }
