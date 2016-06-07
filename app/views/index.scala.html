@@ -96,23 +96,19 @@ function sendHTML(){
 					//console.log($('#iframe').contents().find('*'));
 					$.each(elements, function(index, item){
 						var classname = item.className.split(" ")[0];
+						if(classname != ""){
 						var td = $("<td></td>",{
 							text : classname
 						});
-						console.log(classname);
-						classN = classname.outerHTML;
-						console.log(classN);
+						classname = "." + classname;
 						//console.log(td);
 						var td2 = $("<td>COLOR</td>");
 						//console.log(td2);
 						var tr = $("<tr></tr>",{
 							on : {
-								mouseover : function(classN){
-									console.log(classN);
-									var classNa = classN.outerHTML;
-									classNa = "." + classNa;
-									console.log(classNa);
-									var content = $('iframe').contents().find(classNa);
+								mouseover : function(event){
+									console.log(classname);
+									var content = $('iframe').contents().find(classname);
 									var element = $("<div></div>", {
   										"class" : "hoverImage"
 									});
@@ -137,11 +133,12 @@ function sendHTML(){
 									content.append(element);
 									console.log("要素代入")
 								},
-								mouseOut : function(classname){
+								mouseout : function(classname){
 									console.log("マウスアウト");
-									classname = "." + classname;
 									var content = $('iframe').contents().find(classname);
+									console.log("要素の見つける");
 									content.css("position", "");
+									console.log("css削除");
 									$('iframe').contents().find('.hoverImage').remove();
 								}
 							}
@@ -150,6 +147,7 @@ function sendHTML(){
 						tr.append(td);
 						tr.append(td2);
 						$('#classTable').append(tr);
+					}
 					});
 				});
 			</script>
