@@ -15,6 +15,7 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 import models.Chooser;
+import models.Image;
 import models.Template;
 
 public class AppService {
@@ -38,10 +39,27 @@ public class AppService {
 	
 	/**
 	 * 
+	 * @param memberId
+	 * @return
+	 */
+	public List<Image> findAllImages(Long memberId) {
+		return Image.find.where().eq("member.memberId", memberId).findList();
+	}
+	
+	/**
+	 * 
 	 * @param template
 	 */
 	public void saveTemplate(Template template) {
 		template.save();
+	}
+	
+	/**
+	 * 
+	 * @param image
+	 */
+	public void saveImage(Image image) {
+		image.save();
 	}
 
 	public static List<String> extractClasses(String html) {

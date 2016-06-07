@@ -21,5 +21,7 @@ public class Image extends BaseModel {
 
 	public String imageMessage;
 	
+	public String imageType;
+	
 	public static Finder<Long, Image> find = new Finder<Long, Image>(Long.class, Image.class);
 }

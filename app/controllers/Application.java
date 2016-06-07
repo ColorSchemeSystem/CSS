@@ -99,7 +99,12 @@ public class Application extends BaseController {
 	    		saveHtml(picture.getFile(),form);
 	    		return redirect(routes.Application.templates());
 	    	}	else	{
+	    		Member member = isLoggedIn();
+	    		if(member == null) {
+	    			return redirect(routes.Application.upload());
+	    		}
 	    		saveImage(picture.getFile(),picture.getContentType(),form);
+	    		return redirect(routes.Application.images());
 	    	}
 	    }
 	    return redirect(routes.Application.templates());
@@ -133,18 +138,39 @@ public class Application extends BaseController {
 				imageFilePath + imageFileName);
 	}
 	
+	/**
+	 * 
+	 * @param file
+	 * @param type
+	 * @param form
+	 */
 	private static void saveImage(File file, String type, Form<TemplateUpload> form) {
 		Image image = new Image();
 		image.imageName = form.get().templateName;
 		image.imageMessage = form.get().templateMessage;
+		image.imageType = "png";
 		Member member = isLoggedIn();
 	    if(member != null) {
 	    	image.member = member;
 	    }
+	    appS.saveImage(image);
+	    final String imageFilePath = Play.application().path().getPath() + "/public/member-images/";
+		final String imageFileName = String.valueOf(image.imageId) + ".png";
+		file.renameTo(new File(imageFilePath + imageFileName));
 	}
 	
+	/**
+	 * 
+	 * @return
+	 */
 	public static Result images() {
-		return TODO;
+		Member member = isLoggedIn();
+		if(member != null) {
+			List<Image> imagesList = appS.findAllImages(member.memberId);
+			return ok(images.render(imagesList,member));
+		}	else	{
+			return redirect(routes.AdminController.login());
+		}
 	}
 	
 	/**
