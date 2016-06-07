@@ -21,6 +21,8 @@ import com.avaje.ebean.Query;
 
 import views.html.*;
 import models.*;
+import parsers.style.StyleCleaner;
+import parsers.style.StyleParser;
 import services.*;
 
 import java.awt.image.BufferedImage;
@@ -32,6 +34,8 @@ public class Application extends BaseController {
 	private static AppService appS = new AppService();
 
 	private static ImageService imageS = new ImageService();
+	
+	private static FileService fileS = new FileService();
 
 	public static Result index() {
 		Chooser chooser = new Chooser();
@@ -192,17 +196,14 @@ public class Application extends BaseController {
 		Form<TemplateDownload> form = Form.form(TemplateDownload.class).bindFromRequest();
 		TemplateDownload html = form.get();
 		html.tempHtml = "<html>" + html.tempHtml + "</html>";
-		try{
-			File file = new File("template.html");
-			FileWriter filewriter = new FileWriter(file);
-			filewriter.write(html.tempHtml);
-			filewriter.close();
-			response().setContentType("application/x-download");
-			response().setHeader("Content-disposition","attachment; filename=template.html");
-			return ok(file);
-		}catch(Exception e){
-			e.printStackTrace();
-		}
-		return redirect("/");
+		StyleParser styleParser = new StyleParser();
+		StyleCleaner styleCleaner = new StyleCleaner();
+		fileS.saveFile("style.css", styleParser.parse(html.tempHtml).toString());
+		fileS.saveFile("index.html", styleCleaner.removeStyleTagAndStyleAttrs(html.tempHtml));
+		File[] files = {new File("index.html"),new File("style.css")};
+		fileS.zip("template.zip",files);
+		response().setContentType("application/x-download");
+		response().setHeader("Content-disposition","attachment; filename=template.zip");
+		return ok(new File("template.zip"));
 	}
 }
