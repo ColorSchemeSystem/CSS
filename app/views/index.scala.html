@@ -82,10 +82,67 @@ function sendHTML(){
 }
 </script>
 
+@for(data <- tags) {
+	<div class="tagData" data-name="@data"></div>
+}
+
+
 <div id="chooser" data-placement="'@chooser.placement'" data-hsvpanel="@chooser.hsvpanel" data-sliders="@chooser.slider" data-swatches="@chooser.swatche"></div>
 	<div class="main">
 		<div class="inHtml">
 			<iframe src="@routes.Assets.at(path)" width="920px" name="template" id="iframe"></iframe>
+			<script type="text/javascript">
+				$('#iframe').load(function(){
+					//console.log('読み込み完了');
+					$(".tagData").each(function() {
+						//$('body').append($('<script>$("input#menuBer-back").ColorPickerSliders({placement: true,hsvpanel: true,sliders: true},'data');<\/script>'));
+						var name = $(this).data('name');
+						var contentName = "."+name;
+						//console.log($('iframe').contents().find(contentName).prop("tagName"));
+						var dataBack;
+						var databorder;
+						var datafont;
+						var n = $('iframe').contents().find(contentName);
+						console.log(n);
+						if($('iframe').contents().find(contentName).prop("tagName") == "UL") {
+							dataBack = {contentName:contentName+" > li", targetName:"background"};
+							databorder = {contentName:contentName+" > li", targetName:"border"};
+							datafont = {contentName: contentName+" > li", targetName:"font"};
+						} else {
+							dataBack = {contentName:contentName, targetName:"background"};
+							databorder = {contentName:contentName, targetName:"border"};
+							datafont = {contentName:contentName, targetName:"font"};
+						}
+						$("input#"+name+"-back").ColorPickerSliders({
+							placement: $('#chooser').data('placement'),
+							hsvpanel: $('#chooser').data('hsvpanel'),
+							sliders: $('#chooser').data('sliders'),
+							swatches: $('#chooser').data('swatches'),
+							previewformat: 'hex'
+						},dataBack);
+
+						$("input#"+name+"-bor").ColorPickerSliders({
+							placement: $('#chooser').data('placement'),
+							hsvpanel: $('#chooser').data('hsvpanel'),
+							sliders: $('#chooser').data('sliders'),
+							swatches: $('#chooser').data('swatches'),
+							previewformat: 'hex'
+						},databorder);
+
+						$("input#"+name+"-font").ColorPickerSliders({
+							placement: $('#chooser').data('placement'),
+							hsvpanel: $('#chooser').data('hsvpanel'),
+							sliders: $('#chooser').data('sliders'),
+							swatches: $('#chooser').data('swatches'),
+							previewformat: 'hex'
+						},datafont);
+
+						$('iframe').contents().find('*').each(function() {
+							//console.log($(this));
+						});
+					});
+				});
+			</script>
 		</div>
 		<form method="post" id="sendForm" name="sendForm" action="/template/download">
 			<div class="button">
@@ -133,36 +190,8 @@ function sendHTML(){
 									<input type="text" class="form-control" id="@data-font" value="#A6FF00" data-color-format="hex">
 								</td>
 							</tr>
-							<script>
-								var data = {contentName:'.@data', targetName:"background"};
-									$("input#@data-back").ColorPickerSliders({
-										placement: $('#chooser').data('placement'),
-										hsvpanel: $('#chooser').data('hsvpanel'),
-										sliders: $('#chooser').data('sliders'),
-										swatches: $('#chooser').data('swatches'),
-										previewformat: 'hex'
-									},data);
-								</script>
-								<script>
-									var data = {contentName:'.@data', targetName:"border"};
-									$("input#@data-bor").ColorPickerSliders({
-										placement: $('#chooser').data('placement'),
-										hsvpanel: $('#chooser').data('hsvpanel'),
-										sliders: $('#chooser').data('sliders'),
-										swatches: $('#chooser').data('swatches'),
-										previewformat: 'hex'
-									},data);
-								</script>
-								<script>
-									var data = {contentName:'.@data', targetName:"font"};
-									$("input#@data-font").ColorPickerSliders({
-										placement: $('#chooser').data('placement'),
-										hsvpanel: $('#chooser').data('hsvpanel'),
-										sliders: $('#chooser').data('sliders'),
-										swatches: $('#chooser').data('swatches'),
-										previewformat: 'hex'
-									},data);
-								</script>
+						
+							
 							}
 						</tbody>
 					</table>

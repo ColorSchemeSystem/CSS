@@ -1390,7 +1390,7 @@
         style += '.item1 { backgroundColor:red; }';
         if(targetData.targetName == "background") $('iframe').contents().find(targetData.contentName).css('backgroundColor',color);
         else if(targetData.targetName == "border") $('iframe').contents().find(targetData.contentName).css('border-color',color);
-        else if(targetData.targetName == "font") $('iframe').contents().find(targetData.contentName +"> *").css('color',color);
+        else if(targetData.targetName == "font") $('iframe').contents().find(targetData.contentName +" > *").css('color',color);
         style += '</style>';
         //$('iframe').contents().find('head').append(style);
         //var src = $("iframe").attr("src");
