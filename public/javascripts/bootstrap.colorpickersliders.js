@@ -2,7 +2,7 @@
 (function($) {
   'use strict';
 
-  $.fn.ColorPickerSliders = function(options,contentName,setTarget) {
+  $.fn.ColorPickerSliders = function(options,targetData) {
 
     return this.each(function() {
 
@@ -34,9 +34,9 @@
           },
       MAXVALIDCHROMA = 144;   // maximum valid chroma value found convertible to rgb (blue)
 
-      init(contentName,setTarget);
+      init(targetData);
 
-      function _initSettings(contentName,setTarget) {
+      function _initSettings(targetData) {
         if (typeof options === 'undefined') {
           options = {};
         }
@@ -109,7 +109,7 @@
         }, options.labels);
       }
 
-      function init(contentName,setTarget) {
+      function init(targetData) {
         if (alreadyinitialized) {
           return;
         }
@@ -126,7 +126,7 @@
           rendermode = 'svg';
         }
 
-        _initSettings(contentName,setTarget);
+        _initSettings(targetData);
 
         // force preview when browser doesn't support css gradients
         if ((!settings.order.hasOwnProperty('preview') || settings.order.preview === false) && !rendermode) {
@@ -137,13 +137,13 @@
         _initColor();
         _initConnectedinput();
         _updateTriggerelementColor();
-        _updateConnectedInput(contentName,setTarget);
+        _updateConnectedInput(targetData);
 
         if (settings.flat) {
           showFlat();
         }
 
-        _bindEvents(contentName);
+        _bindEvents();
       }
 
       function _buildComponent() {
@@ -183,7 +183,7 @@
       }
 
       // 違う
-      function updateColor(newcolor, disableinputupdate, contentName) {
+      function updateColor(newcolor, disableinputupdate) {
         var updatedcolor = tinycolor(newcolor);
 
         if (updatedcolor.isValid()) {
@@ -199,7 +199,7 @@
           }
           else {
             if (!disableinputupdate) {
-              _updateConnectedInput(contentName,setTarget);
+              _updateConnectedInput(targetData);
             }
             _updateTriggerelementColor();
           }
@@ -458,7 +458,7 @@
       }
 
       // 違う
-      function _bindEvents(contentName) {
+      function _bindEvents() {
         triggerelement.on('colorpickersliders.updateColor', function(e, newcolor) {
           updateColor(newcolor);
         });
@@ -521,7 +521,7 @@
           connectedinput.on('keyup change', function() {
             var $input = $(this);
 
-            updateColor($input.val(), true, contentName);
+            updateColor($input.val(), true);
           });
         }
 
@@ -1311,7 +1311,7 @@
         }
 
         if (!disableinputupdate) {
-          _updateConnectedInput(contentName,setTarget);
+          _updateConnectedInput(targetData);
         }
 
         if ((100 - color.cielch.l) * color.cielch.a < settings.previewcontrasttreshold) {
@@ -1348,10 +1348,8 @@
         }
       }
 
-      // TODO $('iframe').contents().find('.content').css('backgroundColor',color.tiny.toRgbString());
-      // TODO の.find('.content')部分を変更できる様に
       // ここでtextエリア内の表示文字をセット
-      function _updateConnectedInput(contentName,setTarget) {
+      function _updateConnectedInput(targetData) {
         if (connectedinput) {
           connectedinput.each(function(index, element) {
             var $element = $(element),
@@ -1361,26 +1359,22 @@
               case 'hex':
                 if (color.hsla.a < 1) {
                   $element.val(color.tiny.toRgbString());
-                  $element.val(contentName);
-                  setTargetColor(contentName,setTarget,color.tiny.toRgbString());
+                  setTargetColor(targetData,color.tiny.toRgbString());
                 }
                 else {
                   $element.val(color.tiny.toHexString());
-                  $element.val(contentName);
-                  setTargetColor(contentName,setTarget,color.tiny.toHexString());
+                  setTargetColor(targetData,color.tiny.toHexString());
                 }
                 break;
               case 'hsl':
                 $element.val(color.tiny.toHslString());
-                $element.val(contentName);
-                setTargetColor(contentName,setTarget,color.tiny.toHslString());
+                setTargetColor(targetData,color.tiny.toHslString());
                 break;
               case 'rgb':
                 /* falls through */
               default:
                 $element.val(color.tiny.toRgbString());
-                $element.val(contentName);
-                setTargetColor(contentName,setTarget,color.tiny.toRgbString());
+                setTargetColor(targetData,color.tiny.toRgbString());
                 break;
             }
           });
@@ -1388,10 +1382,20 @@
       }
 
       // targetに色設定
-      function setTargetColor(contentName,target,color) {
-        if(target == "background") $('iframe').contents().find(contentName).css('backgroundColor',color);
-        else if(target == "border") $('iframe').contents().find(contentName).css('border-color',color);
-        else if(target == "font") $('iframe').contents().find(contentName +"> *").css('color',color);
+      function setTargetColor(targetData,color) {
+        var style = '';
+        style += '<style type="text/css" id=';
+        style += targetData.contentName;
+        style += '>';
+        style += '.item1 { backgroundColor:red; }';
+        if(targetData.targetName == "background") $('iframe').contents().find(targetData.contentName).css('backgroundColor',color);
+        else if(targetData.targetName == "border") $('iframe').contents().find(targetData.contentName).css('border-color',color);
+        else if(targetData.targetName == "font") $('iframe').contents().find(targetData.contentName +" > *").css('color',color);
+        style += '</style>';
+        //$('iframe').contents().find('head').append(style);
+        //var src = $("iframe").attr("src");
+        //$("iframe").attr("src","");
+        //$("iframe").attr("src",src);
       }
 
       // 違う
