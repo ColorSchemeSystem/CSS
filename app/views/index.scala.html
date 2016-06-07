@@ -70,6 +70,7 @@ function hoverOut(name){
 
 function display(name) {
 	$(name).toggle();
+	console.log(name.toString());
 }
 
 function sendHTML(){
@@ -103,7 +104,7 @@ function sendHTML(){
 						var databorder;
 						var datafont;
 						var n = $('iframe').contents().find(contentName);
-						console.log(n);
+						//console.log(n);
 						if($('iframe').contents().find(contentName).prop("tagName") == "UL") {
 							dataBack = {contentName:contentName+" > li", targetName:"background"};
 							databorder = {contentName:contentName+" > li", targetName:"border"};
