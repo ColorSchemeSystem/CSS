@@ -127,7 +127,9 @@ public class AdminController extends BaseController {
 	public static Result myPage() {
 		Form<MyPage> form = Form.form(MyPage.class);
 		Member mem = isLoggedIn();
-		if(mem == null) return badRequest("/");
+		if(mem == null) {
+			return redirect(routes.AdminController.login());
+		}
 		Chooser chooser = adminS.findChooserByChooserId(mem.chooser.chooserId);
 		MyPage setting = new MyPage();
 		setting.memberName = mem.memberName;
