@@ -61,6 +61,16 @@ function addBackground(name) {
 	$('#classTable').append(tr);
 	var classname = "." + name;
 
+	var color = $('iframe').contents().find(classname).css("background-color");
+	if(color == 'rgba(0, 0, 0, 0)') color = 'rgb(255, 255, 255)';
+	$("#"+name+"-back").val(color);
+
+	// タグがulだったら
+	console.log($('iframe').contents().find(classname).tagName);
+	if($('iframe').contents().find(classname).tagName == "UL") {
+		console.log("UL");
+	}
+
 	var dataBack = {contentName:classname, targetName:"background"};
 	$("input#"+name+"-back").ColorPickerSliders({
 		placement: $('#chooser').data('placement'),
@@ -82,6 +92,9 @@ function addBorder(name) {
 	$('#classTable').append(tr);
 	var classname = "." + name;
 
+	var color = $('iframe').contents().find(classname).css('border-color');
+	$("#"+name+"-bor").val(color);
+
 	var dataBorder = {contentName:classname, targetName:"border"};
 	$("input#"+name+"-bor").ColorPickerSliders({
 		placement: $('#chooser').data('placement'),
@@ -102,6 +115,9 @@ function addFont(name) {
 	tr.css("display", "none");
 	$('#classTable').append(tr);
 	var classname = "." + name;
+
+	var color = $('iframe').contents().find(classname).css('color');
+	$("#"+name+"-font").val(color);
 
 	var dataFont = {contentName:classname, targetName:"font"};
 	$("input#"+name+"-font").ColorPickerSliders({
