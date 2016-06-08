@@ -3,13 +3,15 @@
 @import helper._
 
 @main("login Page", user) {
+<div class='container'>
 	<h1>@message</h1>
 	@helper.form(action = routes.AdminController.loginEntry()) {
-		@inputText(myform("memberName"),'_label -> "name")
-		@inputText(myform("password"),'_label -> "password")
+		@inputText(myform("memberName"),'_label -> "ユーザー名")
+		@inputText(myform("password"),'_label -> "パスワード")
 		<input type="submit" value="ログイン">
 	}
-
-	<a href="/"><input type="button" value="TOPへ"></a>
-	<a href="@routes.AdminController.createAccount()"><input type="button" value="新規登録"></a>
+	<div style='margin-top : 20px;'>
+		<a href="@routes.AdminController.createAccount()">新規登録はこちら</a>
+	</div>
+</div>
 }
