@@ -34,7 +34,7 @@ public class Application extends BaseController {
 	private static AppService appS = new AppService();
 
 	private static ImageService imageS = new ImageService();
-	
+
 	private static FileService fileS = new FileService();
 
 	public static Result index() {
@@ -44,6 +44,9 @@ public class Application extends BaseController {
 		String html = appS.readHtmlFile(file);
 		List<String> htmlTag = appS.extractClasses(html);
 		String path = "iframes/iframe1.html";
+		TemplateSave tempS = new TemplateSave();
+		tempS.flg = 0;
+		Form<TemplateSave> form = Form.form(TemplateSave.class).fill(tempS);
 		if(mem != null) {
 			if(mem.chooser != null) {
 				chooser = appS.findChooserByChooserId(mem.chooser.chooserId);
@@ -52,9 +55,9 @@ public class Application extends BaseController {
 				mem.chooser = new Chooser();
 				chooser = new Chooser();
 			}
-			return ok(index.render(mem, chooser, path, htmlTag));
+			return ok(index.render(mem, chooser, path, htmlTag, form, "1"));
 		}
-		return ok(index.render(null, chooser, path, htmlTag));
+		return ok(index.render(null, chooser, path, htmlTag, form, "1"));
 	}
 
 	public static Result indexWithId(Long id){
@@ -63,19 +66,22 @@ public class Application extends BaseController {
 		Template temp = appS.getTemp(id);
 		String path;
 		if(temp != null){
-			path = "iframes/iframe" + id + ".html";
+			path = "iframes/" + id + ".html";
 		}else{
 			path = "iframes/iframe1.html";
 		}
 		File file = new File(Play.application().path().getPath() + "/public/" + path);
 		String html = appS.readHtmlFile(file);
 		List<String> htmlTag = appS.extractClasses(html);
+		TemplateSave tempS = new TemplateSave();
+		tempS.flg = 0;
+		Form<TemplateSave> form = Form.form(TemplateSave.class).fill(tempS);
 		if(mem != null) {
 			Query<Chooser> query = Chooser.find.where("chooserId = '"+mem.chooser.chooserId+"'");
 			chooser = query.findUnique();
-			return ok(index.render(mem, chooser, path, htmlTag));
+			return ok(index.render(mem, chooser, path, htmlTag, form, id.toString()));
 		}
-		return ok(index.render(null, chooser, path, htmlTag));
+		return ok(index.render(null, chooser, path, htmlTag, form, id.toString()));
 	}
 
 	/**
@@ -115,7 +121,7 @@ public class Application extends BaseController {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param file
 	 * @param form
 	 */
@@ -138,12 +144,12 @@ public class Application extends BaseController {
 		String base64ImageData = response.get().getBody();
 		final String imageFilePath = Play.application().path().getPath() + "/public/snapshots/";
 		final String imageFileName = String.valueOf(template.templateId) + ".png";
-		imageS.saveBase64ImageDataAsImage(base64ImageData, "png", 
+		imageS.saveBase64ImageDataAsImage(base64ImageData, "png",
 				imageFilePath + imageFileName);
 	}
-	
+
 	/**
-	 * 
+	 *
 	 * @param file
 	 * @param type
 	 * @param form
@@ -162,9 +168,9 @@ public class Application extends BaseController {
 		final String imageFileName = String.valueOf(image.imageId) + ".png";
 		file.renameTo(new File(imageFilePath + imageFileName));
 	}
-	
+
 	/**
-	 * 
+	 *
 	 * @return
 	 */
 	public static Result images() {
@@ -176,7 +182,7 @@ public class Application extends BaseController {
 			return redirect(routes.AdminController.login());
 		}
 	}
-	
+
 	/**
 	 * @return
 	 */
@@ -208,7 +214,56 @@ public class Application extends BaseController {
 			return ok(new File("template.zip"));
 		} catch (IOException e) {
 			e.printStackTrace();
-			return redirect(routes.Application.index());
+			return redirect(routes.Application.indexWithId(Long.parseLong(html.temp_id)));
 		}
 	}
+
+	public static Result saveEditTemplate(){
+		Form<TemplateSave> form = Form.form(TemplateSave.class).bindFromRequest();
+		TemplateSave tempS = form.get();
+		tempS.tempHtml = "<html>" + tempS.tempHtml + "</html>";
+		if(tempS.tempHtml != null){
+			Template temp = new Template();
+			temp.templateName = tempS.tempName;
+			if(temp.templateName == null){
+				temp.templateName = "template" + tempS.temp_id;
+			}
+			temp.templateMessage = tempS.tempMessage;
+			temp.accessFlag = tempS.flg;
+			if(temp.accessFlag == null){
+				temp.accessFlag = 0;
+			}
+			if(tempS.member_id != null){
+				temp.member = appS.findMemberById(tempS.member_id);
+			}else{
+				temp.member = null;
+			}
+			appS.saveTemplate(temp);
+			String fileN = temp.templateId + ".html";
+			Long newTempId = temp.templateId;
+			File file = new File(fileN);
+			try{
+				FileWriter fileWriter = new FileWriter(file);
+				fileWriter.write(tempS.tempHtml);
+				fileWriter.close();
+				String fullPath = Play.application().path().getPath() + "/public/iframes/";
+				file.renameTo(new File(fullPath, fileN));
+				return redirect(routes.Application.indexWithId(newTempId));
+			}catch(Exception e){
+				e.printStackTrace();
+			}
+		}else{
+			return redirect(routes.Application.index());
+		}
+		return redirect(routes.Application.index());
+	}
+
+	/*public static Result detailTemp(){
+		Form<TemplateDownload> form = Form.form(TemplateDownload.class).bindFromRequest();
+		TemplateDownload html = form.get();
+		html.tempHtml = "<html>" + html.tempHtml + "</html>";
+		if(html.tempHtml != null){
+			return ok(detailHtml.render(html.tempHtml));
+		}
+	}*/
 }

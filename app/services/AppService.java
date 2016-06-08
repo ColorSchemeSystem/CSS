@@ -16,46 +16,51 @@ import org.jsoup.select.Elements;
 
 import models.Chooser;
 import models.Image;
+import models.Member;
 import models.Template;
 
 public class AppService {
 
 	/**
-	 * 
+	 *
 	 * @return
 	 */
 	public List<Template> findAllTemplates() {
 		return Template.find.all();
 	}
-	
+
 	/**
-	 * 
+	 *
 	 * @param memberId
 	 * @return
 	 */
 	public List<Template> findAllTemplates(Long memberId) {
 		return Template.find.where().eq("member.memberId", memberId).findList();
 	}
-	
+
 	/**
-	 * 
+	 *
 	 * @param memberId
 	 * @return
 	 */
 	public List<Image> findAllImages(Long memberId) {
 		return Image.find.where().eq("member.memberId", memberId).findList();
 	}
-	
+
 	/**
-	 * 
+	 *
 	 * @param template
 	 */
 	public void saveTemplate(Template template) {
 		template.save();
 	}
-	
+
+	public Member findMemberById(Long id){
+		return Member.find.byId(id);
+	}
+
 	/**
-	 * 
+	 *
 	 * @param image
 	 */
 	public void saveImage(Image image) {
@@ -93,8 +98,8 @@ public class AppService {
 		}
 		return classes;
 	}
-	
-	/** 
+
+	/**
 	 * @param chooserId
 	 * @return
 	 */

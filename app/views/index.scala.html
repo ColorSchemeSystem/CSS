@@ -1,4 +1,8 @@
-@(user: Member, chooser: Chooser, path: String, tags: List[String])
+@(user: Member, chooser: Chooser, path: String, tags: List[String], myForm: Form[forms.TemplateSave], id: String)
+
+@import helper._
+
+@implicitField = @{ FieldConstructor(fieldConstructor.fieldC.f) }
 
 @main("Color Scheme", user){ 
 <script>
@@ -41,13 +45,19 @@ function display(name) {
 	console.log(name);
 }
 
-function sendHTML(){
+function sendHTML(formId, id){
 	var ele = $("<input>", {
 					"type" : "hidden",
 					"name" : "tempHtml",
 					"value" : $('iframe').contents().find('html').html()
 				});
-	$('#sendForm').append(ele);
+	var ele2 = $("<input>",{
+					"type" : "hidden",
+					"name" : "temp_id",
+					"value" : id
+				});
+	$(formId).append(ele);
+	$(formId).append(ele2);
 };
 
 function addBackground(name) {
@@ -113,7 +123,51 @@ function addFont(name) {
 	},dataFont);
 }
 
+function showPopup(member_id, id){
+	var inst = $('[data-remodal-id=modal]').remodal();
+	inst.open();
+
+	sendHTML('#saveHtmlForm', id);
+	
+	var ele = $("<input>", {
+					"type" : "hidden",
+					"name" : "member_id",
+					"value" : member_id
+				});
+	$('#saveHTMLForm').append(ele);
+}
+
 </script>
+
+<!--modalView-->
+<div class="remodal" data-remodal-id="modal" role="dialog" aria-labelledby="modal1Title" aria-describedby="modal1Desc">
+  <button data-remodal-action="close" class="remodal-close" aria-label="Close"></button>
+  <div class="remodal-content">
+  	<h1>HTMLの保存</h1>
+  	<br><br>
+  	@form(action = routes.Application.saveEditTemplate, 'id -> "saveHtmlForm"){
+	    @(inputText(
+	    	field = myForm("tempName"), args = 'class -> "nameForm", 'size -> 50, 'placeholder -> "HTMLの名前"
+	    ))
+	    <br><br>
+	    @(textarea(
+	    	field = myForm("tempMessage"), args = 'class -> "messageForm", 'rows -> 10, 'cols -> 50, 'placeholder -> "HTMLの説明"
+	    ))
+	    <br><br>
+	    @if(user == null){
+
+	    }else{
+	    	@(inputRadioGroup(
+	        	myForm("flg"),
+	        	options = Seq("0"->"公開", "1"->"非公開")
+	      	))
+	      	<br><br>
+	    }
+	    <button data-remodal-action="cancel" class="remodal-cancel">キャンセル</button>
+  		<input type="submit" class="remodal-confirm" value="保存">
+	}
+  </div>
+</div>
 
 
 <div id="chooser" data-placement="'@chooser.placement'" data-hsvpanel="@chooser.hsvpanel" data-sliders="@chooser.slider" data-swatches="@chooser.swatche"></div>
@@ -125,7 +179,7 @@ function addFont(name) {
 					//console.log("実行");
 					var elements = new Array();
 					elements = $('#iframe').contents().find('*');
-					//console.log($('#iframe').contents().find('*'));
+					console.log($('#iframe').contents().find('*'));
 					$.each(elements, function(index, item){
 						var classname = item.className.split(" ")[0];
 						if(classname != ""){
@@ -135,7 +189,7 @@ function addFont(name) {
 							var CN = classname;
 							classname = "." + classname;
 							//console.log(td);
-							var td2 = $("<td>COLOR</td>");
+							var td2 = $("<td>" + item.tagName + "</td>");
 							//console.log(td2);
 							var tr = $("<tr></tr>",{
 								on : {
@@ -166,7 +220,7 @@ function addFont(name) {
 										content.append(element);
 										//console.log("要素代入")
 									},
-									mouseout : function(classname){
+									mouseout : function(event){
 										//console.log("マウスアウト");
 										var content = $('iframe').contents().find(classname);
 										//console.log("要素の見つける");
@@ -199,15 +253,21 @@ function addFont(name) {
 		</div>
 		<form method="post" id="sendForm" name="sendForm" action="/template/download">
 			<div class="button">
-				<input type="button" value="登録">
-				<input type="submit" value="HTMLを書き出す" onClick="sendHTML();">
+			@if(user == null){
+				<input type="button" value="登録" onClick="showPopup(null, @id);">
+			}else{
+				<input type="button" value="登録" onClick="showPopup(@user.memberId, @id);">
+			}
+				<input type="submit" value="HTMLを書き出す" onClick="sendHTML('#sendForm', @id);">
 			</div>
 		</form>
 	</div>
   <div class="side">
     <div class="fixnav">
 		<div class="tempButton">
-			<a href="#"><button class="button1">テンプレート表示</button></a>
+			<form method="post" id="showTemp" name="showTemp" action="/detail/template">
+				<input type = "submit" class="button1" value="テンプレート表示" onClick="sendHTML('#showTemp', @id);">
+			</form>
 		</div>
       <div class="classTags">
 				<div class="table-responsive">
@@ -221,6 +281,7 @@ function addFont(name) {
 			</div>
 		</div>
 	</div>
+
 }
 
 				
