@@ -207,7 +207,7 @@ public class Application extends BaseController {
 		fileS.saveFile("index.html", styleCleaner.removeStyleTagAndStyleAttrs(html.tempHtml));
 		String[] files = {"index.html","style.css"};
 		try {
-			fileS.zip2("template.zip",files);
+			fileS.zip("template.zip",files);
 			response().setContentType("application/x-download");
 			response().setHeader("Content-disposition","attachment; filename=template.zip");
 			return ok(new File("template.zip"));
