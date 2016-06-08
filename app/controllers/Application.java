@@ -86,8 +86,9 @@ public class Application extends BaseController {
 	 * @return
 	 */
 	public static Result upload() {
+		Member member = isLoggedIn();
 		Form<TemplateUpload> form = Form.form(TemplateUpload.class);
-		return ok(upload.render(form));
+		return ok(upload.render(form,member));
 	}
 
 	/**
@@ -116,7 +117,7 @@ public class Application extends BaseController {
 	    List<ValidationError> errors = new ArrayList<ValidationError>();
 	    errors.add(new ValidationError("tmpFileName","ファイルを選択してください。"));
 	    form.errors().put("tmpFileName", errors);
-	    return ok(upload.render(form));
+	    return ok(upload.render(form,isLoggedIn()));
 	}
 
 	/**
