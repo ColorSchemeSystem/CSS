@@ -1,4 +1,4 @@
-@(templates : List[Template], member : Member)
+@(dto : dtos.PagingDto[Template], member : Member, columns : Integer)
 
 @main("Color Scheme",member){ 
 <div class='container'>
@@ -17,8 +17,8 @@
 	</ul>
 	}
 	<div id='templates_list' style='margin-top : 40px;'>
-	@for((t, index) <- templates.zipWithIndex) {
-		@if((index + 1) == 1 || ((index + 1) % 6 == 1)) {
+	@for((t, index) <- dto.data.zipWithIndex) {
+		@if((index + 1) == 1 || ((index + 1) % columns == 1)) {
 			<div class='clearfix' style='margin-top : 10px;'>
 		}
 				<div style='float : left;'>
@@ -33,13 +33,23 @@
 					</a>	
 					</div>
 				</div>
-		@if((index + 1) % 6 == 0) {
+		@if((index + 1) % columns == 0) {
 			</div>
 		}
 	}
-	@if(templates.size == 0 || templates.size / 6 != 0) {
+	@if(dto.data.size == 0 || dto.data.size / columns != 0) {
 		</div>
 	}
 	</div>
+	<ul class="pager pager-margin">
+	@dto.currentPage match {
+    	case i if i <= 1 => { <li class="previous disabled"><a href="#">&larr; 前へ</a></li> }
+    	case _ => { <li class="previous"><a href="@routes.Application.templates()?page=@(dto.currentPage - 1)">&larr; 前へ</a></li> }
+	}
+	@dto.currentPage match {
+    	case i if i >= dto.totalPage => { <li class="next disabled"><a href="#">次へ &rarr;</a></li> }
+    	case _ => { <li class="next"><a href="@routes.Application.templates()?page=@(dto.currentPage + 1)">次へ &rarr;</a></li> }
+	}
+	</ul>
 </div>
 }				

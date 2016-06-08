@@ -21,6 +21,7 @@ import org.apache.commons.lang3.StringUtils;
 
 import com.avaje.ebean.Query;
 
+import dtos.PagingDto;
 import views.html.*;
 import models.*;
 import parsers.style.StyleCleaner;
@@ -188,13 +189,17 @@ public class Application extends BaseController {
 	public static Result templates() {
 		Member member = isLoggedIn();
 		String type = request().getQueryString("type");
-		List<Template> templatesList;
+		Integer page = 1;
+		try {
+			page = Integer.parseInt(request().getQueryString("page"));
+		} catch(Exception e) {}
+		PagingDto<Template> pagingDto;
 		if(StringUtils.isNotEmpty(type) && type.equals("member") && member != null) {
-			templatesList = appS.findAllTemplates(member.memberId);
+			pagingDto = appS.findTemplatesWithPages(page, 20 , member.memberId);
 		}	else	{
-			templatesList = appS.findAllTemplates();
+			pagingDto = appS.findTemplatesWithPages(page, 20);
 		}
-		return ok(templates.render(templatesList,member));
+		return ok(templates.render(pagingDto,member,5));
 	}
 
 	public static Result download(){
