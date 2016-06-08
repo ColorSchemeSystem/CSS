@@ -101,7 +101,7 @@ public class Application extends BaseController {
 				asMultipartFormData();
 		FilePart picture = body.getFile("tmpFileName");
 	    if(!form.hasErrors() && picture != null && picture.getFile() != null) {
-	    	if(picture != null && picture.getFile() != null) {
+	    	if(picture != null && picture.getFile() != null && picture.getContentType().equals("text/html")) {
 	    		saveHtml(picture.getFile(),form);
 	    		return redirect(routes.Application.templates());
 	    	}	else	{
@@ -176,8 +176,12 @@ public class Application extends BaseController {
 	public static Result images() {
 		Member member = isLoggedIn();
 		if(member != null) {
-			List<Image> imagesList = appS.findAllImages(member.memberId);
-			return ok(images.render(imagesList,member));
+			Integer page = 1;
+			try {
+				page = Integer.parseInt(request().getQueryString("page"));
+			} catch(Exception e) {}
+			PagingDto<Image> dto = appS.findImagesWithPages(page, 20, member.memberId);
+			return ok(images.render(dto,member,5));
 		}	else	{
 			return redirect(routes.AdminController.login());
 		}
