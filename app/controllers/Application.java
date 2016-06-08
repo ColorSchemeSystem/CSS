@@ -5,11 +5,13 @@ import play.mvc.*;
 import play.mvc.Http.MultipartFormData;
 import play.mvc.Http.MultipartFormData.FilePart;
 import play.data.Form;
+import play.data.validation.ValidationError;
 import play.cache.Cache;
 import play.db.ebean.Model.Finder;
 import play.libs.WS;
 import play.libs.F.Promise;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.imageio.ImageIO;
@@ -96,10 +98,9 @@ public class Application extends BaseController {
 				.bindFromRequest();
 		MultipartFormData body = request().body().
 				asMultipartFormData();
-	    FilePart picture = body.getFile("templateFile");
-	    if(!form.hasErrors() &&
-	    		picture != null && picture.getFile() != null) {
-	    	if(picture.getContentType().equals("text/html")) {
+		FilePart picture = body.getFile("tmpFileName");
+	    if(!form.hasErrors() && picture != null && picture.getFile() != null) {
+	    	if(picture != null && picture.getFile() != null) {
 	    		saveHtml(picture.getFile(),form);
 	    		return redirect(routes.Application.templates());
 	    	}	else	{
@@ -111,7 +112,10 @@ public class Application extends BaseController {
 	    		return redirect(routes.Application.images());
 	    	}
 	    }
-	    return redirect(routes.Application.templates());
+	    List<ValidationError> errors = new ArrayList<ValidationError>();
+	    errors.add(new ValidationError("tmpFileName","ファイルを選択してください。"));
+	    form.errors().put("tmpFileName", errors);
+	    return ok(upload.render(form));
 	}
 
 	/**
@@ -134,7 +138,8 @@ public class Application extends BaseController {
 	    File newFile = new File(path + fileName);
 	    file.renameTo(newFile);
 	    String target = "https://www.google.co.jp/";
-	    Promise<WS.Response> response = WS.url(ImageService.webShotUrl).setQueryParameter("target", target).setTimeout(300000).get();
+	    Promise<WS.Response> response = WS.url(ImageService.webShotUrl).setQueryParameter("target", target)
+	    		.setTimeout(1000 * 60).get();
 		String base64ImageData = response.get().getBody();
 		final String imageFilePath = Play.application().path().getPath() + "/public/snapshots/";
 		final String imageFileName = String.valueOf(template.templateId) + ".png";

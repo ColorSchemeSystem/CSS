@@ -1,6 +1,7 @@
 @(templates : List[Template], member : Member)
 
 @main("Color Scheme",member){ 
+<div class='container'>
 	<h1>
 	@if(member == null) {
 		テンプレート一覧
@@ -15,7 +16,7 @@
 		@(member.memberName)さんのテンプレートのみを表示</a></li>
 	</ul>
 	}
-	<div id='templates_list' style='margin-left : 40px; margin-top : 40px;'>
+	<div id='templates_list' style='margin-top : 40px;'>
 	@for((t, index) <- templates.zipWithIndex) {
 		@if((index + 1) == 1 || ((index + 1) % 6 == 1)) {
 			<div class='clearfix' style='margin-top : 10px;'>
@@ -40,4 +41,5 @@
 		</div>
 	}
 	</div>
+</div>
 }				

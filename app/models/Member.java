@@ -16,10 +16,10 @@ public class Member extends BaseModel {
 	@Id
 	public Long memberId;
 
-	@Required(message = "入力してください")
+	@Required
 	public String memberName;
 
-	@Required(message = "入力してください")
+	@Required
 	public String password;
 
 	public String mail;
