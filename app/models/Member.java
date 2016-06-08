@@ -8,6 +8,9 @@ import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
+
+import play.data.validation.Constraints.MinLength;
+import play.data.validation.Constraints.Pattern;
 import play.data.validation.Constraints.Required;
 
 @Entity
@@ -20,6 +23,8 @@ public class Member extends BaseModel {
 	public String memberName;
 
 	@Required
+	@Pattern(value = "^[a-zA-Z0-9]*$")
+	@MinLength(6)
 	public String password;
 
 	public String mail;
