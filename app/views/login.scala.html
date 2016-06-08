@@ -1,13 +1,15 @@
 @(user: Member, message: String, myform: Form[models.Member])
 
+@implicitFieldConstructor = @{ helper.FieldConstructor(myhelper.formFieldConstructor.render) } 
+
 @import helper._
 
 @main("login Page", user) {
 <div class='container'>
 	<h1>@message</h1>
 	@helper.form(action = routes.AdminController.loginEntry()) {
-		@inputText(myform("memberName"),'_label -> "ユーザー名")
-		@inputText(myform("password"),'_label -> "パスワード")
+		@inputText(myform("memberName"),'_label -> "ユーザー名",'_showConstraints -> false)
+		@inputText(myform("password"),'_label -> "パスワード",'_showConstraints -> false)
 		<input type="submit" value="ログイン">
 	}
 	<div style='margin-top : 20px;'>

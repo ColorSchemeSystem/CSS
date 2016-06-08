@@ -5,11 +5,13 @@ import play.mvc.*;
 import play.mvc.Http.MultipartFormData;
 import play.mvc.Http.MultipartFormData.FilePart;
 import play.data.Form;
+import play.data.validation.ValidationError;
 import play.cache.Cache;
 import play.db.ebean.Model.Finder;
 import play.libs.WS;
 import play.libs.F.Promise;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.imageio.ImageIO;
@@ -19,6 +21,7 @@ import org.apache.commons.lang3.StringUtils;
 
 import com.avaje.ebean.Query;
 
+import dtos.PagingDto;
 import views.html.*;
 import models.*;
 import parsers.style.StyleCleaner;
@@ -96,10 +99,9 @@ public class Application extends BaseController {
 				.bindFromRequest();
 		MultipartFormData body = request().body().
 				asMultipartFormData();
-	    FilePart picture = body.getFile("templateFile");
-	    if(!form.hasErrors() &&
-	    		picture != null && picture.getFile() != null) {
-	    	if(picture.getContentType().equals("text/html")) {
+		FilePart picture = body.getFile("tmpFileName");
+	    if(!form.hasErrors() && picture != null && picture.getFile() != null) {
+	    	if(picture != null && picture.getFile() != null) {
 	    		saveHtml(picture.getFile(),form);
 	    		return redirect(routes.Application.templates());
 	    	}	else	{
@@ -111,7 +113,10 @@ public class Application extends BaseController {
 	    		return redirect(routes.Application.images());
 	    	}
 	    }
-	    return redirect(routes.Application.templates());
+	    List<ValidationError> errors = new ArrayList<ValidationError>();
+	    errors.add(new ValidationError("tmpFileName","ファイルを選択してください。"));
+	    form.errors().put("tmpFileName", errors);
+	    return ok(upload.render(form));
 	}
 
 	/**
@@ -134,7 +139,8 @@ public class Application extends BaseController {
 	    File newFile = new File(path + fileName);
 	    file.renameTo(newFile);
 	    String target = "https://www.google.co.jp/";
-	    Promise<WS.Response> response = WS.url(ImageService.webShotUrl).setQueryParameter("target", target).setTimeout(300000).get();
+	    Promise<WS.Response> response = WS.url(ImageService.webShotUrl).setQueryParameter("target", target)
+	    		.setTimeout(1000 * 60).get();
 		String base64ImageData = response.get().getBody();
 		final String imageFilePath = Play.application().path().getPath() + "/public/snapshots/";
 		final String imageFileName = String.valueOf(template.templateId) + ".png";
@@ -183,13 +189,17 @@ public class Application extends BaseController {
 	public static Result templates() {
 		Member member = isLoggedIn();
 		String type = request().getQueryString("type");
-		List<Template> templatesList;
+		Integer page = 1;
+		try {
+			page = Integer.parseInt(request().getQueryString("page"));
+		} catch(Exception e) {}
+		PagingDto<Template> pagingDto;
 		if(StringUtils.isNotEmpty(type) && type.equals("member") && member != null) {
-			templatesList = appS.findAllTemplates(member.memberId);
+			pagingDto = appS.findTemplatesWithPages(page, 20 , member.memberId);
 		}	else	{
-			templatesList = appS.findAllTemplates();
+			pagingDto = appS.findTemplatesWithPages(page, 20);
 		}
-		return ok(templates.render(templatesList,member));
+		return ok(templates.render(pagingDto,member,5));
 	}
 
 	public static Result download(){
@@ -202,7 +212,7 @@ public class Application extends BaseController {
 		fileS.saveFile("index.html", styleCleaner.removeStyleTagAndStyleAttrs(html.tempHtml));
 		String[] files = {"index.html","style.css"};
 		try {
-			fileS.zip2("template.zip",files);
+			fileS.zip("template.zip",files);
 			response().setContentType("application/x-download");
 			response().setHeader("Content-disposition","attachment; filename=template.zip");
 			return ok(new File("template.zip"));

@@ -27,35 +27,11 @@ public class FileService {
 	}
 	
 	/**
-	 * 
-	 */
-	public void zip(String fileName, File[] files) {
-	    try {
-	    	ZipOutputStream zos = new ZipOutputStream(new BufferedOutputStream(
-	    			new FileOutputStream(new File(fileName))));
-	    	byte[] buffer = new byte[1024];
-	    	for (File file : files) {
-	            ZipEntry entry = new ZipEntry(file.getName());
-	            zos.putNextEntry(entry);
-	            InputStream is = new BufferedInputStream(new FileInputStream(file));
-	            int len = 0;
-	            while ((len = is.read(buffer)) != -1) {
-	                zos.write(buffer, 0, len);
-	            }
-	            zos.closeEntry();
-	            zos.finish();
-	        }
-	    } catch (IOException e) {
-	        e.printStackTrace();
-	    }
-	}
-	
-	/**
 	 * @param fileName
 	 * @param targetFileNames
 	 * @throws IOException
 	 */
-	public void zip2(String fileName,String[] targetFileNames) throws IOException{
+	public void zip(String fileName,String[] targetFileNames) throws IOException{
 	    try(ZipOutputStream zos = new ZipOutputStream(new FileOutputStream(fileName)))
 	    {
 	        for(String path : targetFileNames){

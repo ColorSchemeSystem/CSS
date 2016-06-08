@@ -1,5 +1,7 @@
 @(user: Member, message: String, myform: Form[models.Member])
 
+@implicitFieldConstructor = @{ helper.FieldConstructor(myhelper.formFieldConstructor.render) } 
+
 @import helper._
 
 @main("createAccount Page", user) {
