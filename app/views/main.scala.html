@@ -16,6 +16,8 @@
 		<!-- <script type="text/javascript" src="bootstrap.js"></script> -->
 
 		<link href='@routes.Assets.at("stylesheets/bootstrap.colorpickersliders.css")' rel="stylesheet" type="text/css" media="all">
+		<link href='@routes.Assets.at("stylesheets/remodal-default-theme.css")' rel="stylesheet" type="text/css" media="all">
+		<link href='@routes.Assets.at("stylesheets/remodal.css")' rel="stylesheet" type="text/css" media="all">
 
 		<script src="//cdnjs.cloudflare.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.2.0/js/bootstrap.min.js"></script>
@@ -26,6 +28,7 @@
 		<script src='@routes.Assets.at("javascripts/bootstrap.colorpickersliders.js")'></script>
 		<script src='@routes.Assets.at("javascripts/rgbcolor.js")'></script>
 		<script src='@routes.Assets.at("javascripts/index.js")'></script>
+		<script src='@routes.Assets.at("javascripts/remodal.js")'></script>
 
 		<style>
 
@@ -37,6 +40,7 @@
 				margin: 0;
 				font-size: 13px;
 				background: #eeeeee;
+				font-family: "ヒラギノ角ゴ ProN W3", "Hiragino Kaku Gothic ProN", "メイリオ", Meiryo, sans-serif;
 			}
 
 			.clearfix {
@@ -90,6 +94,27 @@
 				background-color: #FFF;
 				padding: 10px;
 				margin-bottom: 15px;
+			}
+
+			#loading{
+				display: none;
+				width: 920px;
+				height: 500px;
+				background: #FFF;
+				border: 1px solid #000;
+				z-index: 1;
+			}
+
+			#loader{
+				display: none;
+				position: absolute;
+				top: 49%;
+				left: 32%;
+				width: 200px;
+				height: 200px;
+				text-align: center;
+				color: #000;
+				z-index: 2;
 			}
 
 			.side  {

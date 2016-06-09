@@ -1,235 +1,72 @@
-@(user: Member, chooser: Chooser, path: String, tags: List[String])
+@(user: Member, chooser: Chooser, path: String, tags: List[String], myForm: Form[forms.TemplateSave], id: String)
+
+@import helper._
+
+@implicitField = @{ FieldConstructor(fieldConstructor.fieldC.f) }
 
 @main("Color Scheme", user){ 
-<script>
 
-$(window).load(function(){
-	fixFrameSize();
-	var navi = $('.fixnav');
-		var main  = $('.main');
-		var target_top = navi.offset().top - parseInt(navi.css('margin-top'),10);
-		var sub_top = main.offset().top - parseInt(main.css('margin-top'),10);
-		var sub_scroll = main.offset().top + main.outerHeight(true) - navi.outerHeight(true) - parseInt(navi.css('margin-top'),10);
+<!--modalView-->
+<div class="remodal" data-remodal-id="modal" role="dialog" aria-labelledby="modal1Title" aria-describedby="modal1Desc">
+  <button data-remodal-action="close" class="remodal-close" aria-label="Close"></button>
+  <div class="remodal-content">
+  	<h1>HTMLの保存</h1>
+  	<br><br>
+  	@form(action = routes.Application.saveEditTemplate, 'id -> "saveHtmlForm"){
+	    @(inputText(
+	    	field = myForm("tempName"), args = 'class -> "nameForm", 'size -> 50, 'placeholder -> "HTMLの名前"
+	    ))
+	    <br><br>
+	    @(textarea(
+	    	field = myForm("tempMessage"), args = 'class -> "messageForm", 'rows -> 10, 'cols -> 50, 'placeholder -> "HTMLの説明"
+	    ))
+	    <br><br>
+	    @if(user == null){
 
-		if (navi.outerHeight(true) + target_top < main.outerHeight(true) + sub_top) {
-		$(window).scroll(function () {
-			var ws = $(window).scrollTop();
-			$('.scroll').text(ws);
-			if (ws > sub_scroll) {
-			navi.css({position:'fixed', top: sub_scroll - ws + 'px'});
-			} else if(ws > target_top) {
-			navi.css({position:'fixed', top: '0px'});
-			} else {
-			navi.css({position:'relative', top: '0px'});
-			}
-		});
+	    }else{
+	    	@(inputRadioGroup(
+	        	myForm("flg"),
+	        	options = Seq("0"->"公開", "1"->"非公開")
+	      	))
+	      	<br><br>
+	    }
+	    <button data-remodal-action="cancel" class="remodal-cancel">キャンセル</button>
+  		<input type="submit" class="remodal-confirm" value="保存">
 	}
-});
-
-function fixFrameSize() {
-	if (window.parent) {
-		var body = document.body;
-		var height = body.scrollHeight;
-		var iframe = window.parent.document.getElementsByTagName("iframe")[0];
-		iframe.style.height = height + "px";
-		iframe.scrolling = "no";
-	}
-};
-
-function display(name) {
-	$(name).toggle();
-}
-
-function sendHTML(){
-	var ele = $("<input>", {
-					"type" : "hidden",
-					"name" : "tempHtml",
-					"value" : $('iframe').contents().find('html').html()
-				});
-	$('#sendForm').append(ele);
-};
-
-
-function tggoleHide(classname) {
-
-	if($(classname).css("display") == "none") {
-		if($(classname).children().size() > 0) {
-			$(classname).children().each(function() {
-				var childClassName = $(this).attr("class");
-				$("."+childClassName).css("display", "none");
-				console.log("孫おるで"+childClassName);
-				tggoleHide($(this).children());
-			});
-		}
-	}
-};
-
-// タグに応じて配色を追加
-function addColorSchemeFromSelectElement(classname,assignmentName) {
-	switch($('iframe').contents().find("."+classname).prop("tagName")) {
-		case "UL":
-		{
-			// 配下にliがあるか
-			var parentName = $('iframe').contents().find("."+classname).parent().attr("class");
-			for(var i = parentName;$('iframe').contents().find("."+i).parent().attr("class") != undefined;) {
-				parentName = $('iframe').contents().find("."+i).parent().attr("class") + parentName;
-				i = $('iframe').contents().find("."+i).parent().attr("class");
-			}
-			parentName += classname;
-			if($('iframe').contents().find("."+classname).children().size() > 0) {
-				var cnt = 0;	// liの番号用
-				$('iframe').contents().find("."+classname).children().each(function() {
-					var assignmentNameCopy = assignmentName;
-					assignmentNameCopy += classname;
-					var childClassName = $(this).attr("class");
-					// li配下にタグが存在したら
-					if($(this).children().size() > 0) {
-						$(this).children().each(function() {
-							// タグを小文字に変換して連結
-							childClassName = classname +" li:eq("+cnt+") "+linkingSubordinateTab($(this));
-						});
-					} else {
-						childClassName = classname +" li:eq("+cnt+")";
-					}
-					assignmentNameCopy += "ULLI"+cnt;
-					addLiHideTab(parentName,childClassName,"li"+(cnt),assignmentNameCopy);
-					addLiBackground("li",cnt,childClassName,assignmentNameCopy,classname);
-					cnt ++;
-				});
-			}
-		}
-		break;
-		case "LI":
-		{
-			// 配下にタグがあったら
-			var CN = classname;
-			if($('iframe').contents().find("."+classname).children().size() > 0) {
-				$('iframe').contents().find("."+classname).children().each(function() {
-					// タグを小文字にして連結
-					classname = classname+" "+linkingSubordinateTab($(this));
-				});
-			}
-
-			// これ呼んじゃダメ
-			//addLiBackground(CN,"",classname);
-		}
-		break;
-		case "DIV":
-		{
-			// 仮
-			//addBackground(classname);
-
-			// 配下にタグがあったら
-			if($('iframe').contents().find("."+classname).children().size() > 0) {
-				$('iframe').contents().find("."+classname).children().each(function() {
-					if($(this).attr("class") != undefined) {
-						// タグにあった処理を
-						// できてない
-						var parentName = $(this).attr("class");
-						var childClassName = $(this).attr("class");
-						if($(this).children().size() > 0) {
-							var cnt = 0;
-							if($(this).children().size() == 1) cnt = "";
-							$(this).children().each(function() {
-								childClassName = $(this).attr("class");
-								if(childClassName != undefined) {
-									addTrInHideTab(parentName,childClassName,childClassName);
-								} else {
-									// タグを小文字にして連結
-									childClassName = classname+" "+linkingSubordinateTab($(this));
-									addLiHideTab(classname,childClassName,linkingSubordinateTab($(this)) + cnt);
-								}
-								cnt ++;
-							});
-						}
-						//addTrInHideTab($(this).attr("class"),childClassName,childClassName);
-						//addTabTr($(this).attr("class"));
-					}
-				});
-			}
-		}
-		break;
-		default:
-		{
-			addBackground(classname);
-		}
-		break;
-	}
-};
-
-// 子供の数だけタブを作成してくれる
-function addTabTr(classname) {
-	addTr(classname);
-	testhoge(classname,"");
-};
-
-function testhoge(classname,assignmentName) {
-	assignmentName += classname;
-	$('iframe').contents().find("."+classname).children().each(function() {
-		var childClassName = $(this).attr("class");
-		if(childClassName == undefined) return;
-		var assignmentNameCopy = assignmentName;
-		assignmentNameCopy += childClassName;
-		//console.log("タブ作成"+assignmentNameCopy);
-		addTrInHideTab(classname,childClassName,childClassName,assignmentNameCopy);
-		if($('iframe').contents().find("."+childClassName).children().attr("class")) {
-			classname += childClassName;
-			//classname = classname + childClassName;
-			$('iframe').contents().find("."+childClassName).children().each(function() {
-				if($(this).attr("class") == undefined) return;
-				childClassName = $(this).attr("class");
-				var copycopy = assignmentNameCopy;
-				copycopy += childClassName;
-				//console.log("タブ作成"+copycopy);
-				addTrInHideTab(classname,childClassName,childClassName,copycopy);
-				testhoge(childClassName,copycopy);
-			});
-		}
-		addColorSchemeFromSelectElement(childClassName,assignmentNameCopy);
-	});
-}
-
-</script>
+  </div>
+</div>
 
 
 <div id="chooser" data-placement="'@chooser.placement'" data-hsvpanel="@chooser.hsvpanel" data-sliders="@chooser.slider" data-swatches="@chooser.swatche"></div>
 	<div class="main">
 		<div class="inHtml">
-			<iframe src="@routes.Assets.at(path)" width="920px" name="template" id="iframe"></iframe>
-			<script>
-				$('#iframe').load(function(){
-					var elements = new Array();
-					elements = $('#iframe').contents().find('*');
-					$.each(elements, function(index, item){
-						var classname = item.className.split(" ")[0];
-						if(classname != ""){
-							//TODO 子要素にclassがあったらさらにタブで開く様にする
-							if($('iframe').contents().find("."+classname).children().attr("class")) {
-								// 親にクラスがあったらreturn
-								if($('iframe').contents().find("."+classname).parent().attr("class")) return;
-
-								// 子供の数だけループしてtab作成
-								addTabTr(classname);
-							} else {
-								//addTr(classname);
-								//console.log(classname+"子供いないぜ");
-							}
-						}
-					});
-				});
-			</script>
+			<div id="loading">
+				<div id="loader">
+				    <img src='@routes.Assets.at("images/loading.gif")' width="80" height="80" alt="Now Loading..." onLoad="setTimer(@id)"/>
+				    <p>Now Loading...</p>
+				</div>
+			</div>
+			<div id="afterLoad">
+				<!--<iframe src="@routes.Assets.at(path)" width="920px" name="template" id="iframe"></iframe>-->
+			</div>
 		</div>
 		<form method="post" id="sendForm" name="sendForm" action="/template/download">
 			<div class="button">
-				<input type="button" value="登録">
-				<input type="submit" value="HTMLを書き出す" onClick="sendHTML();">
+			@if(user == null){
+				<input type="button" value="登録" onClick="showPopup(null, @id);">
+			}else{
+				<input type="button" value="登録" onClick="showPopup(@user.memberId, @id);">
+			}
+				<input type="submit" value="HTMLを書き出す" onClick="sendHTML('#sendForm', @id);">
 			</div>
 		</form>
 	</div>
   <div class="side">
     <div class="fixnav">
 		<div class="tempButton">
-			<a href="#"><button class="button1">テンプレート表示</button></a>
+			<form method="post" id="showTemp" name="showTemp" action="/template/detail">
+				<input type = "submit" class="button1" value="プレビュー" onClick="sendHTML('#showTemp', @id);">
+			</form>
 		</div>
       <div class="classTags">
 				<div class="table-responsive">
@@ -243,6 +80,7 @@ function testhoge(classname,assignmentName) {
 			</div>
 		</div>
 	</div>
+
 }
 
 				

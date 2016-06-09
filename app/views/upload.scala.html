@@ -1,12 +1,16 @@
-@(templateForm: Form[forms.TemplateUpload])
+@(templateForm: Form[forms.TemplateUpload],member : Member)
 
 @implicitFieldConstructor = @{ helper.FieldConstructor(myhelper.formFieldConstructor.render) } 
 
-@main("Color Scheme",null){
+@main("Color Scheme",member){
 <div class='container'>
 	<h1 style='margin-top : 40px; margin-bottom : 40px;'>テンプレートアップロード</h1>
 	<p style='margin-bottom : 20px; font-size : 16px; color : blue;'>
-	あなたの好きなhtmlテンプレートをアップロードできます。
+	@if(member == null) {
+		あなたの好きなhtmlテンプレートをアップロードできます。
+	}	else	{
+		あなたの好きな htmlテンプレート or 画像ファイル をアップロードできます。
+	}
 	</p>
 	@helper.form(action = routes.Application.doUpload,
 	'enctype -> "multipart/form-data") {

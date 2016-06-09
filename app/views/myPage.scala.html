@@ -1,14 +1,19 @@
-@(member: models.Member, setting: Form[forms.ChooserAdvancedSetting])
+@(member: models.Member, setting: Form[forms.MyPage])
 
 @import helper._
 
+@implicitFieldConstructor = @{ helper.FieldConstructor(myhelper.formFieldConstructor.render) } 
+
 @main("myPage", member) {
-	<p>@(member.memberName)さん</p>
-	<p>メールアドレス : @member.mail</p><button>編集</button>
-	<p><a href='@routes.AdminController.modifyPassword()'>パスワードを変更</a></p>
-	
 	@helper.form(action = routes.AdminController.saveChooserSetting()) {
 		<div class="container">
+		<h1 style='margin-top : 20px;'>マイページ</h1>
+			<div class='row'>
+				@helper.inputText(setting("memberName"),'_label -> "アカウント名",'_showConstraints -> false)
+				@helper.inputText(setting("mail"),'_label -> "メールアドレス",'_showConstraints -> false)
+				<p style='margin-top : 10px;'><a href='@routes.AdminController.modifyPassword()' target='_blank'>パスワードを変更</a></p>
+			</div>
+			<h3>カラーパレットの設定</h3>
 			<div class="row">
 				<div class="col-xs-4">
 					@helper.inputRadioGroup(
@@ -75,7 +80,7 @@
 				</div>
 
 			</div>
+			<input type="submit" value="設定を保存">
 		</div>
-		<input type="submit" value="設定を保存">
 	}
 }

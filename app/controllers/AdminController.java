@@ -31,7 +31,7 @@ import org.mindrot.jbcrypt.BCrypt;
 
 import com.avaje.ebean.Query;
 
-import forms.ChooserAdvancedSetting;
+import forms.MyPage;
 import forms.ModifyPassword;
 import forms.TemplateUpload;
 import models.*;
@@ -125,11 +125,15 @@ public class AdminController extends BaseController {
 	 * @return
 	 */
 	public static Result myPage() {
-		Form<ChooserAdvancedSetting> form = Form.form(ChooserAdvancedSetting.class);
+		Form<MyPage> form = Form.form(MyPage.class);
 		Member mem = isLoggedIn();
-		if(mem == null) return badRequest("/");
+		if(mem == null) {
+			return redirect(routes.AdminController.login());
+		}
 		Chooser chooser = adminS.findChooserByChooserId(mem.chooser.chooserId);
-		ChooserAdvancedSetting setting = new ChooserAdvancedSetting();
+		MyPage setting = new MyPage();
+		setting.memberName = mem.memberName;
+		setting.mail = mem.mail;
 		setting.hsvpanel	= chooser.hsvpanel;
 		setting.slider		= chooser.slider;
 		setting.swatche		= chooser.swatche;
@@ -141,9 +145,17 @@ public class AdminController extends BaseController {
 	 * @return
 	 */
 	public static Result saveChooserSetting() {
-		Form<ChooserAdvancedSetting> form = Form.form(ChooserAdvancedSetting.class).bindFromRequest();
-		Member mem = (Member)getObjectFormSession("Member");
+		Form<MyPage> form = Form.form(MyPage.class).bindFromRequest();
+		Member mem = isLoggedIn();
+		if(mem == null) {
+			return badRequest(myPage.render(mem, form));
+		}
 		if(!form.hasErrors()) {
+			if(!mem.memberName.equals(form.get().memberName) || !mem.mail.equals(form.get().mail)) {
+				mem.memberName = form.get().memberName;
+				mem.mail = form.get().mail;
+				adminS.storeMember(mem);
+			}
 			Chooser chooser = adminS.findChooserByChooserId(mem.chooser.chooserId);
 			chooser.hsvpanel	= form.get().hsvpanel;
 			chooser.slider		= form.get().slider;

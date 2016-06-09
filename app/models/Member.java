@@ -9,6 +9,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
+import play.data.validation.Constraints.Email;
 import play.data.validation.Constraints.MinLength;
 import play.data.validation.Constraints.Pattern;
 import play.data.validation.Constraints.Required;
@@ -27,6 +28,7 @@ public class Member extends BaseModel {
 	@MinLength(6)
 	public String password;
 
+	@Email
 	public String mail;
 	
 	@ManyToOne(cascade = CascadeType.PERSIST)
