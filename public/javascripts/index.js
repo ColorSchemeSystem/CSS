@@ -112,8 +112,11 @@ function addFont(name) {
 }
 
 // Trタブを非表示で追加親クラスのタブがクリックされたら表示される、クリックされると配下のタブが表示される
-function addTrInHideTab(parentName,classname,dispName) {
-	var CN = classname;
+function addTrInHideTab(parentName,classname,dispName,assignmentName) {
+	//var CN = classname;
+	//var CN = parentName + classname;
+	if(assignmentName == "headermenuBar") console.log("めぬーばー"+"dispName:"+dispName+"  parentName:"+parentName);
+	else if(assignmentName == "headermenuBarmenu") console.log("menu--------"+"dispName:"+dispName+"  parentName:"+parentName);
 	var td = $("<td></td>",{
 		text : dispName
 	});
@@ -150,7 +153,8 @@ function addTrInHideTab(parentName,classname,dispName) {
 				$('iframe').contents().find('.hoverImage').remove();
 			},
 			click : function(event) {
-				$(".iframe"+CN).each(function() {
+				console.log(assignmentName);
+				$(".iframe"+assignmentName).each(function() {
 					display($(this));
 				});
 			}
@@ -178,7 +182,7 @@ function addTrInHideTab(parentName,classname,dispName) {
 };
 
 // li用のhideTab
-function addLiHideTab(parentName,classname,dispName) {
+function addLiHideTab(parentName,classname,dispName,assignmentName) {
 	var CN = classname;
 	var td = $("<td></td>",{
 		text : dispName
@@ -216,7 +220,7 @@ function addLiHideTab(parentName,classname,dispName) {
 				$('iframe').contents().find('.hoverImage').remove();
 			},
 			click : function(event) {
-				$(".iframe"+dispName).each(function() {
+				$(".iframe"+assignmentName).each(function() {
 					display($(this));
 				});
 			}
@@ -270,6 +274,18 @@ function addLiBackground(name, number, childClassName) {
 		swatches: $('#chooser').data('swatches'),
 		previewformat: 'hex'
 	},dataBack);
+};
+
+// 配下のタグ名を連結して返す
+function linkingSubordinateTab(data){
+	var name = "";
+	name = $(data).prop("tagName").toLowerCase();
+	if($(data).children().size() > 0) {
+		$(data).children().each(function() {
+			name += " "+linkingSubordinateTab($(this));
+		});
+	}
+	return name;
 };
 
 

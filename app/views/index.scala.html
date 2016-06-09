@@ -65,43 +65,86 @@ function tggoleHide(classname) {
 };
 
 // タグに応じて配色を追加
-function addColorSchemeFromSelectElement(classname) {
+function addColorSchemeFromSelectElement(classname,assignmentName) {
 	switch($('iframe').contents().find("."+classname).prop("tagName")) {
 		case "UL":
 		{
+			// 配下にliがあるか
+			assignmentName += "UL";
 			if($('iframe').contents().find("."+classname).children().size() > 0) {
-				cnt = 0;	// liの番号用
+				var cnt = 0;	// liの番号用
 				$('iframe').contents().find("."+classname).children().each(function() {
+					var assignmentNameCopy = assignmentName;
+					assignmentNameCopy += "Li" + cnt;
 					var childClassName = $(this).attr("class");
 					// li配下にタグが存在したら
 					if($(this).children().size() > 0) {
 						$(this).children().each(function() {
-							// li配下にaタグがあったら
-							if($(this).prop("tagName") == "A") {
-								childClassName = classname +" li:eq("+cnt+") a";
-							}
+							// タグを小文字に変換して連結
+							childClassName = classname +" li:eq("+cnt+") "+linkingSubordinateTab($(this));
 						});
 					} else {
 						childClassName = classname +" li:eq("+cnt+")";
 					}
-					addLiHideTab(classname,childClassName,"li"+(cnt));
-					//addBackground("li"+(cnt+1));
+					addLiHideTab(classname,childClassName,"li"+(cnt),assignmentNameCopy);
 					addLiBackground("li",cnt,childClassName);
 					cnt ++;
 				});
 			}
 		}
 		break;
+		case "LI":
+		{
+			// 配下にタグがあったら
+			var CN = classname;
+			if($('iframe').contents().find("."+classname).children().size() > 0) {
+				$('iframe').contents().find("."+classname).children().each(function() {
+					// タグを小文字にして連結
+					classname = classname+" "+linkingSubordinateTab($(this));
+				});
+			}
+
+			addLiBackground(CN,"",classname);
+		}
+		break;
 		case "DIV":
 		{
 			// 仮
-			addBackground(classname);
-			//console.log("DIV~");
+			//addBackground(classname);
+
+			// 配下にタグがあったら
+			if($('iframe').contents().find("."+classname).children().size() > 0) {
+				$('iframe').contents().find("."+classname).children().each(function() {
+					if($(this).attr("class") != undefined) {
+						// タグにあった処理を
+						// できてない
+						var parentName = $(this).attr("class");
+						var childClassName = $(this).attr("class");
+						if($(this).children().size() > 0) {
+							var cnt = 0;
+							if($(this).children().size() == 1) cnt = "";
+							$(this).children().each(function() {
+								childClassName = $(this).attr("class");
+								if(childClassName != undefined) {
+									addTrInHideTab(parentName,childClassName,childClassName);
+								} else {
+									// タグを小文字にして連結
+									childClassName = classname+" "+linkingSubordinateTab($(this));
+									addLiHideTab(classname,childClassName,linkingSubordinateTab($(this)) + cnt);
+								}
+								cnt ++;
+							});
+						}
+						//addTrInHideTab($(this).attr("class"),childClassName,childClassName);
+						//addTabTr($(this).attr("class"));
+					}
+				});
+			}
 		}
 		break;
 		default:
 		{
-			//addBackground(classname);
+			addBackground(classname);
 		}
 		break;
 	}
@@ -110,22 +153,30 @@ function addColorSchemeFromSelectElement(classname) {
 // 子供の数だけタブを作成してくれる
 function addTabTr(classname) {
 	addTr(classname);
-	testhoge(classname);
+	testhoge(classname,"");
 };
 
-function testhoge(classname) {
+function testhoge(classname,assignmentName) {
+	assignmentName += classname;
 	$('iframe').contents().find("."+classname).children().each(function() {
 		var childClassName = $(this).attr("class");
-		addTrInHideTab(classname,childClassName,childClassName);
+		if(childClassName == undefined) return;
+		var assignmentNameCopy = assignmentName;
+		console.log(assignmentNameCopy);
+		addTrInHideTab(classname,childClassName,childClassName,assignmentNameCopy);
 		if($('iframe').contents().find("."+childClassName).children().attr("class")) {
-			 classname = childClassName;
+			classname = childClassName;
+			//classname = classname + childClassName;
 			$('iframe').contents().find("."+childClassName).children().each(function() {
 				if($(this).attr("class") == undefined) return;
 				childClassName = $(this).attr("class");
-				addTrInHideTab(classname,childClassName,childClassName);
+				var copycopy = assignmentNameCopy;
+				copycopy += childClassName;
+				addTrInHideTab(classname,childClassName,childClassName,copycopy);
+				testhoge(childClassName,copycopy);
 			});
 		}
-		addColorSchemeFromSelectElement(childClassName);
+		addColorSchemeFromSelectElement(childClassName,assignmentNameCopy);
 	});
 }
 
@@ -138,10 +189,8 @@ function testhoge(classname) {
 			<iframe src="@routes.Assets.at(path)" width="920px" name="template" id="iframe"></iframe>
 			<script>
 				$('#iframe').load(function(){
-					//console.log("実行");
 					var elements = new Array();
 					elements = $('#iframe').contents().find('*');
-					//console.log($('#iframe').contents().find('*'));
 					$.each(elements, function(index, item){
 						var classname = item.className.split(" ")[0];
 						if(classname != ""){
@@ -154,7 +203,7 @@ function testhoge(classname) {
 								addTabTr(classname);
 							} else {
 								//addTr(classname);
-								//console.log("子供いないぜ");
+								//console.log(classname+"子供いないぜ");
 							}
 						}
 					});
