@@ -113,10 +113,6 @@ function addFont(name) {
 
 // Trタブを非表示で追加親クラスのタブがクリックされたら表示される、クリックされると配下のタブが表示される
 function addTrInHideTab(parentName,classname,dispName,assignmentName) {
-	//var CN = classname;
-	//var CN = parentName + classname;
-	if(assignmentName == "headermenuBar") console.log("めぬーばー"+"dispName:"+dispName+"  parentName:"+parentName);
-	else if(assignmentName == "headermenuBarmenu") console.log("menu--------"+"dispName:"+dispName+"  parentName:"+parentName);
 	var td = $("<td></td>",{
 		text : dispName
 	});
@@ -153,7 +149,6 @@ function addTrInHideTab(parentName,classname,dispName,assignmentName) {
 				$('iframe').contents().find('.hoverImage').remove();
 			},
 			click : function(event) {
-				console.log(assignmentName);
 				$(".iframe"+assignmentName).each(function() {
 					display($(this));
 				});
@@ -183,6 +178,7 @@ function addTrInHideTab(parentName,classname,dispName,assignmentName) {
 
 // li用のhideTab
 function addLiHideTab(parentName,classname,dispName,assignmentName) {
+	console.log("親"+parentName);
 	var CN = classname;
 	var td = $("<td></td>",{
 		text : dispName
@@ -248,9 +244,9 @@ function addLiHideTab(parentName,classname,dispName,assignmentName) {
 };
 
 // 複数同じタグがある場合(現状li用)
-function addLiBackground(name, number, childClassName) {
-	var idName = name+number.toString();
-	var tr = $("<tr class='iframe"+idName+"'></tr>");
+function addLiBackground(name, number, childClassName,assignmentName) {
+	var idName = name + number;
+	var tr = $("<tr class='iframe"+assignmentName+"'></tr>");
 	var td = $("<td>background</td>");
 	var td2 = $("<input type='text' class='form-control' id='"+idName+"-back' value='#A6FF00' data-color-format='hex'>");
 
