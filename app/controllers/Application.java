@@ -250,6 +250,7 @@ public class Application extends BaseController{
 			}
 			if(tempS.member_id != null){
 				temp.member = appS.findMemberById(tempS.member_id);
+				System.out.println("メンバー = " + temp.member);
 			}else{
 				temp.member = null;
 			}
@@ -273,12 +274,13 @@ public class Application extends BaseController{
 		return redirect(routes.Application.index());
 	}
 
-	/*public static Result detailTemp(){
+	public static Result detailTemp(){
 		Form<TemplateDownload> form = Form.form(TemplateDownload.class).bindFromRequest();
 		TemplateDownload html = form.get();
 		html.tempHtml = "<html>" + html.tempHtml + "</html>";
 		if(html.tempHtml != null){
-			return ok(detailHtml.render(html.tempHtml));
+			return ok(html.tempHtml).as("text/html");
 		}
-	}*/
+		return redirect("/");
+	}
 }
