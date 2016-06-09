@@ -249,21 +249,32 @@ public class Application extends BaseController{
 				temp.accessFlag = 0;
 			}
 			if(tempS.member_id != null){
+				System.out.println("メンバーID = " + tempS.member_id);
 				temp.member = appS.findMemberById(tempS.member_id);
 				System.out.println("メンバー = " + temp.member);
 			}else{
 				temp.member = null;
 			}
 			appS.saveTemplate(temp);
-			String fileN = temp.templateId + ".html";
+			String tempName = temp.templateId + ".html";
 			Long newTempId = temp.templateId;
-			File file = new File(fileN);
+			File file = new File(tempName);
 			try{
 				FileWriter fileWriter = new FileWriter(file);
 				fileWriter.write(tempS.tempHtml);
 				fileWriter.close();
-				String fullPath = Play.application().path().getPath() + "/public/iframes/";
-				file.renameTo(new File(fullPath, fileN));
+				String tempPath = Play.application().path().getPath() + "/public/iframes/";
+
+			    String target = "https://www.google.co.jp/";
+			    Promise<WS.Response> response = WS.url(ImageService.webShotUrl).setQueryParameter("target", target)
+			    		.setTimeout(1000 * 60).get();
+				String base64ImageData = response.get().getBody();
+				final String imageFilePath = Play.application().path().getPath() + "/public/snapshots/";
+				final String imageFileName = String.valueOf(newTempId) + ".png";
+				imageS.saveBase64ImageDataAsImage(base64ImageData, "png",
+						imageFilePath + imageFileName);
+
+				file.renameTo(new File(tempPath, tempName));
 				return redirect(routes.Application.indexWithId(newTempId));
 			}catch(Exception e){
 				e.printStackTrace();

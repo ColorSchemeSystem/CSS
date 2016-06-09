@@ -213,6 +213,7 @@ function testhoge(classname,assignmentName) {
 }
 
 function showPopup(member_id, id){
+	console.log("メンバーid" + member_id);
 	var inst = $('[data-remodal-id=modal]').remodal();
 	inst.open();
 
@@ -223,7 +224,7 @@ function showPopup(member_id, id){
 					"name" : "member_id",
 					"value" : member_id
 				});
-	$('#saveHTMLForm').append(ele);
+	$('#saveHtmlForm').append(ele);
 }
 
 function setTimer(id){
