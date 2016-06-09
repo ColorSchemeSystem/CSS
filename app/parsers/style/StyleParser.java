@@ -33,7 +33,7 @@ public class StyleParser {
 		}
 		return list;
 	}
-	
+
 	/**
 	 * @param style
 	 * @return
@@ -53,7 +53,7 @@ public class StyleParser {
 		}
 		return new String[]{attrs,elements};
 	}
-	
+
 	/**
 	 * @param attrs
 	 * @return
@@ -67,9 +67,9 @@ public class StyleParser {
 			}
 			attrsList.add(attr.replaceAll("\\s", ""));
 		}
-		return attrsList;	
+		return attrsList;
 	}
-	
+
 	/**
 	 * @param elementsStr
 	 * @return
@@ -84,7 +84,7 @@ public class StyleParser {
 			}
 			String[] keyValue = e.split(":");
 			try {
-				map.put(keyValue[0].trim(), 
+				map.put(keyValue[0].trim(),
 						keyValue[1].trim());
 			}	catch(ArrayIndexOutOfBoundsException ex) {
 				ex.printStackTrace();
@@ -92,7 +92,7 @@ public class StyleParser {
 		}
 		return map;
 	}
-	
+
 	/**
 	 * @param attrs
 	 * @return
@@ -112,7 +112,7 @@ public class StyleParser {
 		}
 		return result;
 	}
-	
+
 	/**
 	 * @param elements
 	 * @return
@@ -127,7 +127,7 @@ public class StyleParser {
 		}
 		return result;
 	}
-	
+
 	/**
 	 * @param html
 	 */
@@ -149,7 +149,7 @@ public class StyleParser {
 		}
 		return style;
 	}
-	
+
 	/**
 	 * @param html
 	 */
@@ -178,7 +178,7 @@ public class StyleParser {
 					result = styleMap;
 				}	else	{
 					for(String key : styleMap.keySet()) {
-						if(result.containsKey(key) && 
+						if(result.containsKey(key) &&
 								!result.get(key).equals(styleMap.get(key))) {
 							result.remove(key);
 						}
@@ -192,7 +192,7 @@ public class StyleParser {
 		}
 		return style;
 	}
-	
+
 	/**
 	 * @param html
 	 * @return
@@ -203,7 +203,7 @@ public class StyleParser {
 		s1.mergeStyle(s2);
 		return s1;
 	}
-	
+
 	/**
 	 * @param document
 	 * @return
@@ -222,4 +222,5 @@ public class StyleParser {
 		}
 		return new ArrayList<String>(classNames);
 	}
+
 }

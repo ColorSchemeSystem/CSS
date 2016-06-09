@@ -1,10 +1,17 @@
-@(user: Member, chooser: Chooser, path: String, tags: List[String])
+@(user: Member, chooser: Chooser, path: String, tags: List[String], myForm: Form[forms.TemplateSave], id: String)
+
+@import helper._
+
+@implicitField = @{ FieldConstructor(fieldConstructor.fieldC.f) }
 
 @main("Color Scheme", user){ 
 <script>
 
+var iframeMethod;
+
 $(window).load(function(){
-	fixFrameSize();
+	$('#loading').css("display", "block");
+	$('#loader').css("display", "block");
 	var navi = $('.fixnav');
 		var main  = $('.main');
 		var target_top = navi.offset().top - parseInt(navi.css('margin-top'),10);
@@ -12,18 +19,18 @@ $(window).load(function(){
 		var sub_scroll = main.offset().top + main.outerHeight(true) - navi.outerHeight(true) - parseInt(navi.css('margin-top'),10);
 
 		if (navi.outerHeight(true) + target_top < main.outerHeight(true) + sub_top) {
-		$(window).scroll(function () {
-			var ws = $(window).scrollTop();
-			$('.scroll').text(ws);
-			if (ws > sub_scroll) {
-			navi.css({position:'fixed', top: sub_scroll - ws + 'px'});
-			} else if(ws > target_top) {
-			navi.css({position:'fixed', top: '0px'});
-			} else {
-			navi.css({position:'relative', top: '0px'});
-			}
-		});
-	}
+			$(window).scroll(function () {
+				var ws = $(window).scrollTop();
+				$('.scroll').text(ws);
+				if (ws > sub_scroll) {
+				navi.css({position:'fixed', top: sub_scroll - ws + 'px'});
+				} else if(ws > target_top) {
+				navi.css({position:'fixed', top: '0px'});
+				} else {
+				navi.css({position:'relative', top: '0px'});
+				}
+			});
+		}
 });
 
 function fixFrameSize() {
@@ -40,13 +47,19 @@ function display(name) {
 	$(name).toggle();
 }
 
-function sendHTML(){
+function sendHTML(formId, id){
 	var ele = $("<input>", {
 					"type" : "hidden",
 					"name" : "tempHtml",
 					"value" : $('iframe').contents().find('html').html()
 				});
-	$('#sendForm').append(ele);
+	var ele2 = $("<input>",{
+					"type" : "hidden",
+					"name" : "temp_id",
+					"value" : id
+				});
+	$(formId).append(ele);
+	$(formId).append(ele2);
 };
 
 
@@ -129,19 +142,63 @@ function testhoge(classname) {
 	});
 }
 
-</script>
+function showPopup(member_id, id){
+	var inst = $('[data-remodal-id=modal]').remodal();
+	inst.open();
 
+	sendHTML('#saveHtmlForm', id);
+	
+	var ele = $("<input>", {
+					"type" : "hidden",
+					"name" : "member_id",
+					"value" : member_id
+				});
+	$('#saveHTMLForm').append(ele);
+}
 
-<div id="chooser" data-placement="'@chooser.placement'" data-hsvpanel="@chooser.hsvpanel" data-sliders="@chooser.slider" data-swatches="@chooser.swatche"></div>
-	<div class="main">
-		<div class="inHtml">
-			<iframe src="@routes.Assets.at(path)" width="920px" name="template" id="iframe"></iframe>
-			<script>
-				$('#iframe').load(function(){
-					//console.log("実行");
-					var elements = new Array();
+function setTimer(id){
+	iframeMethod = setInterval("loadIframe(" + id + ")", 2000);
+}
+
+function loadIframe(id){
+	console.log("タイマー");
+	checkError(id);
+}
+
+function checkError(id){
+	if(id == 0){
+		var url = "/assets/iframes/iframe1.html"
+	}else{
+		var url = "/assets/iframes/" + id + ".html"
+	}
+
+	$.ajax({ cache: false,
+    	url: url,
+    	success: function (data) {
+    		console.log("接続に成功")
+        	reloadIframe(url);
+    	},
+    	error: function (data) {
+        	console.log("404エラーです")
+    	}
+	});
+}
+
+function reloadIframe(url){
+	clearInterval(iframeMethod);
+	console.log("読み込みます");
+	$('#loading').css("display", "none");
+	$('#loader').css("display", "none");
+	var iframe = $("<iframe></iframe>", {
+		"src" : url,
+		"width" : "920px",
+		"name" : "template",
+		"id" : "iframe",
+		on : {
+			load : function(event){
+				var elements = new Array();
 					elements = $('#iframe').contents().find('*');
-					//console.log($('#iframe').contents().find('*'));
+					console.log($('#iframe').contents().find('*'));
 					$.each(elements, function(index, item){
 						var classname = item.className.split(" ")[0];
 						if(classname != ""){
@@ -158,20 +215,78 @@ function testhoge(classname) {
 							}
 						}
 					});
-				});
-			</script>
+			}
+		}
+
+	});
+	$('#afterLoad').append(iframe);
+	$('#afterLoad').css("display", "block");
+	fixFrameSize();
+}
+
+</script>
+
+<!--modalView-->
+<div class="remodal" data-remodal-id="modal" role="dialog" aria-labelledby="modal1Title" aria-describedby="modal1Desc">
+  <button data-remodal-action="close" class="remodal-close" aria-label="Close"></button>
+  <div class="remodal-content">
+  	<h1>HTMLの保存</h1>
+  	<br><br>
+  	@form(action = routes.Application.saveEditTemplate, 'id -> "saveHtmlForm"){
+	    @(inputText(
+	    	field = myForm("tempName"), args = 'class -> "nameForm", 'size -> 50, 'placeholder -> "HTMLの名前"
+	    ))
+	    <br><br>
+	    @(textarea(
+	    	field = myForm("tempMessage"), args = 'class -> "messageForm", 'rows -> 10, 'cols -> 50, 'placeholder -> "HTMLの説明"
+	    ))
+	    <br><br>
+	    @if(user == null){
+
+	    }else{
+	    	@(inputRadioGroup(
+	        	myForm("flg"),
+	        	options = Seq("0"->"公開", "1"->"非公開")
+	      	))
+	      	<br><br>
+	    }
+	    <button data-remodal-action="cancel" class="remodal-cancel">キャンセル</button>
+  		<input type="submit" class="remodal-confirm" value="保存">
+	}
+  </div>
+</div>
+
+
+<div id="chooser" data-placement="'@chooser.placement'" data-hsvpanel="@chooser.hsvpanel" data-sliders="@chooser.slider" data-swatches="@chooser.swatche"></div>
+	<div class="main">
+		<div class="inHtml">
+			<div id="loading">
+				<div id="loader">
+				    <img src='@routes.Assets.at("images/loading.gif")' width="80" height="80" alt="Now Loading..." onLoad="setTimer(@id)"/>
+				    <p>Now Loading...</p>
+				</div>
+			</div>
+			<div id="afterLoad">
+				<!--<iframe src="@routes.Assets.at(path)" width="920px" name="template" id="iframe"></iframe>-->
+			</div>
 		</div>
 		<form method="post" id="sendForm" name="sendForm" action="/template/download">
 			<div class="button">
-				<input type="button" value="登録">
-				<input type="submit" value="HTMLを書き出す" onClick="sendHTML();">
+			@if(user == null){
+				<input type="button" value="登録" onClick="showPopup(null, @id);">
+			}else{
+				<input type="button" value="登録" onClick="showPopup(@user.memberId, @id);">
+			}
+				<input type="submit" value="HTMLを書き出す" onClick="sendHTML('#sendForm', @id);">
 			</div>
 		</form>
 	</div>
   <div class="side">
     <div class="fixnav">
 		<div class="tempButton">
-			<a href="#"><button class="button1">テンプレート表示</button></a>
+			<form method="post" id="showTemp" name="showTemp" action="/detail/template">
+				<input type = "submit" class="button1" value="テンプレート表示" onClick="sendHTML('#showTemp', @id);">
+			</form>
 		</div>
       <div class="classTags">
 				<div class="table-responsive">
@@ -185,6 +300,7 @@ function testhoge(classname) {
 			</div>
 		</div>
 	</div>
+
 }
 
 				

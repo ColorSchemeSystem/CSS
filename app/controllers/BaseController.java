@@ -39,7 +39,7 @@ public class BaseController extends Controller {
 	protected static void removeObjectSession(String key) {
 		session().remove(key);
 	}
-	
+
 	/**
 	 * @return
 	 */
