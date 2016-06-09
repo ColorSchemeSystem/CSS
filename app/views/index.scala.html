@@ -157,15 +157,17 @@ function addTabTr(classname) {
 };
 
 function testhoge(classname,assignmentName) {
+	console.log(assignmentName);
 	assignmentName += classname;
 	$('iframe').contents().find("."+classname).children().each(function() {
 		var childClassName = $(this).attr("class");
 		if(childClassName == undefined) return;
 		var assignmentNameCopy = assignmentName;
-		console.log(assignmentNameCopy);
+		assignmentNameCopy += childClassName;
+		//console.log(assignmentNameCopy);
 		addTrInHideTab(classname,childClassName,childClassName,assignmentNameCopy);
 		if($('iframe').contents().find("."+childClassName).children().attr("class")) {
-			classname = childClassName;
+			classname += childClassName;
 			//classname = classname + childClassName;
 			$('iframe').contents().find("."+childClassName).children().each(function() {
 				if($(this).attr("class") == undefined) return;
