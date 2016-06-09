@@ -48,7 +48,7 @@ function addBackground(name) {
 	var classname = "." + name;
 
 	var color = $('iframe').contents().find(classname).css("background-color");
-	if(color == 'rgba(0, 0, 0, 0)') color = 'rgb(255, 255, 255)';
+	if(color == 'rgba(0, 0, 0, 0)') color = 'rgb(127, 127, 127)';
 	$("#"+name+"-back").val(color);
 
 	var dataBack = {contentName:classname, targetName:"background"};
@@ -178,7 +178,6 @@ function addTrInHideTab(parentName,classname,dispName,assignmentName) {
 
 // li用のhideTab
 function addLiHideTab(parentName,classname,dispName,assignmentName) {
-	console.log("親"+parentName);
 	var CN = classname;
 	var td = $("<td></td>",{
 		text : dispName
@@ -243,8 +242,8 @@ function addLiHideTab(parentName,classname,dispName,assignmentName) {
 	$('#classTable').append(tr);
 };
 
-// 複数同じタグがある場合(現状li用)
-function addLiBackground(name, number, childClassName,assignmentName) {
+// 複数同じタグがある場合(li用)
+function addLiBackground(name, number, childClassName,assignmentName,parentName) {
 	var idName = name + number;
 	var tr = $("<tr class='iframe"+assignmentName+"'></tr>");
 	var td = $("<td>background</td>");
@@ -254,13 +253,12 @@ function addLiBackground(name, number, childClassName,assignmentName) {
 	tr.append(td2);
 	tr.css("display", "none");
 	$('#classTable').append(tr);
-	var classname = "." + name;
-
-	var color = $('iframe').contents().find(classname).css("background-color");
-	if(color == 'rgba(0, 0, 0, 0)') color = 'rgb(255, 255, 255)';
-	$("#"+idName+"-back").val(color);
 
 	childClassName = "." + childClassName;
+
+	var color = $('iframe').contents().find(childClassName).css("background-color");
+	if(color == 'rgba(0, 0, 0, 0)' || color == undefined) color = 'rgb(255, 255, 255)';
+	$("#"+idName+"-back").val(color);
 
 	var dataBack = {contentName:childClassName, targetName:"background"};
 	$("input#"+idName+"-back").ColorPickerSliders({
