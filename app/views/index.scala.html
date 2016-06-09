@@ -49,242 +49,84 @@ function sendHTML(){
 	$('#sendForm').append(ele);
 };
 
-function addTr(classname) {
-	var CN = classname;
-	var td = $("<td></td>",{
-		text : classname
-	});
-	classname = "." + classname;
-	//console.log(td);
-	var td2 = $("<td>COLOR</td>");
-	//console.log(td2);
-	var tr = $("<tr></tr>",{
-		on : {
-			/*mouseover : function(event){
-				//console.log(classname);
-				var content = $('iframe').contents().find(classname);
-				var element = $("<div></div>", {
-						"class" : "hoverImage"
-				});
-				//console.log("オブジェクト作成");
-				var css = {
-					color : "red",
-					position : "absolute",
-					width : content.innerWidth(),
-					height : content.innerHeight(),
-					background : "red",
-					filter : "alpha(opacity = 30)",
-					MozOpacity : 0.3,
-					opacity : 0.3
-				};
-				//console.log("css設定");
-				content.css("position", "relative");
-				element.css(css);
-				element.css("top", 0);
-				element.css("left", 0);
-				element.css("z-index", 1000);
-				//console.log("cssセット")
-				content.append(element);
-				//console.log("要素代入")
-			},
-			mouseout : function(classname){
-				//console.log("マウスアウト");
-				var content = $('iframe').contents().find(classname);
-				//console.log("要素の見つける");
-				content.css("position", "");
-				//console.log("css削除");
-				$('iframe').contents().find('.hoverImage').remove();
-			},*/
-			click : function(event) {
-				$(".iframe"+CN).each(function() {
-					display($(this));
-				});
-			}
+
+function tggoleHide(classname) {
+
+	if($(classname).css("display") == "none") {
+		if($(classname).children().size() > 0) {
+			$(classname).children().each(function() {
+				var childClassName = $(this).attr("class");
+				$("."+childClassName).css("display", "none");
+				console.log("孫おるで"+childClassName);
+				tggoleHide($(this).children());
+			});
 		}
-	});
-	tr.append(td);
-	tr.append(td2);
-	tr.css("background-color", "#AAA");
-	$('#classTable').append(tr);
-};
-/*
-function addTrAndTrInTdTab(classname,childName) {
-	var CN = classname;
-	var td = $("<td></td>",{
-		text : classname
-	});
-	classname = "." + classname;
-	//console.log(td);
-	var td2 = $("<td>COLOR</td>");
-	//console.log(td2);
-	var tr = $("<tr></tr>",{
-		on : {
-			click : function(event) {
-				$(".iframe"+CN).each(function() {
-					display($(this));
-				});
-			}
-		}
-	});
-	tr.append(td);
-	tr.append(td2);
-	tr.css("background-color", "#AAA");
-	$('#classTable').append(tr);
-};
-*/
-function addTrInHideTab(parentName,classname) {
-	var CN = classname;
-	var td = $("<td></td>",{
-		text : classname
-	});
-	classname = "." + classname;
-	//console.log(td);
-	var td2 = $("<td>COLOR</td>");
-	//console.log(td2);
-	var tr = $("<tr></tr>",{
-		"class": "iframe"+parentName,
-		on : {
-			mouseover : function(event){
-				//console.log(classname);
-				var content = $('iframe').contents().find(classname);
-				var element = $("<div></div>", {
-						"class" : "hoverImage"
-				});
-				//console.log("オブジェクト作成");
-				var css = {
-					color : "red",
-					position : "absolute",
-					width : content.innerWidth(),
-					height : content.innerHeight(),
-					background : "red",
-					filter : "alpha(opacity = 30)",
-					MozOpacity : 0.3,
-					opacity : 0.3
-				};
-				//console.log("css設定");
-				content.css("position", "relative");
-				element.css(css);
-				element.css("top", 0);
-				element.css("left", 0);
-				element.css("z-index", 1000);
-				//console.log("cssセット")
-				content.append(element);
-				//console.log("要素代入")
-			},
-			mouseout : function(classname){
-				//console.log("マウスアウト");
-				var content = $('iframe').contents().find(classname);
-				//console.log("要素の見つける");
-				content.css("position", "");
-				//console.log("css削除");
-				$('iframe').contents().find('.hoverImage').remove();
-			},
-			click : function(event) {
-				console.log("くりっく");
-				$(".iframe"+CN).each(function() {
-					display($(this));
-				});
-			}
-		}
-	});
-	tr.append(td);
-	tr.append(td2);
-	tr.css("display", "none");
-	tr.css("background-color", "#AAA");
-	$('#classTable').append(tr);
+	}
 };
 
+// タグに応じて配色を追加
 function addColorSchemeFromSelectElement(classname) {
-	addBackground(classname);
+	switch($('iframe').contents().find("."+classname).prop("tagName")) {
+		case "UL":
+		{
+			if($('iframe').contents().find("."+classname).children().size() > 0) {
+				cnt = 0;	// liの番号用
+				$('iframe').contents().find("."+classname).children().each(function() {
+					var childClassName = $(this).attr("class");
+					// li配下にタグが存在したら
+					if($(this).children().size() > 0) {
+						$(this).children().each(function() {
+							// li配下にaタグがあったら
+							if($(this).prop("tagName") == "A") {
+								childClassName = classname +" li:eq("+cnt+") a";
+							}
+						});
+					} else {
+						childClassName = classname +" li:eq("+cnt+")";
+					}
+					addLiHideTab(classname,childClassName,"li"+(cnt));
+					//addBackground("li"+(cnt+1));
+					addLiBackground("li",cnt,childClassName);
+					cnt ++;
+				});
+			}
+		}
+		break;
+		case "DIV":
+		{
+			// 仮
+			addBackground(classname);
+			//console.log("DIV~");
+		}
+		break;
+		default:
+		{
+			//addBackground(classname);
+		}
+		break;
+	}
 };
 
+// 子供の数だけタブを作成してくれる
 function addTabTr(classname) {
 	addTr(classname);
+	testhoge(classname);
+};
+
+function testhoge(classname) {
 	$('iframe').contents().find("."+classname).children().each(function() {
 		var childClassName = $(this).attr("class");
-		console.log(classname+"子供います"+childClassName);
-		addTrInHideTab(classname,childClassName);
+		addTrInHideTab(classname,childClassName,childClassName);
+		if($('iframe').contents().find("."+childClassName).children().attr("class")) {
+			 classname = childClassName;
+			$('iframe').contents().find("."+childClassName).children().each(function() {
+				if($(this).attr("class") == undefined) return;
+				childClassName = $(this).attr("class");
+				addTrInHideTab(classname,childClassName,childClassName);
+			});
+		}
 		addColorSchemeFromSelectElement(childClassName);
 	});
-};
-
-function addBackground(name) {
-	var tr = $("<tr class='iframe"+name+"'></tr>");
-	var td = $("<td>background</td>");
-	var td2 = $("<input type='text' class='form-control' id='"+name+"-back' value='#A6FF00' data-color-format='hex'>");
-
-	tr.append(td);
-	tr.append(td2);
-	tr.css("display", "none");
-	$('#classTable').append(tr);
-	var classname = "." + name;
-
-	var color = $('iframe').contents().find(classname).css("background-color");
-	if(color == 'rgba(0, 0, 0, 0)') color = 'rgb(255, 255, 255)';
-	$("#"+name+"-back").val(color);
-
-	// タグがulだったら
-	//console.log($('iframe').contents().find(classname).prop("tagName"));
-	if($('iframe').contents().find(classname).prop("tagName") == "UL") {
-		//console.log("UL");
-	}
-
-	var dataBack = {contentName:classname, targetName:"background"};
-	$("input#"+name+"-back").ColorPickerSliders({
-		placement: $('#chooser').data('placement'),
-		hsvpanel: $('#chooser').data('hsvpanel'),
-		sliders: $('#chooser').data('sliders'),
-		swatches: $('#chooser').data('swatches'),
-		previewformat: 'hex'
-	},dataBack);
-};
-
-function addBorder(name) {
-	var tr = $("<tr class='iframe"+name+"'></tr>");
-	var td = $("<td>border</td>");
-	var td2 = $("<input type='text' class='form-control' id='"+name+"-bor' value='#A6FF00' data-color-format='hex'>");
-
-	tr.append(td);
-	tr.append(td2);
-	tr.css("display", "none");
-	$('#classTable').append(tr);
-	var classname = "." + name;
-
-	var color = $('iframe').contents().find(classname).css('border-color');
-	$("#"+name+"-bor").val(color);
-
-	var dataBorder = {contentName:classname, targetName:"border"};
-	$("input#"+name+"-bor").ColorPickerSliders({
-		placement: $('#chooser').data('placement'),
-		hsvpanel: $('#chooser').data('hsvpanel'),
-		sliders: $('#chooser').data('sliders'),
-		swatches: $('#chooser').data('swatches'),
-		previewformat: 'hex'
-	},dataBorder);
-}
-
-function addFont(name) {
-	var tr = $("<tr class='iframe"+name+"'></tr>");
-	var td = $("<td>font</td>");
-	var td2 = $("<input type='text' class='form-control' id='"+name+"-font' value='#A6FF00' data-color-format='hex'>");
-
-	tr.append(td);
-	tr.append(td2);
-	tr.css("display", "none");
-	$('#classTable').append(tr);
-	var classname = "." + name;
-
-	var color = $('iframe').contents().find(classname).css('color');
-	$("#"+name+"-font").val(color);
-
-	var dataFont = {contentName:classname, targetName:"font"};
-	$("input#"+name+"-font").ColorPickerSliders({
-		placement: $('#chooser').data('placement'),
-		hsvpanel: $('#chooser').data('hsvpanel'),
-		sliders: $('#chooser').data('sliders'),
-		swatches: $('#chooser').data('swatches'),
-		previewformat: 'hex'
-	},dataFont);
 }
 
 </script>
@@ -303,9 +145,6 @@ function addFont(name) {
 					$.each(elements, function(index, item){
 						var classname = item.className.split(" ")[0];
 						if(classname != ""){
-							//if($('iframe').contents().find(classname).children())
-							//console.log($('iframe').contents().find("."+classname).children().attr("class"));
-
 							//TODO 子要素にclassがあったらさらにタブで開く様にする
 							if($('iframe').contents().find("."+classname).children().attr("class")) {
 								// 親にクラスがあったらreturn
@@ -317,31 +156,6 @@ function addFont(name) {
 								//addTr(classname);
 								//console.log("子供いないぜ");
 							}
-							// if($('iframe').contents().find("."+classname).children().attr("class")) {
-							// 	// 親にclassがあった場合 → return
-							// 	if($('iframe').contents().find("."+classname).parent().attr("class")) {
-							// 		//console.log($('iframe').contents().find("."+classname).parent().attr("class") +":"+ $('iframe').contents().find("."+classname).attr("class"));
-							// 		return;
-							// 	}
-							// 	var childClassName = $('iframe').contents().find("."+classname).children().attr("class");
-
-							// 	addTrAndTrInTdTab(classname,childClassName);
-							// }
-							// // 子要素にclassがない 
-							// else {
-							// 	// 親にclassがあった場合 → return
-							// 	if($('iframe').contents().find("."+classname).parent().attr("class")) {
-							// 		//console.log($('iframe').contents().find("."+classname).parent().attr("class") +":"+ $('iframe').contents().find("."+classname).attr("class"));
-							// 		return;
-							// 	}
-							// 	addTr(classname);
-
-							// 	addBackground(classname);
-
-							// 	addBorder(classname);
-
-							// 	addFont(classname);
-							// }
 						}
 					});
 				});
