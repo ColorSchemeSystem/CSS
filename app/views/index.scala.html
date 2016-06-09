@@ -7,8 +7,11 @@
 @main("Color Scheme", user){ 
 <script>
 
+var iframeMethod;
+
 $(window).load(function(){
-	fixFrameSize();
+	$('#loading').css("display", "block");
+	$('#loader').css("display", "block");
 	var navi = $('.fixnav');
 		var main  = $('.main');
 		var target_top = navi.offset().top - parseInt(navi.css('margin-top'),10);
@@ -16,18 +19,18 @@ $(window).load(function(){
 		var sub_scroll = main.offset().top + main.outerHeight(true) - navi.outerHeight(true) - parseInt(navi.css('margin-top'),10);
 
 		if (navi.outerHeight(true) + target_top < main.outerHeight(true) + sub_top) {
-		$(window).scroll(function () {
-			var ws = $(window).scrollTop();
-			$('.scroll').text(ws);
-			if (ws > sub_scroll) {
-			navi.css({position:'fixed', top: sub_scroll - ws + 'px'});
-			} else if(ws > target_top) {
-			navi.css({position:'fixed', top: '0px'});
-			} else {
-			navi.css({position:'relative', top: '0px'});
-			}
-		});
-	}
+			$(window).scroll(function () {
+				var ws = $(window).scrollTop();
+				$('.scroll').text(ws);
+				if (ws > sub_scroll) {
+				navi.css({position:'fixed', top: sub_scroll - ws + 'px'});
+				} else if(ws > target_top) {
+				navi.css({position:'fixed', top: '0px'});
+				} else {
+				navi.css({position:'relative', top: '0px'});
+				}
+			});
+		}
 });
 
 function fixFrameSize() {
@@ -71,6 +74,16 @@ function addBackground(name) {
 	$('#classTable').append(tr);
 	var classname = "." + name;
 
+	var color = $('iframe').contents().find(classname).css("background-color");
+	if(color == 'rgba(0, 0, 0, 0)') color = 'rgb(255, 255, 255)';
+	$("#"+name+"-back").val(color);
+
+	// タグがulだったら
+	console.log($('iframe').contents().find(classname).tagName);
+	if($('iframe').contents().find(classname).tagName == "UL") {
+		console.log("UL");
+	}
+
 	var dataBack = {contentName:classname, targetName:"background"};
 	$("input#"+name+"-back").ColorPickerSliders({
 		placement: $('#chooser').data('placement'),
@@ -92,6 +105,9 @@ function addBorder(name) {
 	$('#classTable').append(tr);
 	var classname = "." + name;
 
+	var color = $('iframe').contents().find(classname).css('border-color');
+	$("#"+name+"-bor").val(color);
+
 	var dataBorder = {contentName:classname, targetName:"border"};
 	$("input#"+name+"-bor").ColorPickerSliders({
 		placement: $('#chooser').data('placement'),
@@ -112,6 +128,9 @@ function addFont(name) {
 	tr.css("display", "none");
 	$('#classTable').append(tr);
 	var classname = "." + name;
+
+	var color = $('iframe').contents().find(classname).css('color');
+	$("#"+name+"-font").val(color);
 
 	var dataFont = {contentName:classname, targetName:"font"};
 	$("input#"+name+"-font").ColorPickerSliders({
@@ -137,47 +156,47 @@ function showPopup(member_id, id){
 	$('#saveHTMLForm').append(ele);
 }
 
-</script>
+function setTimer(id){
+	iframeMethod = setInterval("loadIframe(" + id + ")", 2000);
+}
 
-<!--modalView-->
-<div class="remodal" data-remodal-id="modal" role="dialog" aria-labelledby="modal1Title" aria-describedby="modal1Desc">
-  <button data-remodal-action="close" class="remodal-close" aria-label="Close"></button>
-  <div class="remodal-content">
-  	<h1>HTMLの保存</h1>
-  	<br><br>
-  	@form(action = routes.Application.saveEditTemplate, 'id -> "saveHtmlForm"){
-	    @(inputText(
-	    	field = myForm("tempName"), args = 'class -> "nameForm", 'size -> 50, 'placeholder -> "HTMLの名前"
-	    ))
-	    <br><br>
-	    @(textarea(
-	    	field = myForm("tempMessage"), args = 'class -> "messageForm", 'rows -> 10, 'cols -> 50, 'placeholder -> "HTMLの説明"
-	    ))
-	    <br><br>
-	    @if(user == null){
+function loadIframe(id){
+	console.log("タイマー");
+	checkError(id);
+}
 
-	    }else{
-	    	@(inputRadioGroup(
-	        	myForm("flg"),
-	        	options = Seq("0"->"公開", "1"->"非公開")
-	      	))
-	      	<br><br>
-	    }
-	    <button data-remodal-action="cancel" class="remodal-cancel">キャンセル</button>
-  		<input type="submit" class="remodal-confirm" value="保存">
+function checkError(id){
+	if(id == 0){
+		var url = "/assets/iframes/iframe1.html"
+	}else{
+		var url = "/assets/iframes/" + id + ".html"
 	}
-  </div>
-</div>
 
+	$.ajax({ cache: false,
+    	url: url,
+    	success: function (data) {
+    		console.log("接続に成功")
+        	reloadIframe(url);
+    	},
+    	error: function (data) {
+        	console.log("404エラーです")
+    	}
+	});
+}
 
-<div id="chooser" data-placement="'@chooser.placement'" data-hsvpanel="@chooser.hsvpanel" data-sliders="@chooser.slider" data-swatches="@chooser.swatche"></div>
-	<div class="main">
-		<div class="inHtml">
-			<iframe src="@routes.Assets.at(path)" width="920px" name="template" id="iframe"></iframe>
-			<script>
-				$('#iframe').load(function(){
-					//console.log("実行");
-					var elements = new Array();
+function reloadIframe(url){
+	clearInterval(iframeMethod);
+	console.log("読み込みます");
+	$('#loading').css("display", "none");
+	$('#loader').css("display", "none");
+	var iframe = $("<iframe></iframe>", {
+		"src" : url,
+		"width" : "920px",
+		"name" : "template",
+		"id" : "iframe",
+		on : {
+			load : function(event){
+				var elements = new Array();
 					elements = $('#iframe').contents().find('*');
 					console.log($('#iframe').contents().find('*'));
 					$.each(elements, function(index, item){
@@ -239,6 +258,7 @@ function showPopup(member_id, id){
 							tr.append(td);
 							tr.append(td2);
 							tr.css("background-color", "#AAA");
+							
 							$('#classTable').append(tr);
 
 							addBackground(CN.toString());
@@ -248,8 +268,60 @@ function showPopup(member_id, id){
 							addFont(CN.toString());
 						}
 					});
-				});
-			</script>
+			}
+		}
+
+	});
+	$('#afterLoad').append(iframe);
+	$('#afterLoad').css("display", "block");
+	fixFrameSize();
+}
+
+</script>
+
+<!--modalView-->
+<div class="remodal" data-remodal-id="modal" role="dialog" aria-labelledby="modal1Title" aria-describedby="modal1Desc">
+  <button data-remodal-action="close" class="remodal-close" aria-label="Close"></button>
+  <div class="remodal-content">
+  	<h1>HTMLの保存</h1>
+  	<br><br>
+  	@form(action = routes.Application.saveEditTemplate, 'id -> "saveHtmlForm"){
+	    @(inputText(
+	    	field = myForm("tempName"), args = 'class -> "nameForm", 'size -> 50, 'placeholder -> "HTMLの名前"
+	    ))
+	    <br><br>
+	    @(textarea(
+	    	field = myForm("tempMessage"), args = 'class -> "messageForm", 'rows -> 10, 'cols -> 50, 'placeholder -> "HTMLの説明"
+	    ))
+	    <br><br>
+	    @if(user == null){
+
+	    }else{
+	    	@(inputRadioGroup(
+	        	myForm("flg"),
+	        	options = Seq("0"->"公開", "1"->"非公開")
+	      	))
+	      	<br><br>
+	    }
+	    <button data-remodal-action="cancel" class="remodal-cancel">キャンセル</button>
+  		<input type="submit" class="remodal-confirm" value="保存">
+	}
+  </div>
+</div>
+
+
+<div id="chooser" data-placement="'@chooser.placement'" data-hsvpanel="@chooser.hsvpanel" data-sliders="@chooser.slider" data-swatches="@chooser.swatche"></div>
+	<div class="main">
+		<div class="inHtml">
+			<div id="loading">
+				<div id="loader">
+				    <img src='@routes.Assets.at("images/loading.gif")' width="80" height="80" alt="Now Loading..." onLoad="setTimer(@id)"/>
+				    <p>Now Loading...</p>
+				</div>
+			</div>
+			<div id="afterLoad">
+				<!--<iframe src="@routes.Assets.at(path)" width="920px" name="template" id="iframe"></iframe>-->
+			</div>
 		</div>
 		<form method="post" id="sendForm" name="sendForm" action="/template/download">
 			<div class="button">

@@ -1,0 +1,8 @@
+error.required=必須項目です。
+constraint.required=必須項目です。
+
+constraint.pattern=半角英数で入力してください。
+error.pattern=半角英数以外の文字が含まれています。
+
+constraint.minLength=6文字以上で入力してください。
+error.minLength=6文字以上で入力してください。

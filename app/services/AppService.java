@@ -14,6 +14,10 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
+import com.avaje.ebean.Page;
+import com.avaje.ebean.PagingList;
+
+import dtos.PagingDto;
 import models.Chooser;
 import models.Image;
 import models.Member;
@@ -40,11 +44,54 @@ public class AppService {
 
 	/**
 	 *
+	 * @param page
+	 * @param itemPerPage
+	 * @return
+	 */
+	public PagingDto<Template> findTemplatesWithPages(int page,int itemPerPage,Long memberId) {
+		Page<Template> templatePage;
+		if(memberId == null) {
+			templatePage = Template.find.findPagingList(itemPerPage).getPage(page -1);
+		}	else	{
+			templatePage = Template.find.where().eq("memberId", memberId).findPagingList(itemPerPage).getPage(page -1);
+		}
+		PagingDto<Template> dto = new PagingDto<Template>();
+		dto.data = templatePage.getList();
+		dto.currentPage = page;
+		dto.totalPage = templatePage.getTotalPageCount();
+		return dto;
+	}
+
+	/**
+	 *
+	 * @param page
+	 * @param itemPerPage
+	 * @return
+	 */
+	public PagingDto<Template> findTemplatesWithPages(int page,int itemPerPage) {
+		return findTemplatesWithPages(page, itemPerPage,(Long) null);
+	}
+
+	/**
 	 * @param memberId
 	 * @return
 	 */
 	public List<Image> findAllImages(Long memberId) {
 		return Image.find.where().eq("member.memberId", memberId).findList();
+	}
+
+	/**
+	 * @param page
+	 * @param itemPerPage
+	 * @return
+	 */
+	public PagingDto<Image> findImagesWithPages(int page,int itemPerPage, Long memberId) {
+		Page<Image> imagePage = Image.find.findPagingList(itemPerPage).getPage(page -1);
+		PagingDto<Image> dto = new PagingDto<Image>();
+		dto.data = imagePage.getList();
+		dto.currentPage = page;
+		dto.totalPage = imagePage.getTotalPageCount();
+		return dto;
 	}
 
 	/**
