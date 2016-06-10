@@ -1,14 +1,14 @@
 @(dto : dtos.PagingDto[Template], member : Member, columns : Integer)
 
 @main("Color Scheme",member){ 
-<div class='container'>
-	<h1>
+<div class='listContainer'>
+	<h2>
 	@if(member == null) {
 		テンプレート一覧
 	}	else	{
 		@(member.memberName)さんが作成したテンプレート一覧
 	}
-	</h1>
+	</h2>
 	@if(member != null) {
 	<ul>
 		<li><a href='@routes.Application.templates()'>全てのテンプレートを表示</a></li>
@@ -16,21 +16,21 @@
 		@(member.memberName)さんのテンプレートのみを表示</a></li>
 	</ul>
 	}
-	<div id='templates_list' style='margin-top : 40px;'>
+	<div id='templates_list'>
 	@for((t, index) <- dto.data.zipWithIndex) {
 		@if((index + 1) == 1 || ((index + 1) % columns == 1)) {
-			<div class='clearfix' style='margin-top : 10px;'>
+			<div class='clearfix'>
 		}
-				<div style='float : left;'>
-					<div style='margin-left : 20px;'>
-					<a href='@routes.Application.indexWithId(t.templateId)' target='_blank'>
-						<div>
-							<img width='120' height='120' src='/assets/snapshots/@(t.templateId).png'/>
-						</div>
-						<div style='margin-left : 50px; margin-top : 10px;'>
-							@t.templateName
-						</div>
-					</a>	
+				<div class="listImage">
+					<div class="col-xs-2">
+						<a href='@routes.Application.indexWithId(t.templateId)' target='_blank'>
+							<div>
+								<img width='170' height='150' src='/assets/snapshots/@(t.templateId).png'/>
+							</div>
+							<div class="tempName">
+								@t.templateName
+							</div>
+						</a>	
 					</div>
 				</div>
 		@if((index + 1) % columns == 0) {

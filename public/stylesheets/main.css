@@ -1,0 +1,249 @@
+			
+
+
+			/*メイン/HOMEのCSS*/
+			* {
+				box-sizing: border-box;
+			}
+
+			body {
+				margin: 0;
+				font-size: 13px;
+				background-color: #FFF;
+				font-family: "ヒラギノ角ゴ ProN W3", "Hiragino Kaku Gothic ProN", "メイリオ", Meiryo, sans-serif;
+				height: 100%;
+			}
+
+			.clearfix {
+				zoom: 1;
+			}
+
+			.clearfix:after {
+				content: "";
+				display: block;
+				clear: both;
+			}
+
+			.header{
+				background-color: #F6F6F6;
+			}
+
+			.header .menuBar .navbar-inverse{
+				background-color: #373737;
+			}
+
+			.header .menuBar .navbar-header a{
+				font-size: 30px;
+				padding-right: 40px;
+			}
+
+			.navbar-inverse{
+				margin-bottom: 0px;
+			}
+
+			.wrapper {
+				max-width: 1300px;
+				margin: 0px;
+				overflow: hidden;
+				min-height: 510px;
+				background-color: #f4f4f4;
+			}
+
+			.main {
+				width: 980px;
+				float: left;
+				padding: 20px;
+				margin: 10px 0px 0px 10px;
+			}
+
+			.main a{
+				text-decoration: none;
+			}
+
+			#sendForm input{
+				width:  150px;
+				margin: 20px 20px 20px 0px;
+				background-color: #6d7993;
+				color: #FFF;
+			}
+
+			.main .inHtml{
+				background-color: #FFF;
+				padding: 10px;
+				margin-bottom: 15px;
+			}
+
+			#loading{
+				display: none;
+				width: 920px;
+				height: 500px;
+				background: #FFF;
+				border: 1px solid #000;
+				z-index: 1;
+			}
+
+			#loader{
+				display: none;
+				position: relative;
+				top: 43%;
+				left: 38%;
+				width: 200px;
+				height: 200px;
+				text-align: center;
+				color: #000;
+				z-index: 2;
+			}
+
+			.side  {
+				float: right;
+				position: relative;
+				width: 230px;
+				padding-bottom: 32768px;
+				margin-bottom: -32768px;
+				background-color: #FFF;
+			}
+
+			.side .fixnav .tempButton{
+				margin: 40px 20px 40px 40px;
+			}
+
+			.side .fixnav .tempButton input{
+    			width: 150px;
+    			height: 90px;
+			}
+
+			.side .fixnav .panel-heading{
+				background-color: #dcd0c0;
+			}
+
+			.fixnav {
+				background-color: #FFF;
+				width: 230px;
+				margin-right: 0px;
+				height: 610px;
+				overflow: scroll;
+			}
+
+			.footer{
+				padding: 30px;
+				margin-top: 0px;
+				text-align: center;
+				background: #FFF;
+			}
+
+			.footer p{
+				margin-bottom: 30px;
+			}
+
+
+			/*ログインのCSS*/
+			.wrapper .loginContainer{
+				margin: 40px auto 0px auto;
+				width: 430px;
+				background-color: #FFF;
+				border: 1px solid #c0c0c0;
+				padding-left: 50px;
+				padding-bottom: 40px;
+			}
+
+			.wrapper .loginContainer h2{
+				margin-bottom: 40px;
+				font-weight: bold;
+			}
+
+			.wrapper .loginContainer input{
+				margin-bottom: 10px;
+			}
+
+			.wrapper .loginContainer input.btn{
+				width: 325px;
+				margin-bottom: 30px;
+			}
+
+			.wrapper .loginContainer a button{
+				width: 325px;
+			}
+
+
+			/*新規作成のCSS*/
+			.wrapper .accountContainer{
+				margin: 40px auto 40px auto;
+				width: 430px;
+				background-color: #FFF;
+				border: 1px solid #c0c0c0;
+				padding-left: 50px;
+				padding-bottom: 40px;
+			}
+
+			.wrapper .accountContainer h2{
+				margin-bottom: 40px;
+				font-weight: bold;
+			}
+
+			.wrapper .accountContainer input{
+				margin-bottom: 10px;
+			}
+
+			.wrapper .accountContainer input.btn{
+				width: 325px;
+				margin-bottom: 30px;
+			}
+
+			/*アップロードのCSS*/
+			.wrapper .uploadContainer{
+				margin: 40px auto 40px auto;
+				width: 600px;
+				background-color: #FFF;
+				border: 1px solid #c0c0c0;
+				padding-left: 50px;
+				padding-bottom: 40px;
+			}
+
+			.wrapper .uploadContainer h2{
+				margin-bottom: 40px;
+				font-weight: bold;
+			}
+
+			.wrapper .uploadContainer .update-confirm{
+				width: 300px;
+				margin-left: 100px;
+			}
+
+			.wrapper .uploadContainer .explain{
+				font-size: 12px;
+				margin-bottom: 20px;
+				color: #808080;
+			}
+
+			/*テンプレート一覧のCSS*/
+			.wrapper .listContainer{
+				margin: 40px auto 40px auto;
+				padding-left: 120px;
+				padding-bottom: 40px;
+				text-align: center;
+			}
+
+			.wrapper .listContainer h2{
+				margin-bottom: 20px;
+				font-weight: bold;
+				margin-right: 130px;
+			}
+ 
+			#templates_list .listImage{
+				margin-left: 25px;
+				margin-top: 30px;
+			}
+
+			#templates_list .listImage .tempName{
+				width: 180px;
+				white-space: nowrap;
+				overflow: hidden;
+				text-overflow: ellipsis;
+				margin-top: 10px;
+			}
+
+
+
+
+
+
