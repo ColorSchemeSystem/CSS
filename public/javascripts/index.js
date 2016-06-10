@@ -271,7 +271,6 @@ function addColorSchemeFromSelectElementSubordinate(tagName,findPass,assignmentN
 };
 
 function addNamedBackAndBorderAndFont(classname,named) {
-	if(classname == "header div") console.log("あるじゃねーか");
 	addNamedBackGround(classname,named);
 	addNamedBorder(classname,named);
 	addNamedFont(classname,named);
@@ -296,30 +295,15 @@ function autoCreate(classname,assignmentName) {
 	assignmentName += classname;
 	$('iframe').contents().find("."+classname).children().each(function() {
 		var childClassName = $(this).attr("class");
-		// 配下にくらすがないdivなら配色設定してreturn
-		if(childClassName == undefined) {
-			if($(this).prop("tagName") == "DIV") {
-				classname = $(this).parent().attr("class")+" "+$(this).prop("tagName").toLowerCase();
-				//assignmentName += $(this).prop("tagName").toLowerCase();
-				//console.log("in"+"  classname:"+classname+"  assignmentName:"+assignmentName);
-				//addNamedBackAndBorderAndFont(classname,assignmentName);
-			}
-			return;
-		}
+		if(childClassName == undefined) return;
 		var assignmentNameCopy = assignmentName;
 		assignmentNameCopy += childClassName;
 		addTrInHideTab(classname,childClassName,childClassName,assignmentNameCopy,$(this).prop("tagName").toLowerCase());
 		// 配下にclassがあったら
 		if($('iframe').contents().find("."+childClassName).children().attr("class")) {
 			classname += childClassName;
-			//classname = classname + childClassName;
 			$('iframe').contents().find("."+childClassName).children().each(function() {
-				// 配下にくらすがなければ配色設定してreturn
-				if(childClassName == undefined) {
-					console.log("配下にクラスなし"+$(this).prop("tagName"));
-					//addBackground(classname+" "+$(this).prop("tagName").toLowerCase());
-					return;
-				}
+				if(childClassName == undefined) return;
 				childClassName = $(this).attr("class");
 				var copycopy = assignmentNameCopy;
 				copycopy += childClassName;
@@ -429,6 +413,8 @@ function addTr(classname,tagName) {
 			}
 		}
 	});
+	td.css("color","white");
+	td2.css("color","white");
 	tr.append(td);
 	tr.append(td2);
 	tr.css("background-color", "#999");
@@ -625,9 +611,18 @@ function addNamedEditText(classname,named) {
 
 // Trタブを非表示で追加親クラスのタブがクリックされたら表示される、クリックされると配下のタブが表示される
 function addTrInHideTab(parentName,classname,dispName,assignmentName,tagName) {
-	var td = $("<td></td>",{
-		text : dispName
-	});
+	var td;
+	if(dispName != tagName) {
+		td = $("<td></td>",{
+			text : dispName
+		});
+	} else {
+		td = $("<td></td>",{
+			text : "  "+dispName,
+			"class" : "glyphicon glyphicon-chevron-down",
+			"aria-hidden" : "true"
+		});
+	}
 	classname = "." + classname;
 	var td2 = $("<td>"+tagName+"</td>");
 	var tr = $("<tr></tr>",{
@@ -692,7 +687,9 @@ function addTrInHideTab(parentName,classname,dispName,assignmentName,tagName) {
 function addLiHideTab(parentName,classname,dispName,assignmentName,tagName) {
 	var CN = classname;
 	var td = $("<td></td>",{
-		text : dispName
+		text : "  "+dispName,
+		"class" : "glyphicon glyphicon-chevron-down",
+		"aria-hidden" : "true"
 	});
 	classname = "." + classname;
 	var td2 = $("<td>"+tagName+"</td>");
