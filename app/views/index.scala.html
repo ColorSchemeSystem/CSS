@@ -53,25 +53,34 @@
 		<form method="post" id="sendForm" name="sendForm" action="/template/download">
 			<div class="button">
 			@if(user == null){
-				<input type="button" value="登録" onClick="showPopup(null, @id);">
+				<input class="btn btn-default" type="button" value="HTMLを保存" onClick="showPopup(null, @id);">
 			}else{
-				<input type="button" value="登録" onClick="showPopup(@user.memberId, @id);">
+				<input class="btn btn-default" type="button" value="HTMLを保存" onClick="showPopup(@user.memberId, @id);">
 			}
-				<input type="submit" value="HTMLを書き出す" onClick="sendHTML('#sendForm', @id);">
+				<input class="btn btn-default" type="submit" value="HTMLを書き出す" onClick="sendHTML('#sendForm', @id);">
 			</div>
 		</form>
 	</div>
-  <div class="side">
+ <div class="side">
     <div class="fixnav">
 		<div class="tempButton">
 			<form method="post" id="showTemp" name="showTemp" action="/template/detail">
-				<input type = "submit" class="button1" value="プレビュー" onClick="sendHTML('#showTemp', @id);">
+				<input class="btn btn-default btn-lg" type="submit" value="PREVIEW" onClick="sendHTML('#showTemp', @id);">
 			</form>
 		</div>
-      <div class="classTags">
+
+      	<div class="classTags">
+      		<div class="panel panel-default">
+      			<div class="panel-heading">
+      				ELEMENTS
+      			</div>
 				<div class="table-responsive">
 					<table class="table table-hover">
 						<thead>
+							<tr>
+								<th>className</th>
+								<th>TagName</th>
+							</tr>
 						</thead>
 						<tbody id="classTable">
 						</tbody>
@@ -80,6 +89,7 @@
 			</div>
 		</div>
 	</div>
+</div>
 
 }
 

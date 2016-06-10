@@ -18,6 +18,7 @@
 		<link href='@routes.Assets.at("stylesheets/bootstrap.colorpickersliders.css")' rel="stylesheet" type="text/css" media="all">
 		<link href='@routes.Assets.at("stylesheets/remodal-default-theme.css")' rel="stylesheet" type="text/css" media="all">
 		<link href='@routes.Assets.at("stylesheets/remodal.css")' rel="stylesheet" type="text/css" media="all">
+		<link href='@routes.Assets.at("stylesheets/main.css")' rel="stylesheet" type="text/css" media="all">
 
 		<script src="//cdnjs.cloudflare.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.2.0/js/bootstrap.min.js"></script>
@@ -29,143 +30,10 @@
 		<script src='@routes.Assets.at("javascripts/rgbcolor.js")'></script>
 		<script src='@routes.Assets.at("javascripts/index.js")'></script>
 		<script src='@routes.Assets.at("javascripts/remodal.js")'></script>
-
-		<style>
-
-		* {
-				box-sizing: border-box;
-			}
-
-			body {
-				margin: 0;
-				font-size: 13px;
-				background: #eeeeee;
-				font-family: "ヒラギノ角ゴ ProN W3", "Hiragino Kaku Gothic ProN", "メイリオ", Meiryo, sans-serif;
-			}
-
-			.clearfix {
-				zoom: 1;
-			}
-
-			.clearfix:after {
-				content: "";
-				display: block;
-				clear: both;
-			}
-
-			.header{
-				background-color: #F6F6F6;
-			}
-
-			.header .titleBar{
-				padding: 0px 0px 0px 30px;
-				font-size: 30px;
-				background-color: #FFF;
-			}
-
-			.header .titleBar p{
-				margin: 0px;
-				padding: 10px;
-			}
-
-			.navbar-inverse{
-				margin-bottom: 0px;
-			}
-
-			.wrapper {
-				max-width: 1300px;
-				margin: 0px;
-				overflow: hidden;
-				min-height: 510px;
-			}
-
-			.main {
-				width: 980px;
-				float: left;
-				padding: 20px;
-				margin: 10px 0px 0px 10px;
-			}
-
-			.main a{
-				text-decoration: none;
-			}
-
-			.main .inHtml{
-				background-color: #FFF;
-				padding: 10px;
-				margin-bottom: 15px;
-			}
-
-			#loading{
-				display: none;
-				width: 920px;
-				height: 500px;
-				background: #FFF;
-				border: 1px solid #000;
-				z-index: 1;
-			}
-
-			#loader{
-				display: none;
-				position: relative;
-				top: 43%;
-				left: 38%;
-				width: 200px;
-				height: 200px;
-				text-align: center;
-				color: #000;
-				z-index: 2;
-			}
-
-			.side  {
-				float: right;
-				position: relative;
-				width: 230px;
-				padding-bottom: 32768px;
-				margin-bottom: -32768px;
-				background-color: #FFF;
-			}
-
-			.side .fixnav .tempButton{
-				margin: 40px 20px 40px 40px;
-			}
-
-			.side .fixnav .tempButton .button1{
-				font-size: 12px;
-    		font-weight: bold;
-    		padding: 10px 30px;
-    		background-color: #202020;
-    		color: #FFF;
-    		border-style: none;
-			}
-
-			.side .fixnav .tempButton .button1:hover{
-				background-color: #696969;
-				color: #FFF;
-			}
-
-			.fixnav {
-				background-color: #FFF;
-				width: 230px;
-				margin-right: 0px;
-				height: 610px;
-				overflow: scroll;
-			}
-
-			.footer{
-				padding: 30px;
-				margin-top: 0px;
-				text-align: center;
-				background: #FFF;
-			}
-		</style>
 	</head>
 
 	<body>
 		<div class="header">
-			<div class="titleBar">
-				<p>Title</p>
-			</div>
 			<div class="menuBar">
 			@if(user == null) {
 				@template.menuBar(user)
@@ -178,7 +46,7 @@
         	@content
       	</div>
       	<div class="footer">
-      	  ColorSchemeSystem All rights reserved.
+      	  <p>ColorSchemeSystem All rights reserved.</p>
       	</div>
     </body>
 </html>

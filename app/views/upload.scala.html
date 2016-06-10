@@ -3,21 +3,21 @@
 @implicitFieldConstructor = @{ helper.FieldConstructor(myhelper.formFieldConstructor.render) } 
 
 @main("Color Scheme",member){
-<div class='container'>
-	<h1 style='margin-top : 40px; margin-bottom : 40px;'>テンプレートアップロード</h1>
-	<p style='margin-bottom : 20px; font-size : 16px; color : blue;'>
+<div class='uploadContainer'>
+	<h2>テンプレートアップロード</h2>
+	<p class="explain">
 	@if(member == null) {
-		あなたの好きなhtmlテンプレートをアップロードできます。
+		あなたの好きなhtmlファイルをアップロードできます。
 	}	else	{
-		あなたの好きな htmlテンプレート or 画像ファイル をアップロードできます。
+		あなたの好きな htmlファイル or 画像ファイル をアップロードできます。
 	}
 	</p>
 	@helper.form(action = routes.Application.doUpload,
 	'enctype -> "multipart/form-data") {
 		@myhelper.inputFile(templateForm("tmpFileName"),'type -> "file")
-		@helper.inputText(templateForm("templateName"),'_label -> "テンプレートの名前")
-		@helper.textarea(templateForm("templateMessage"),'_label -> "テンプレートの説明")
-		<input class='update-confirm' type="submit" value="アップロード">
+		@helper.inputText(templateForm("templateName"),'_label -> "テンプレートの名前", 'size -> 70)
+		@helper.textarea(templateForm("templateMessage"),'_label -> "テンプレートの説明", 'cols -> 70, 'rows -> 10)
+		<input class='update-confirm btn btn-primary' type="submit" value="アップロード">
 	}
 </div>
 }
