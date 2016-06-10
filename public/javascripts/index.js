@@ -90,6 +90,11 @@ function addColorSchemeFromSelectElement(classname,assignmentName,tagName) {
 			parentName += classname;
 			if($('iframe').contents().find("."+classname).children().size() > 0) {
 				var cnt = 0;	// liの番号用
+				//liに一括設定できる様に
+				addTrInHideTab(parentName,classname,"li一括",assignmentName+"li","li一括");
+				var childPass = classname +" li"+" "+linkingSubordinateTabForFind($('iframe').contents().find("."+classname+" li:eq("+cnt+") ").children());
+				addNamedBackGround(childPass,assignmentName+"li");
+				addNamedFont(childPass,assignmentName+"li");
 				$('iframe').contents().find("."+classname).children().each(function() {
 					var assignmentNameCopy = assignmentName;
 					assignmentNameCopy += classname;
@@ -183,6 +188,11 @@ function addColorSchemeFromSelectElementSubordinate(tagName,findPass,assignmentN
 			if($('iframe').contents().find("."+findPass).children().size() > 0) {
 				var childPass;
 				var cnt = 0;
+				//liに一括設定できる様に
+				addTrInHideTab(assignmentName,findPass,"li一括",assignmentName+"li","li一括");
+				var childPass = findPass +" li"+" "+linkingSubordinateTabForFind($('iframe').contents().find("."+findPass+" li:eq("+cnt+") ").children());
+				addNamedBackGround(childPass,assignmentName+"li");
+				addNamedFont(childPass,assignmentName+"li");
 				$('iframe').contents().find("."+findPass).children().each(function() {
 					childPass = findPass;
 					childPass += " "+$(this).prop("tagName").toLowerCase()+":eq("+cnt+")";
@@ -612,15 +622,15 @@ function addNamedEditText(classname,named) {
 // Trタブを非表示で追加親クラスのタブがクリックされたら表示される、クリックされると配下のタブが表示される
 function addTrInHideTab(parentName,classname,dispName,assignmentName,tagName) {
 	var td;
-	if(dispName != tagName) {
-		td = $("<td></td>",{
-			text : dispName
-		});
-	} else {
+	if(dispName == tagName && dispName.length == tagName.length) {
 		td = $("<td></td>",{
 			text : "  "+dispName,
 			"class" : "glyphicon glyphicon-chevron-down",
 			"aria-hidden" : "true"
+		});
+	} else {
+		td = $("<td></td>",{
+			text : dispName
 		});
 	}
 	classname = "." + classname;
