@@ -77,7 +77,7 @@ function tggoleHide(classname) {
 };
 
 // タグに応じて配色を追加
-function addColorSchemeFromSelectElement(classname,assignmentName) {
+function addColorSchemeFromSelectElement(classname,assignmentName,tagName) {
 	switch($('iframe').contents().find("."+classname).prop("tagName")) {
 		case "UL":
 		{
@@ -104,8 +104,12 @@ function addColorSchemeFromSelectElement(classname,assignmentName) {
 						childClassName = classname +" li:eq("+cnt+")";
 					}
 					assignmentNameCopy += "ULLI"+cnt;
-					addLiHideTab(parentName,childClassName,"li"+(cnt),assignmentNameCopy);
+					// liのタブ追加
+					addLiHideTab(parentName,childClassName,"li"+(cnt),assignmentNameCopy, $(this).prop("tagName").toLowerCase());
+					// 背景色編集追加
 					addLiBackground("li",cnt,childClassName,assignmentNameCopy,classname);
+					// テキスト編集追加
+					addNamedEditText(childClassName,assignmentNameCopy);
 					cnt ++;
 				});
 			}
@@ -128,9 +132,7 @@ function addColorSchemeFromSelectElement(classname,assignmentName) {
 		break;
 		case "DIV":
 		{
-			// 仮
-			//addBackground(classname);
-			console.log(assignmentName);
+			addNamedBackGround(classname,assignmentName);
 
 			// 配下にタグがあったら
 			if($('iframe').contents().find("."+classname).children().size() > 0) {
@@ -139,12 +141,11 @@ function addColorSchemeFromSelectElement(classname,assignmentName) {
 					// 自分の配下のタグを取得
 					var childTag = $(this).prop("tagName").toLowerCase();
 					assignmentNameCopy += childTag;
-					//console.log(assignmentNameCopy);
 
-					//console.log(linkingSubordinate($(this)));
+					// 配下のタグで処理を割振る
+					addColorSchemeFromSelectElementSubordinate($(this).prop("tagName"), classname+" "+childTag, assignmentName);
 
-					var array = linkingSubordinate($(this));
-					//console.log(array.length);
+					/*var array = linkingSubordinate($(this));
 
 					// 配下にタグがなければ
 					if(array.length == 0) {
@@ -152,12 +153,42 @@ function addColorSchemeFromSelectElement(classname,assignmentName) {
 
 						addTrInHideTab(assignmentName,classname+" "+childTag,childTag,assignmentNameCopy);
 						addNamedBackAndBorderAndFont(classname+" "+childTag, assignmentNameCopy);
-					}
-					
-					// タグに合った処理へ振り分け
-					//addColorSchemeFromSelectElementFromDIV($(this),assignmentNameCopy);
+					} else if(array.length == 1) {
+						console.log(linkingSubordinateTabForFind($(this)));
+					} else if(array.length > 1) {
+						var cnt = 0;
+
+						var copycopy;
+						var chTag;
+						$(this).children().each(function() {
+							chTag = childTag;
+							copycopy = assignmentNameCopy;
+							chTag += " "+$(this).prop("tagName").toLowerCase();
+							copycopy += $(this).prop("tagName").toLowerCase();
+							array = linkingSubordinate($(this));
+							//console.log(array.length);
+							//console.log(copycopy);
+						});
+
+						if(array.length == 0) {
+							addTrInHideTab(assignmentName,classname+" "+chTag,childTag,copycopy);
+							addNamedBackAndBorderAndFont(classname+" "+chTag, copycopy);
+							//addNamedBackGround(classname+" "+childTag,assignmentName);
+						}
+
+					} else {
+						return;
+					}*/
 				});
 			}
+		}
+		break;
+		case "P":
+		{
+			var assignmentNameCopy = assignmentName;
+			assignmentNameCopy += classname;
+			addTrInHideTab(assignmentName,classname,classname,assignmentNameCopy,tagName);
+			addNamedBackAndBorderAndFont(classname, assignmentNameCopy);
 		}
 		break;
 		default:
@@ -168,10 +199,93 @@ function addColorSchemeFromSelectElement(classname,assignmentName) {
 	}
 };
 
+function addColorSchemeFromSelectElementSubordinate(tagName,findPass,assignmentName) {
+	switch(tagName) {
+		case "UL":
+		{
+			// 配下にタグがあるか
+			if($('iframe').contents().find("."+findPass).children().size() > 0) {
+				var childPass;
+				var cnt = 0;
+				$('iframe').contents().find("."+findPass).children().each(function() {
+					childPass = findPass;
+					childPass += " "+$(this).prop("tagName").toLowerCase()+":eq("+cnt+")";
+					var childTag = $(this).prop("tagName");
+					var assignmentNameCopy = assignmentName;
+					assignmentNameCopy += tagName + $(this).prop("tagName").toLowerCase();
+					assignmentNameCopy += cnt;
+
+					// 自分の配下にまだタグがあったら
+					if($(this).children().size() > 0) {
+						$(this).children().each(function() {
+							var chPass = childPass;
+							chPass += " "+linkingSubordinateTabForFind($(this));
+							// liのタブ追加
+							addLiHideTab(assignmentName,childTag,"li"+(cnt),assignmentNameCopy, $(this).prop("tagName").toLowerCase());
+							// 背景色編集追加
+							addLiBackground("li",cnt,chPass,assignmentNameCopy,assignmentName);
+							// テキスト編集追加
+							addNamedEditText(chPass,assignmentNameCopy);
+						});
+					}
+
+					// なければ配色設定
+					else {
+						// liのタブ追加
+						addLiHideTab(assignmentName,childTag,"li"+(cnt),assignmentNameCopy, $(this).prop("tagName").toLowerCase());
+						// 背景色編集追加
+						addLiBackground("li",cnt,childPass,assignmentNameCopy,assignmentName);
+						// テキスト編集追加
+						addNamedEditText(childPass,assignmentNameCopy);
+					}
+
+					cnt ++;
+				});
+			}
+
+			//TODO なければどうする？
+		}
+		break;
+		case "DIV":
+		{
+			console.log("div発見");
+			// 配下にタグがあるか
+			if($('iframe').contents().find("."+findPass).children().size() > 0) {
+				$('iframe').contents().find("."+findPass).children().each(function() {
+					var childPass = findPass +" "+ $(this).prop("tagName").toLowerCase();
+					var childTag = $(this).prop("tagName");
+					var assignmentNameCopy = assignmentName + $(this).prop("tagName").toLowerCase();
+					addColorSchemeFromSelectElementSubordinate($(this).prop("tagName"), childPass, assignmentNameCopy);
+				});
+			}
+
+			//TODO なければどうする？
+		}
+		break;
+		case "P":
+		{
+			var assignmentNameCopy = assignmentName;
+			assignmentNameCopy += tagName;
+			addTrInHideTab(assignmentName,findPass,tagName.toLowerCase(),assignmentNameCopy,tagName.toLowerCase());
+			addNamedBackAndBorderAndFont(findPass, assignmentNameCopy);
+		}
+		break;
+		default:
+		{
+			var assignmentNameCopy = assignmentName;
+			assignmentNameCopy += tagName;
+			addTrInHideTab(assignmentName,findPass,tagName.toLowerCase(),assignmentNameCopy,tagName.toLowerCase());
+			addNamedBackGround(findPass,assignmentNameCopy);
+		}
+		break;
+	}
+};
+
 function addNamedBackAndBorderAndFont(classname,named) {
 	addNamedBackGround(classname,named);
 	addNamedBorder(classname,named);
 	addNamedFont(classname,named);
+	addNamedEditText(classname,named);
 };
 
 function linkingSubordinate(data) {
@@ -183,19 +297,19 @@ function linkingSubordinate(data) {
 };
 
 // 子供の数だけタブを作成してくれる
-function addTabTr(classname) {
-	addTr(classname);
-	testhoge(classname,"");
+function addTabTr(classname,tagName) {
+	addTr(classname,tagName);
+	autoCreate(classname,"");
 };
 
-function testhoge(classname,assignmentName) {
+function autoCreate(classname,assignmentName) {
 	assignmentName += classname;
 	$('iframe').contents().find("."+classname).children().each(function() {
 		var childClassName = $(this).attr("class");
 		if(childClassName == undefined) return;
 		var assignmentNameCopy = assignmentName;
 		assignmentNameCopy += childClassName;
-		addTrInHideTab(classname,childClassName,childClassName,assignmentNameCopy);
+		addTrInHideTab(classname,childClassName,childClassName,assignmentNameCopy,$(this).prop("tagName").toLowerCase());
 		if($('iframe').contents().find("."+childClassName).children().attr("class")) {
 			classname += childClassName;
 			//classname = classname + childClassName;
@@ -204,16 +318,15 @@ function testhoge(classname,assignmentName) {
 				childClassName = $(this).attr("class");
 				var copycopy = assignmentNameCopy;
 				copycopy += childClassName;
-				addTrInHideTab(classname,childClassName,childClassName,copycopy);
-				testhoge(childClassName,copycopy);
+				addTrInHideTab(classname,childClassName,childClassName,copycopy,$(this).prop("tagName").toLowerCase());
+				autoCreate(childClassName,copycopy);
 			});
 		}
-		addColorSchemeFromSelectElement(childClassName,assignmentNameCopy);
+		addColorSchemeFromSelectElement(childClassName,assignmentNameCopy,$(this).prop("tagName").toLowerCase());
 	});
 }
 
 function showPopup(member_id, id){
-	console.log("メンバーid" + member_id);
 	var inst = $('[data-remodal-id=modal]').remodal();
 	inst.open();
 
@@ -275,7 +388,8 @@ function reloadIframe(url){
 									if($('iframe').contents().find("."+classname).parent().attr("class")) return;
 
 									// 子供の数だけループしてtab作成
-									addTabTr(classname);
+									addTabTr(classname,$(this).prop("tagName").toLowerCase());
+									if(classname == "test") console.log("test");
 								} else {
 									//addTr(classname);
 									//console.log("子供いないぜ");
@@ -293,13 +407,13 @@ function reloadIframe(url){
 }
 
 // 一番上の要素をクラス名を表示してクリックすると配下にいるタグ達が表示されるtrを追加する
-function addTr(classname) {
+function addTr(classname,tagName) {
 	var CN = classname;
 	var td = $("<td></td>",{
 		text : classname
 	});
 	classname = "." + classname;
-	var td2 = $("<td>COLOR</td>");
+	var td2 = $("<td>"+tagName+"</td>");
 	var tr = $("<tr></tr>",{
 		on : {
 			click : function(event) {
@@ -331,7 +445,7 @@ function addBackground(name) {
 	var classname = "." + name;
 
 	var color = $('iframe').contents().find(classname).css("background-color");
-	if(color == 'rgba(0, 0, 0, 0)') color = 'rgb(127, 127, 127)';
+	if(color == 'rgba(0, 0, 0, 0)' || color == undefined) color = 'rgb(127, 127, 127)';
 	$("#"+name+"-back").val(color);
 
 	var dataBack = {contentName:classname, targetName:"background"};
@@ -357,7 +471,7 @@ function addNamedBackGround(classname,named) {
 	classname = "." + classname;
 
 	var color = $('iframe').contents().find(classname).css("background-color");
-	if(color == 'rgba(0, 0, 0, 0)') color = 'rgb(127, 127, 127)';
+	if(color == 'rgba(0, 0, 0, 0)' || color == undefined) color = 'rgb(127, 127, 127)';
 	$("#"+named+"-back").val(color);
 
 	var dataBack = {contentName:classname, targetName:"background"};
@@ -383,6 +497,7 @@ function addBorder(name) {
 	var classname = "." + name;
 
 	var color = $('iframe').contents().find(classname).css('border-color');
+	if(color == 'rgba(0, 0, 0, 0)' || color == undefined) color = 'rgb(127, 127, 127)';
 	$("#"+name+"-bor").val(color);
 
 	var dataBorder = {contentName:classname, targetName:"border"};
@@ -408,6 +523,7 @@ function addNamedBorder(classname,named) {
 	classname = "." + classname;
 
 	var color = $('iframe').contents().find(classname).css('border-color');
+	if(color == 'rgba(0, 0, 0, 0)' || color == undefined) color = 'rgb(127, 127, 127)';
 	$("#"+named+"-bor").val(color);
 
 	var dataBorder = {contentName:classname, targetName:"border"};
@@ -433,6 +549,7 @@ function addFont(name) {
 	var classname = "." + name;
 
 	var color = $('iframe').contents().find(classname).css('color');
+	if(color == 'rgba(0, 0, 0, 0)' || color == undefined) color = 'rgb(127, 127, 127)';
 	$("#"+name+"-font").val(color);
 
 	var dataFont = {contentName:classname, targetName:"font"};
@@ -458,6 +575,7 @@ function addNamedFont(classname,named) {
 	classname = "." + classname;
 
 	var color = $('iframe').contents().find(classname).css('color');
+	if(color == 'rgba(0, 0, 0, 0)' || color == undefined) color = 'rgb(127, 127, 127)';
 	$("#"+named+"-font").val(color);
 
 	var dataFont = {contentName:classname, targetName:"font"};
@@ -470,13 +588,45 @@ function addNamedFont(classname,named) {
 	},dataFont);
 }
 
+// テキストの変更
+function addEditText(name) {
+	var tr = $("<tr class='iframe"+name+"'></tr>");
+	var td = $("<td>font</td>");
+	var td2 = $("<input type='text' id='"+name+"-text'>");
+
+	tr.append(td);
+	tr.append(td2);
+	tr.css("display", "none");
+	$('#classTable').append(tr);
+	var classname = "." + name;
+
+	var text = $('iframe').contents().find(classname).text();
+	$("#"+name+"-text").val(text);
+}
+
+// テキストの変更
+function addNamedEditText(classname,named) {
+	var tr = $("<tr class='iframe"+named+"'></tr>");
+	var td = $("<td>text</td>");
+	var td2 = $("<input type='text' id='"+named+"-text'>");
+
+	tr.append(td);
+	tr.append(td2);
+	tr.css("display", "none");
+	$('#classTable').append(tr);
+	classname = "." + classname;
+
+	var text = $('iframe').contents().find(classname).text();
+	$("#"+named+"-text").val(text);
+};
+
 // Trタブを非表示で追加親クラスのタブがクリックされたら表示される、クリックされると配下のタブが表示される
-function addTrInHideTab(parentName,classname,dispName,assignmentName) {
+function addTrInHideTab(parentName,classname,dispName,assignmentName,tagName) {
 	var td = $("<td></td>",{
 		text : dispName
 	});
 	classname = "." + classname;
-	var td2 = $("<td>COLOR</td>");
+	var td2 = $("<td>"+tagName+"</td>");
 	var tr = $("<tr></tr>",{
 		"class": "iframe"+parentName,
 		on : {
@@ -508,7 +658,6 @@ function addTrInHideTab(parentName,classname,dispName,assignmentName) {
 				$('iframe').contents().find('.hoverImage').remove();
 			},
 			click : function(event) {
-				console.log(assignmentName);
 				$(".iframe"+assignmentName).each(function() {
 					display($(this));
 				});
@@ -537,13 +686,13 @@ function addTrInHideTab(parentName,classname,dispName,assignmentName) {
 };
 
 // li用のhideTab
-function addLiHideTab(parentName,classname,dispName,assignmentName) {
+function addLiHideTab(parentName,classname,dispName,assignmentName,tagName) {
 	var CN = classname;
 	var td = $("<td></td>",{
 		text : dispName
 	});
 	classname = "." + classname;
-	var td2 = $("<td>COLOR</td>");
+	var td2 = $("<td>"+tagName+"</td>");
 	var tr = $("<tr></tr>",{
 		"class": "iframe"+parentName,
 		on : {
@@ -604,7 +753,7 @@ function addLiHideTab(parentName,classname,dispName,assignmentName) {
 
 // 複数同じタグがある場合(li用)
 function addLiBackground(name, number, childClassName,assignmentName,parentName) {
-	var idName = name + number;
+	var idName = assignmentName + name + number;
 	var tr = $("<tr class='iframe"+assignmentName+"'></tr>");
 	var td = $("<td>background</td>");
 	var td2 = $("<input type='text' class='form-control' id='"+idName+"-back' value='#A6FF00' data-color-format='hex'>");
@@ -617,7 +766,7 @@ function addLiBackground(name, number, childClassName,assignmentName,parentName)
 	childClassName = "." + childClassName;
 
 	var color = $('iframe').contents().find(childClassName).css("background-color");
-	if(color == 'rgba(0, 0, 0, 0)' || color == undefined) color = 'rgb(255, 255, 255)';
+	if(color == 'rgba(0, 0, 0, 0)' || color == undefined) color = 'rgb(127, 127, 127)';
 	$("#"+idName+"-back").val(color);
 
 	var dataBack = {contentName:childClassName, targetName:"background"};
