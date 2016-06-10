@@ -1361,25 +1361,25 @@
               case 'hex':
                 if (color.hsla.a < 1) {
                   $element.val(color.tiny.toRgbString());
-                  $element.val(targetData.contentName);
+                  //$element.val(targetData.contentName);
                   setTargetColor(targetData,color.tiny.toRgbString());
                 }
                 else {
                   $element.val(color.tiny.toHexString());
-                  $element.val(targetData.contentName);
+                  //$element.val(targetData.contentName);
                   setTargetColor(targetData,color.tiny.toHexString());
                 }
                 break;
               case 'hsl':
                 $element.val(color.tiny.toHslString());
-                $element.val(targetData.contentName);
+                //$element.val(targetData.contentName);
                 setTargetColor(targetData,color.tiny.toHslString());
                 break;
               case 'rgb':
                 /* falls through */
               default:
                 $element.val(color.tiny.toRgbString());
-                $element.val(targetData.contentName);
+                //$element.val(targetData.contentName);
                 setTargetColor(targetData,color.tiny.toRgbString());
                 break;
             }
