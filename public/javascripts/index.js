@@ -47,10 +47,6 @@ function fixFrameSize() {
 	}
 };
 
-function display(name) {
-	$(name).toggle();
-}
-
 function sendHTML(formId, id){
 	var ele = $("<input>", {
 					"type" : "hidden",
@@ -66,16 +62,28 @@ function sendHTML(formId, id){
 	$(formId).append(ele2);
 };
 
+var oldclassName = undefined;
+function display(classname) {
+	if(classname != oldclassName) {
+		$(classname).toggle();
+		//toggleHide(classname);
+		console.log(oldclassName);
+	}
+	oldclassName = classname;
+}
 
-function tggoleHide(classname) {
+function toggleHide(classname) {
 	if($(classname).css("display") == "none") {
-		if($(classname).children().size() > 0) {
-			$(classname).children().each(function() {
-				var childClassName = $(this).attr("class");
-				$("."+childClassName).css("display", "none");
-				tggoleHide($(this).children());
-			});
-		}
+		//console.log("display::"+$("[class^="+$(classname).attr("class")+"]").size());
+		//$("[class^="+$(classname).attr("class")+"]").css("display", "none");
+		 var cnt = 0;
+		 $("[class^="+$(classname).attr("class")+"]").each(function() {
+		 	//console.log("tagName::"+$(this).prop("tagName")+"  cnt:"+cnt+"  class:"+$(this).attr("class"));
+		 	var targetClass = $(this).attr("class");
+		 	$("."+targetClass).css("display", "none");
+		 	console.log("targetClass:"+targetClass+"  display:"+$("."+targetClass).css("display"));
+		 	cnt ++;
+		 });
 	}
 };
 
@@ -420,9 +428,6 @@ function addTr(classname,tagName) {
 			click : function(event) {
 				$(".iframe"+CN).each(function() {
 					display($(this));
-
-					// 一番親のタグが閉じたら子供達もとじる
-					//tggoleHide($(this));					
 				});
 			}
 		}
@@ -670,8 +675,10 @@ function addTrInHideTab(parentName,classname,dispName,assignmentName,tagName) {
 				$('iframe').contents().find('.hoverImage').remove();
 			},
 			click : function(event) {
+				console.log("assignmentName:iframe"+assignmentName);
 				$(".iframe"+assignmentName).each(function() {
 					display($(this));
+					return;
 				});
 			}
 		}
