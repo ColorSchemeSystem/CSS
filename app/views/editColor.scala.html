@@ -2,21 +2,20 @@
 
 @import helper._
 
-@implicitFieldConstructor = @{ helper.FieldConstructor(myhelper.formFieldConstructor.render) } 
+@implicitField = @{ FieldConstructor(fieldConstructor.fieldC.f) }
 
 @main("myPage", member) {
-	@helper.form(action = routes.AdminController.saveChooserSetting()) {
-		<div class="container">
-		<h1 style='margin-top : 20px;'>マイページ</h1>
-			<div class='row'>
-				@helper.inputText(setting("memberName"),'_label -> "アカウント名",'_showConstraints -> false)
-				@helper.inputText(setting("mail"),'_label -> "メールアドレス",'_showConstraints -> false)
-				<p style='margin-top : 10px;'><a href='@routes.AdminController.modifyPassword()' target='_blank'>パスワードを変更</a></p>
-			</div>
-			<h3>カラーパレットの設定</h3>
+	@helper.form(action = routes.AdminController.saveColorSetting()) {
+		<div class="mypageContainer">
+		<script type="text/javascript">
+			$(window).load(function(){
+				$('#mypage').addClass("active");
+			});
+		</script>
+		<!--<h1 style='margin-top : 20px;'>マイページ</h1>-->
 			<div class="row">
 				<div class="col-xs-4">
-					@checkbox(setting("hsvpanel"),'_label -> "表示する")
+					@checkbox(setting("hsvpanel"))
 					<div id="hsvflat" class="hsvflatOne"></div>
 					<script>
 					var targetData = {contentName:"hsvflatOne", targetName:"background"};
@@ -31,7 +30,7 @@
 				</div>
 
 				<div class="col-xs-4">
-					@checkbox(setting("slider"),'_label -> "表示する")
+					@checkbox(setting("slider"))
 					<div id="hslflat" class="hsvflatTwo"></div>
 					<script>
 					var targetData = {contentName:"hsvflatTwo", targetName:"background"};
@@ -49,7 +48,7 @@
 				</div>
 
 				<div class="col-xs-4">
-					@checkbox(setting("swatche"),'_label -> "表示する")
+					@checkbox(setting("swatche"))
 					<div id="flat" class="hsvflatThree"></div>
 					<script>
 					var targetData = {contentName:"hsvflatThree", targetName:"background"};
@@ -60,9 +59,16 @@
 					},targetData);
 					</script>
 				</div>
-
+				@helper.inputText(setting("memberId"), 'type -> "hidden")
+				<input type="submit" value="設定を保存" id="colorSubmit" class="btn btn-primary">
 			</div>
-			<input type="submit" value="設定を保存">
+			<div class="sideMenu">
+				<ul class="nav nav-pills nav-stacked">
+					<li role="presentation"><a href="/editProfile ">ユーザー情報</a></li>
+					<li role="presentation"><a href="/editPassword">パスワード</a></li>
+					<li role="presentation" class="active"><a href="/editColor">カラーパレット</a></li>
+				</ul>
+			</div>
 		</div>
 	}
 }

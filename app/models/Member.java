@@ -23,6 +23,8 @@ public class Member extends BaseModel {
 	@Required
 	public String memberName;
 
+	public String nickName;
+
 	@Required
 	@Pattern(value = "^[a-zA-Z0-9]*$")
 	@MinLength(6)
@@ -30,11 +32,11 @@ public class Member extends BaseModel {
 
 	@Email
 	public String mail;
-	
+
 	@ManyToOne(cascade = CascadeType.PERSIST)
 	public Chooser chooser;
-		
+
 	public Timestamp lastLogin;
-	
+
 	public static final Finder<Long, Member> find = new Finder<Long, Member>(Long.class,Member.class);
 }

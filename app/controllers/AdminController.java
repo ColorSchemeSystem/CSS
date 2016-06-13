@@ -7,10 +7,6 @@ import play.cache.Cache;
 import play.db.ebean.Model.Finder;
 import play.libs.F.Promise;
 import play.libs.WS;
-import views.html.createAccount;
-import views.html.login;
-import views.html.myPage;
-import views.html.admin.*;
 import views.html.*;
 
 import java.awt.image.BufferedImage;
@@ -43,7 +39,7 @@ import services.ImageService;
 
 public class AdminController extends BaseController {
 	private static AdminService adminS = new AdminService();
-	
+
 	/**
 	*  ログイン画面へ
 	*/
@@ -51,7 +47,7 @@ public class AdminController extends BaseController {
 		Form<Member> form = Form.form(Member.class);
 		return ok(login.render(null, "ログイン", form));
 	}
-	
+
 	/**
 	*  ログイン画面から送られてきたフォーム情報を取得しデータベースに保存されているか名前検索をかける
 	*  なければlogin画面に戻る,あればpasswordが一致しているか確認
@@ -86,7 +82,7 @@ public class AdminController extends BaseController {
 		removeObjectSession("Member");
 		return redirect("/");
 	}
-	
+
 	/**
 	*  新規アカウント登録画面
 	*/
@@ -111,6 +107,7 @@ public class AdminController extends BaseController {
 				mem.password = adminS.passwordHash(form.get().password);
 				mem.mail = form.get().mail;
 				mem.chooser = new Chooser();
+				mem.nickName = form.get().nickName;
 				adminS.storeMember(mem);
 				writeObjectOnSession("Member", mem);
 				return redirect("/");
@@ -120,11 +117,11 @@ public class AdminController extends BaseController {
 			return badRequest(createAccount.render(null, "ERROR!　もう一度入力してください", form));
 		}
 	}
-	
+
 	/**
 	 * @return
 	 */
-	public static Result myPage() {
+	public static Result editProfile() {
 		Form<MyPage> form = Form.form(MyPage.class);
 		Member mem = isLoggedIn();
 		if(mem == null) {
@@ -133,54 +130,94 @@ public class AdminController extends BaseController {
 		Chooser chooser = adminS.findChooserByChooserId(mem.chooser.chooserId);
 		System.out.println("hsv"+chooser.hsvpanel);
 		MyPage setting = new MyPage();
+		setting.memberId = mem.memberId;
 		setting.memberName = mem.memberName;
+		setting.nickName = mem.nickName;
 		setting.mail = mem.mail;
 		setting.hsvpanel	= chooser.hsvpanel;
 		setting.slider		= chooser.slider;
 		setting.swatche		= chooser.swatche;
 		form = form.fill(setting);
-		return ok(myPage.render(mem, form));
+		return ok(editProfile.render(mem, form));
+	}
+
+	public static Result editColor(){
+		Form<MyPage> form = Form.form(MyPage.class);
+		Member mem = isLoggedIn();
+		if(mem == null) {
+			return redirect(routes.AdminController.login());
+		}
+		Chooser chooser = adminS.findChooserByChooserId(mem.chooser.chooserId);
+		System.out.println("hsv"+chooser.hsvpanel);
+		MyPage setting = new MyPage();
+		setting.memberId = mem.memberId;
+		setting.memberName = mem.memberName;
+		setting.nickName = mem.nickName;
+		setting.mail = mem.mail;
+		setting.hsvpanel	= chooser.hsvpanel;
+		setting.slider		= chooser.slider;
+		setting.swatche		= chooser.swatche;
+		form = form.fill(setting);
+		return ok(editColor.render(mem, form));
 	}
 
 	/**
 	 * @return
 	 */
-	public static Result saveChooserSetting() {
+	public static Result saveColorSetting() {
 		Form<MyPage> form = Form.form(MyPage.class).bindFromRequest();
 		Member mem = isLoggedIn();
 		if(mem == null) {
-			return badRequest(myPage.render(mem, form));
+			return badRequest(editColor.render(mem, form));
 		}
 		if(!form.hasErrors()) {
-			if(!mem.memberName.equals(form.get().memberName) || !mem.mail.equals(form.get().mail)) {
-				mem.memberName = form.get().memberName;
-				mem.mail = form.get().mail;
-				adminS.storeMember(mem);
-			}
 			Chooser chooser = adminS.findChooserByChooserId(mem.chooser.chooserId);
 			chooser.hsvpanel	= form.get().hsvpanel;
 			chooser.slider		= form.get().slider;
 			chooser.swatche		= form.get().swatche;
-			chooser.save();
+			System.out.println("beforechooser = " + chooser.hsvpanel + chooser.slider + chooser.swatche);
+			chooser.update();
+			System.out.println("afterchooser = " + chooser.hsvpanel + chooser.slider + chooser.swatche);
 		} else {
-			return badRequest(myPage.render(mem, form));
+			return badRequest(editColor.render(mem, form));
 		}
-		return ok(myPage.render(mem, form));
+		return ok(editColor.render(mem, form));
 	}
-	
+
+	public static Result saveProfileSetting(){
+		Form<MyPage> form = Form.form(MyPage.class).bindFromRequest();
+		Member mem = isLoggedIn();
+		if(mem == null) {
+			return badRequest(editColor.render(mem, form));
+		}
+		if(!form.hasErrors()) {
+			if(!mem.memberName.equals(form.get().memberName) || !mem.mail.equals(form.get().mail) || !mem.nickName.equals(form.get().nickName)) {
+				mem.memberName = form.get().memberName;
+				mem.mail = form.get().mail;
+				mem.nickName = form.get().nickName;
+				System.out.println("beforemem = " + mem.nickName);
+				adminS.updateMember(mem);
+				System.out.println("aftermem = " + mem.nickName);
+			}
+		} else {
+			return badRequest(editProfile.render(mem, form));
+		}
+		return ok(editProfile.render(mem, form));
+	}
+
 	/**
-	 * 
+	 *
 	 * @return
 	 */
-	public static Result modifyPassword() {
+	public static Result editPass() {
 		Member member = isLoggedIn();
 		if(member == null) {
 			return redirect(routes.AdminController.login());
 		}
 		Form<ModifyPassword> form = Form.form(ModifyPassword.class);
-		return ok(modifyPassword.render(form,member,""));
+		return ok(editPass.render(form,member,""));
 	}
-	
+
 	/**
 	 * @return
 	 */
@@ -201,15 +238,15 @@ public class AdminController extends BaseController {
 			if(changeable) {
 				member = adminS.findMemberById(member.memberId);
 				member.password = form.get().newPassword;
-				adminS.storeMember(member);
+				adminS.updateMember(member);
 				removeObjectSession("Member");
 				writeObjectOnSession("Member", member);
-				return redirect(routes.AdminController.myPage());
+				return redirect(routes.AdminController.editPass());
 			}	else	{
-				return ok(modifyPassword.render(form,member,"入力値が不正です。"));
+				return ok(editPass.render(form,member,"入力値が不正です。"));
 			}
 		}	else	{
-			return ok(modifyPassword.render(form,member,"入力値が不正です。"));
+			return ok(editPass.render(form,member,"入力値が不正です。"));
 		}
 	}
 }

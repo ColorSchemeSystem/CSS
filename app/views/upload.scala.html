@@ -4,6 +4,11 @@
 
 @main("Color Scheme",member){
 <div class='uploadContainer'>
+	<script type="text/javascript">
+		$(window).load(function(){
+			$('#uploadTemp').addClass("active");
+		});
+	</script>
 	<h2>テンプレートアップロード</h2>
 	<p class="explain">
 	@if(member == null) {

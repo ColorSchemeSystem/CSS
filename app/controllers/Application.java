@@ -239,10 +239,6 @@ public class Application extends BaseController{
 		tempS.tempHtml = "<html>" + tempS.tempHtml + "</html>";
 		if(tempS.tempHtml != null){
 			Template temp = new Template();
-			temp.templateName = tempS.tempName;
-			if(temp.templateName == null){
-				temp.templateName = "template" + tempS.temp_id;
-			}
 			temp.templateMessage = tempS.tempMessage;
 			temp.accessFlag = tempS.flg;
 			if(temp.accessFlag == null){
@@ -255,7 +251,14 @@ public class Application extends BaseController{
 			} else {
 				temp.member = null;
 			}
-			appS.saveTemplate(temp);
+			if(!tempS.tempName.trim().equals("")){
+				temp.templateName = tempS.tempName;
+				appS.saveTemplate(temp);
+			}else{
+				appS.saveTemplate(temp);
+				temp.templateName = "template" + temp.templateId;
+				appS.updateTemplate(temp);
+			}
 			String tempName = temp.templateId + ".html";
 			Long newTempId = temp.templateId;
 			File file = new File(tempName);
