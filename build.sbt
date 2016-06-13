@@ -10,7 +10,8 @@ libraryDependencies ++= Seq(
   "commons-io" % "commons-io" % "2.5",
   "net.sf.flexjson" % "flexjson" % "3.3",
   "commons-codec" % "commons-codec" % "1.10",
-  "org.mindrot" % "jbcrypt" % "0.3m"
+  "org.mindrot" % "jbcrypt" % "0.3m",
+  "mysql" % "mysql-connector-java" % "6.0.2" 
 )
 
 play.Project.playJavaSettings
