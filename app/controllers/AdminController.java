@@ -128,7 +128,6 @@ public class AdminController extends BaseController {
 			return redirect(routes.AdminController.login());
 		}
 		Chooser chooser = adminS.findChooserByChooserId(mem.chooser.chooserId);
-		System.out.println("hsv"+chooser.hsvpanel);
 		MyPage setting = new MyPage();
 		setting.memberId = mem.memberId;
 		setting.memberName = mem.memberName;
@@ -168,6 +167,7 @@ public class AdminController extends BaseController {
 		Form<MyPage> form = Form.form(MyPage.class).bindFromRequest();
 		Member mem = isLoggedIn();
 		if(mem == null) {
+			System.out.println("memnone");
 			return badRequest(editColor.render(mem, form));
 		}
 		if(!form.hasErrors()) {
@@ -175,10 +175,9 @@ public class AdminController extends BaseController {
 			chooser.hsvpanel	= form.get().hsvpanel;
 			chooser.slider		= form.get().slider;
 			chooser.swatche		= form.get().swatche;
-			System.out.println("beforechooser = " + chooser.hsvpanel + chooser.slider + chooser.swatche);
 			chooser.update();
-			System.out.println("afterchooser = " + chooser.hsvpanel + chooser.slider + chooser.swatche);
 		} else {
+			System.out.println("bad");
 			return badRequest(editColor.render(mem, form));
 		}
 		return ok(editColor.render(mem, form));
