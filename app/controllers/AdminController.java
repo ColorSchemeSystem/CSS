@@ -131,6 +131,7 @@ public class AdminController extends BaseController {
 			return redirect(routes.AdminController.login());
 		}
 		Chooser chooser = adminS.findChooserByChooserId(mem.chooser.chooserId);
+		System.out.println("hsv"+chooser.hsvpanel);
 		MyPage setting = new MyPage();
 		setting.memberName = mem.memberName;
 		setting.mail = mem.mail;

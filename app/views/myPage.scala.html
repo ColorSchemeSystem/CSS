@@ -16,13 +16,7 @@
 			<h3>カラーパレットの設定</h3>
 			<div class="row">
 				<div class="col-xs-4">
-					@helper.inputRadioGroup(
-						setting("hsvpanel"),
-						options = helper.options(
-						("0","非表示"),
-						("1","表示")),
-						'_label -> "パレット1"
-					)
+					@checkbox(setting("hsvpanel"),'_label -> "表示する")
 					<div id="hsvflat" class="hsvflatOne"></div>
 					<script>
 					var targetData = {contentName:"hsvflatOne", targetName:"background"};
@@ -37,13 +31,7 @@
 				</div>
 
 				<div class="col-xs-4">
-					@helper.inputRadioGroup(
-						setting("slider"),
-						options = helper.options(
-						("0","非表示"),
-						("1","表示")),
-						'_label -> "パレット2"
-            		)
+					@checkbox(setting("slider"),'_label -> "表示する")
 					<div id="hslflat" class="hsvflatTwo"></div>
 					<script>
 					var targetData = {contentName:"hsvflatTwo", targetName:"background"};
@@ -61,13 +49,7 @@
 				</div>
 
 				<div class="col-xs-4">
-					@helper.inputRadioGroup(
-						setting("swatche"),
-						options = helper.options(
-						("0","非表示"),
-						("1","表示")),
-						'_label -> "パレット3"
-            		)
+					@checkbox(setting("swatche"),'_label -> "表示する")
 					<div id="flat" class="hsvflatThree"></div>
 					<script>
 					var targetData = {contentName:"hsvflatThree", targetName:"background"};
