@@ -9,15 +9,14 @@ public class MyPage {
 	@Required
 	public String memberName;
 	
-	@Required
 	@Email
 	public String mail;
 	
-	public Integer hsvpanel;
+	public Boolean hsvpanel;
 	
-	public Integer slider;
+	public Boolean slider;
 	
-	public Integer swatche;
+	public Boolean swatche;
 
 	List<String> listSwatches;
 }

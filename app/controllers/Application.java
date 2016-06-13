@@ -54,7 +54,7 @@ public class Application extends BaseController{
 			if(mem.chooser != null) {
 				chooser = appS.findChooserByChooserId(mem.chooser.chooserId);
 				if(chooser == null) chooser = new Chooser();
-			}	else	{
+			} else {
 				mem.chooser = new Chooser();
 				chooser = new Chooser();
 			}
@@ -70,7 +70,7 @@ public class Application extends BaseController{
 		String path;
 		if(temp != null){
 			path = "iframes/" + id + ".html";
-		}else{
+		} else {
 			path = "iframes/iframe1.html";
 		}
 		File file = new File(Play.application().path().getPath() + "/public/" + path);
@@ -111,7 +111,7 @@ public class Application extends BaseController{
 	    	if(picture != null && picture.getFile() != null && picture.getContentType().equals("text/html")) {
 	    		saveHtml(picture.getFile(),form);
 	    		return redirect(routes.Application.templates());
-	    	}	else	{
+	    	} else {
 	    		Member member = isLoggedIn();
 	    		if(member == null) {
 	    			return redirect(routes.Application.upload());
@@ -207,7 +207,7 @@ public class Application extends BaseController{
 		PagingDto<Template> pagingDto;
 		if(StringUtils.isNotEmpty(type) && type.equals("member") && member != null) {
 			pagingDto = appS.findTemplatesWithPages(page, 20 , member.memberId);
-		}	else	{
+		} else {
 			pagingDto = appS.findTemplatesWithPages(page, 20);
 		}
 		return ok(templates.render(pagingDto,member,5));
@@ -252,7 +252,7 @@ public class Application extends BaseController{
 				System.out.println("メンバーID = " + tempS.member_id);
 				temp.member = appS.findMemberById(tempS.member_id);
 				System.out.println("メンバー = " + temp.member);
-			}else{
+			} else {
 				temp.member = null;
 			}
 			appS.saveTemplate(temp);
@@ -276,10 +276,10 @@ public class Application extends BaseController{
 
 				file.renameTo(new File(tempPath, tempName));
 				return redirect(routes.Application.indexWithId(newTempId));
-			}catch(Exception e){
+			} catch(Exception e) {
 				e.printStackTrace();
 			}
-		}else{
+		} else {
 			return redirect(routes.Application.index());
 		}
 		return redirect(routes.Application.index());

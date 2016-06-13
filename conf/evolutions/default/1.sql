@@ -9,9 +9,9 @@ create table choosers (
   update_ts                 date,
   versions                  bigint,
   placement                 varchar(255),
-  hsvpanel                  integer,
-  slider                    integer,
-  swatche                   integer,
+  hsvpanel                  boolean,
+  slider                    boolean,
+  swatche                   boolean,
   constraint pk_choosers primary key (chooser_id))
 ;
 

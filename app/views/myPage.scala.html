@@ -17,36 +17,36 @@
 			<div class="row">
 				<div class="col-xs-4">
 					@helper.inputRadioGroup(
-            				setting("hsvpanel"),
-            				options = helper.options(
-            				("0","デフォルトのパレットに設定"),
-            				("1","表示"),
-            				("2","非表示")),
-            				'_label -> "パレット1"
-            		)
-					<div id="hsvflat"></div>
+						setting("hsvpanel"),
+						options = helper.options(
+						("0","非表示"),
+						("1","表示")),
+						'_label -> "パレット1"
+					)
+					<div id="hsvflat" class="hsvflatOne"></div>
 					<script>
+					var targetData = {contentName:"hsvflatOne", targetName:"background"};
 					$("#hsvflat").ColorPickerSliders({
 							color: "rgb(36, 170, 242)",
 							flat: true,
 							sliders: false,
 							swatches: false,
 							hsvpanel: true
-					});
+					},targetData);
 					</script>
 				</div>
 
 				<div class="col-xs-4">
 					@helper.inputRadioGroup(
-            				setting("slider"),
-            				options = helper.options(
-            				("0","デフォルトのパレットに設定"),
-            				("1","表示"),
-            				("2","非表示")),
-            				'_label -> "パレット2"
+						setting("slider"),
+						options = helper.options(
+						("0","非表示"),
+						("1","表示")),
+						'_label -> "パレット2"
             		)
-					<div id="hslflat"></div>
+					<div id="hslflat" class="hsvflatTwo"></div>
 					<script>
+					var targetData = {contentName:"hsvflatTwo", targetName:"background"};
 					$("#hslflat").ColorPickerSliders({
 							color: "rgb(36, 170, 242)",
 							flat: true,
@@ -56,26 +56,26 @@
 									preview: 3
 							},
 							swatches: false
-					});
+					},targetData);
 					</script>
 				</div>
 
 				<div class="col-xs-4">
 					@helper.inputRadioGroup(
-            				setting("swatche"),
-            				options = helper.options(
-            				("0","デフォルトのパレットに設定"),
-            				("1","表示"),
-            				("2","非表示")),
-            				'_label -> "パレット3"
+						setting("swatche"),
+						options = helper.options(
+						("0","非表示"),
+						("1","表示")),
+						'_label -> "パレット3"
             		)
-					<div id="flat"></div>
+					<div id="flat" class="hsvflatThree"></div>
 					<script>
+					var targetData = {contentName:"hsvflatThree", targetName:"background"};
 					$("#flat").ColorPickerSliders({
 							flat: true,
 							sliders: false,
 							invalidcolorsopacity: 0
-					});
+					},targetData);
 					</script>
 				</div>
 
