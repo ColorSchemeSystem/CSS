@@ -45,6 +45,7 @@ create table Members (
   update_ts                 date,
   versions                  bigint,
   member_name               varchar(255),
+  nick_name                 varchar(255),
   password                  varchar(255),
   mail                      varchar(255),
   chooser_chooser_id        bigint,

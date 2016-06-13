@@ -1,43 +1,40 @@
 @(dto : dtos.PagingDto[Image], member : Member, columns : Integer)
 
 @main("Color Scheme",member){ 
-<div class='container'>
-	<h1>
-	@(member.memberName)さんが保存した画像一覧
-	</h1>
-	<div id='templates_list' style='margin-left : 40px; margin-top : 40px;'>
-	@for((image, index) <- dto.data.zipWithIndex) {
-		@if((index + 1) == 1 || ((index + 1) % columns == 1)) {
-			<div class='clearfix' style='margin-top : 10px;'>
-		}
-				<div style='float : left;'>
-					<div style='margin-left : 20px;'>
-						<div>
-							<img width='120' height='120' src='/assets/member-images/@(image.imageId).png'/>
+<div class='imgContainer'>
+	<script type="text/javascript">
+		$(window).load(function(){
+			$('#allImage').addClass("active");
+		});
+	</script>
+	<h2>
+	<!--@(member.memberName)さんが保存した画像一覧-->
+	</h2>
+	<div id='img_list'>
+		<div class='clearfix'>
+			@for((image, index) <- dto.data.zipWithIndex) {
+				<div class="listImage">
+					<div class="col-xs-3">
+						<div class="imgThumb">
+							<img width='260' height='200' src='/assets/member-images/@(image.imageId).png'/>
 						</div>
-						<div style='margin-left : 50px; margin-top : 10px;'>
+						<div class="imgName">
 							@image.imageName
-						</div>
-					</a>	
+						</div>	
 					</div>
 				</div>
-		@if((index + 1) % columns == 0) {
-			</div>
-		}
-	}
-	@if(dto.data.size == 0 || dto.data.size / columns != 0) {
+			}
 		</div>
-	}
 	</div>
 	<ul class="pager pager-margin">
-	@dto.currentPage match {
-    	case i if i <= 1 => { <li class="previous disabled"><a href="#">&larr; 前へ</a></li> }
-    	case _ => { <li class="previous"><a href="@routes.Application.images()?page=@(dto.currentPage - 1)">&larr; 前へ</a></li> }
-	}
-	@dto.currentPage match {
-    	case i if i >= dto.totalPage => { <li class="next disabled"><a href="#">次へ &rarr;</a></li> }
-    	case _ => { <li class="next"><a href="@routes.Application.images()?page=@(dto.currentPage + 1)">次へ &rarr;</a></li> }
-	}
+		@dto.currentPage match {
+	    	case i if i <= 1 => { <li class="previous disabled"><a href="#">&larr; 前へ</a></li> }
+	    	case _ => { <li class="previous"><a href="@routes.Application.images()?page=@(dto.currentPage - 1)">&larr; 前へ</a></li> }
+		}
+		@dto.currentPage match {
+	    	case i if i >= dto.totalPage => { <li class="next disabled"><a href="#">次へ &rarr;</a></li> }
+	    	case _ => { <li class="next"><a href="@routes.Application.images()?page=@(dto.currentPage + 1)">次へ &rarr;</a></li> }
+		}
 	</ul>
 </div>
 }				

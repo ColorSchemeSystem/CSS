@@ -217,134 +217,34 @@
 
 			/*テンプレート一覧のCSS*/
 			.wrapper .listContainer{
-				margin: 40px 30px 40px 30px;
+				margin: 40px auto 40px auto;
+				padding-left: 120px;
+				padding-bottom: 40px;
 				text-align: center;
 			}
 
 			.wrapper .listContainer h2{
-				margin-bottom: 40px;
+				margin-bottom: 20px;
 				font-weight: bold;
+				margin-right: 130px;
 			}
 
 			.wrapper .listContainer .tempFilter{
-				float: left;
-			}
-
-			.wrapper .listContainer .tempFilter a{
-				color: #000;
-			}
-
-			#templates_list{
-				min-height: 300px;
+				position: relative;
 			}
  
-			#templates_list .listImage .col-xs-3{
+			#templates_list .listImage{
+				margin-left: 25px;
 				margin-top: 30px;
 			}
 
 			#templates_list .listImage .tempName{
-				width: 270px;
+				width: 180px;
 				white-space: nowrap;
 				overflow: hidden;
 				text-overflow: ellipsis;
 				margin-top: 10px;
-				text-align: center;
 			}
-
-			.pager{
-				margin-left: 10px;
-				margin-right: 10px;
-			}
-
-			/*画像一覧のCSS*/
-			.wrapper .imgContainer{
-				margin: 40px 30px 40px 30px;
-				text-align: center;
-			}
-
-			.wrapper .imgContainer h2{
-				margin-bottom:  40px;
-				font-weight: bold;
-			}
-
-			#img_list{
-				min-height: 300px;
-			}
-
-			#img_list .listImage .col-xs-3{
-				margin-top: 30px;
-			}
-
-			#img_list .listImage .imgName{
-				width: 270px;
-				white-space: nowrap;
-				overflow: hidden;
-				text-overflow: ellipsis;
-				margin-top: 10px;
-				text-align: center;
-			}
-
-			.pager{
-				margin-left: 10px;
-				margin-right: 10px;
-			}
-
-			/*マイページのCSS*/
-			.wrapper .mypageContainer{
-				margin: 20px auto 30px auto;
-				width: 1200px;
-			}
-
-			.wrapper .mypageContainer .profile{
-				float: right;
-				width: 850px;
-				background-color: #FFF;
-				padding: 30px 0px 30px 175px;
-				margin-right: 60px;
-			}
-
-			.wrapper .mypageContainer .row{
-				float: right;
-				width: 850px;
-				background-color: #FFF;
-				margin-right: 60px;
-				padding: 30px 0px 30px 0px;
-			}
-
-			.wrapper .mypageContainer .password{
-				float: right;
-				width: 850px;
-				background-color: #FFF;
-				margin-right: 60px;
-				padding: 30px 0px 30px 175px;
-			}
-
-			.wrapper .mypageContainer .sideMenu{
-				float: left;
-				width: 200px;
-				background-color: #FFF;
-				margin-left: 30px;
-			}
-
-			#profileSubmit{
-				margin-top: 40px;
-				margin-left: 110px;
-				width: 255px;
-			}
-
-			#colorSubmit{
-				margin-top: 40px;
-				margin-left: 300px;
-				width: 255px;
-			}
-
-			#passSubmit{
-				margin-top: 40px;
-				margin-left: 110px;
-				width: 255px;
-			}
-
-
 
 
 

@@ -9,20 +9,20 @@
 				<span class="icon-bar"></span>
 				<span class="icon-bar"></span>
 			</button>
-			<a class="navbar-brand" href="/">
-				TITLE
+			<a class="navbar-brand active" href="/">
+				MyCanvas
 			</a>
 		</div>
 
 		<div class="collapse navbar-collapse" id="navbarEexample7">
 			<ul class="nav navbar-nav">
-				<li><a href="@routes.Application.templates()">すべてのテンプレート</a></li>
-				<li><a href="#">URLからデザインを読み込む</a></li>
-				<li><a href="@routes.Application.upload()">テンプレートのアップロード</a></li>
-				<li><a href="@routes.Application.images()">全ての画像</a></li>
-				<li><a href="@routes.AdminController.myPage()">マイページ</a></li>
+				<li id="allTemp"><a href="@routes.Application.templates()">すべてのテンプレート</a></li>
+				<li id="readURL"><a href="#">URLからデザインを読み込む</a></li>
+				<li id="uploadTemp"><a href="@routes.Application.upload()">テンプレートのアップロード</a></li>
+				<li id="allImage"><a href="@routes.Application.images()">全ての画像</a></li>
+				<li id="mypage"><a href="@routes.AdminController.editProfile()">マイページ</a></li>
 			</ul>
-			<a class="navbar-right" href="@routes.AdminController.logout()"><button type="button" class="btn btn-default navbar-btn">ログアウト</button></a>
+			<a class="navbar-right" href="@routes.AdminController.logout()"><button type="button" class="btn btn-default navbar-btn btn-sm">ログアウト</button></a>
 		</div>
 	</div>
 </nav>

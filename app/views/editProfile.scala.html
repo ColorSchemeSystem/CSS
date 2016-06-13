@@ -1,0 +1,31 @@
+@(member: models.Member, setting: Form[forms.MyPage])
+
+@import helper._
+
+@implicitFieldConstructor = @{ helper.FieldConstructor(myhelper.formFieldConstructor.render) } 
+
+@main("myPage", member) {
+	@helper.form(action = routes.AdminController.saveProfileSetting()) {
+		<div class="mypageContainer">
+		<script type="text/javascript">
+			$(window).load(function(){
+				$('#mypage').addClass("active");
+			});
+		</script>
+		<!--<h1 style='margin-top : 20px;'>マイページ</h1>-->
+			<div class='profile'>
+				@helper.inputText(setting("memberName"),'_label -> "アカウント名",'_showConstraints -> false, 'size -> 70, 'readonly -> true)
+				@helper.inputText(setting("mail"),'_label -> "メールアドレス",'_showConstraints -> false, 'size -> 70)
+				@helper.inputText(setting("nickName"), '_label -> "ニックネーム", '_showConstraints -> false, 'size -> 70)
+				<input type="submit" value="設定を保存" id="profileSubmit" class="btn btn-primary">
+			</div>
+			<div class="sideMenu">
+				<ul class="nav nav-pills nav-stacked">
+					<li role="presentation" class="active"><a href="/editProfile ">ユーザー情報</a></li>
+					<li role="presentation"><a href="/editPassword">パスワード</a></li>
+					<li role="presentation"><a href="/editColor">カラーパレット</a></li>
+				</ul>
+			</div>
+		</div>
+	}
+}

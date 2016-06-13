@@ -102,6 +102,10 @@ public class AppService {
 		template.save();
 	}
 
+	public void updateTemplate(Template template){
+		template.update();
+	}
+
 	public Member findMemberById(Long id){
 		return Member.find.byId(id);
 	}

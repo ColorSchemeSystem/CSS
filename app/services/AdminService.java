@@ -8,24 +8,24 @@ import models.Template;
 
 public class AdminService {
 	/**
-	 * 
+	 *
 	 * @param template
 	 */
 	public void saveTemplate(Template template) {
 		template.save();
 	}
-	
+
 	/**
-	 * 
+	 *
 	 * @param memberId
 	 * @return
 	 */
 	public Member findMemberById(Long memberId) {
 		return Member.find.byId(memberId);
 	}
-	
+
 	/**
-	 * 
+	 *
 	 * @param memberName
 	 * @return
 	 */
@@ -37,9 +37,9 @@ public class AdminService {
 			return false;
 		}
 	}
-	
+
 	/**
-	 * 
+	 *
 	 * @param memberName
 	 * @return
 	 */
@@ -47,26 +47,30 @@ public class AdminService {
 		Member member = Member.find.where().eq("memberName", memberName).findUnique();
 		return member;
 	}
-	
+
 	/**
-	 * 
+	 *
 	 * @param member
 	 */
 	public void storeMember(Member member) {
 		member.save();
 	}
-	
+
+	public void updateMember(Member member){
+		member.update();
+	}
+
 	/**
-	 * 
+	 *
 	 * @param password
 	 * @return
 	 */
 	public String passwordHash(String password) {
 		return BCrypt.hashpw(password, BCrypt.gensalt());
 	}
-	
+
 	/**
-	 * 
+	 *
 	 * @param password
 	 * @param hashedPassword
 	 * @return
@@ -74,9 +78,9 @@ public class AdminService {
 	public boolean checkpw(String password, String hashedPassword) {
 		return BCrypt.checkpw(password, hashedPassword);
 	}
-	
+
 	/**
-	 * 
+	 *
 	 * @param chooserId
 	 * @return
 	 */
