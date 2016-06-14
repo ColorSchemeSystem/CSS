@@ -391,7 +391,7 @@ function reloadIframe(url){
 								// 子供の数だけループしてtab作成
 								addTabTr(classname,$(this).prop("tagName").toLowerCase());
 							}
-						}
+						} else console.log("classないじゃん");
 					});
 
 					// border-sizeリアルタイム処理
@@ -857,8 +857,8 @@ function addLiBackground(name, number, childClassName,assignmentName,parentName)
 // 配下のタグ名を連結して返す(find用 兄弟要素あるとむり)
 function linkingSubordinateTabForFind(data){
 	var name = "";
-	name = $(data).prop("tagName").toLowerCase();
 	if($(data).children().size() > 0) {
+		name = $(data).prop("tagName").toLowerCase();
 		$(data).children().each(function() {
 			name += " "+linkingSubordinateTabForFind($(this));
 		});
