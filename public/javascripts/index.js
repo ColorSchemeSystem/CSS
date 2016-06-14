@@ -340,7 +340,7 @@ function showPopup(member_id, id){
 }
 
 function setTimer(id){
-	//iframeMethod = setInterval("loadIframe(" + id + ")", 2000);
+	iframeMethod = setInterval("loadIframe(" + id + ")", 2000);
 }
 
 function loadIframe(id){
@@ -403,7 +403,6 @@ function reloadIframe(url){
 
 					// textのリアルタイム処理
 					$(function() {
-						//console.log($('input.editText').size());
 						$('input.editText').each(function() {
 							$(this).bind('keyup', editText(this));
 						});
@@ -439,7 +438,6 @@ function editText(element) {
 	var v, old = element.value;
 	return function() {
 		if(old != (v = element.value)) {
-			console.log($("#"+$(this).attr("id")).data('classname'));
 			var text = $("#"+$(this).attr("id")).val();
 			$('iframe').contents().find($("#"+$(this).attr("id")).data('classname')).text(text);
 		}
@@ -651,7 +649,6 @@ function addNamedFont(classname,named) {
 // テキストの変更
 function addEditText(name) {
 	var classname = "." + name;
-	console.log(classname);
 	var tr = $("<tr class='iframe"+name+"'></tr>");
 	var td = $("<td>font</td>");
 	var td2 = $("<input type='text' id='"+name+"-text' class='editText' data-classname='"+classname+"'>");
@@ -668,7 +665,6 @@ function addEditText(name) {
 // テキストの変更
 function addNamedEditText(classname,named) {
 	classname = "." + classname;
-	console.log(classname);
 	var tr = $("<tr class='iframe"+named+"'></tr>");
 	var td = $("<td>text</td>");
 	var td2 = $("<input type='text' id='"+named+"-text' class='editText' data-classname='"+classname+"'>");
