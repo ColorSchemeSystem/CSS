@@ -30,6 +30,8 @@ import services.*;
 
 import java.awt.image.BufferedImage;
 import java.io.*;
+import java.net.URLEncoder;
+
 import forms.*;
 
 public class Application extends BaseController{
@@ -39,6 +41,8 @@ public class Application extends BaseController{
 	private static ImageService imageS = new ImageService();
 
 	private static FileService fileS = new FileService();
+	
+	private static HttpService httpS = new HttpService();
 
 	public static Result index() {
 		Chooser chooser = new Chooser();
@@ -269,10 +273,7 @@ public class Application extends BaseController{
 				String tempPath = Play.application().path().getPath() + "/public/iframes/";
 
 			    String target = "https://www.google.co.jp/";
-			    Promise<WS.Response> response = WS.url(ImageService.webShotUrl).setQueryParameter("target", target)
-			    		.setTimeout(1000 * 60).get();
-			    response.wait();
-				String base64ImageData = response.get().getBody();
+				String base64ImageData = httpS.request(ImageService.webShotUrl + "?" + URLEncoder.encode(target, "UTF-8"));
 				final String imageFilePath = Play.application().path().getPath() + "/public/snapshots/";
 				final String imageFileName = String.valueOf(newTempId) + ".png";
 				imageS.saveBase64ImageDataAsImage(base64ImageData, "png",
