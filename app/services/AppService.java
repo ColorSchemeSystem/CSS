@@ -9,6 +9,7 @@ import java.util.Map;
 import java.io.*;
 import java.util.regex.Pattern;
 
+import org.apache.commons.lang3.StringUtils;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -22,8 +23,21 @@ import models.Chooser;
 import models.Image;
 import models.Member;
 import models.Template;
+import play.Play;
 
 public class AppService {
+	
+	/**
+	 * @return
+	 */
+	public String getPublicFolderPath() {
+		String path = Play.application().configuration().getString("paths.assets");
+		if(StringUtils.isEmpty(path)) {
+			return Play.application().path().getPath();
+		}	else	{
+			return path;
+		}
+	}
 
 	/**
 	 *
