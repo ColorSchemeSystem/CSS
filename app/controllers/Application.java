@@ -145,6 +145,7 @@ public class Application extends BaseController{
 	    }
 	    appS.saveTemplate(template);
 	    final String path = appS.getPublicFolderPath() + "/iframes/";
+	    System.out.println("path                  " + path);
 	    final String fileName = String.valueOf(template.templateId) + ".html";
 	    File newFile = new File(path + fileName);
 	    file.renameTo(newFile);
