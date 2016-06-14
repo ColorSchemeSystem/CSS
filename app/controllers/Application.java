@@ -224,6 +224,7 @@ public class Application extends BaseController{
 		Form<TemplateDownload> form = Form.form(TemplateDownload.class).bindFromRequest();
 		TemplateDownload html = form.get();
 		html.tempHtml = "<html>" + html.tempHtml + "</html>";
+		Logger.info("html : " + html.tempHtml);
 		StyleParser styleParser = new StyleParser();
 		StyleCleaner styleCleaner = new StyleCleaner();
 		fileS.saveFile("style.css", styleParser.parse(html.tempHtml).toString());
