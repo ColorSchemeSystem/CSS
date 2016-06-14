@@ -217,7 +217,7 @@ public class Application extends BaseController{
 		} else {
 			pagingDto = appS.findTemplatesWithPages(page, 20);
 		}
-		return ok(templates.render(pagingDto,member,5));
+		return ok(templates.render(pagingDto,member,5,appS.getSnapShotsUrl()));
 	}
 
 	public static Result download(){

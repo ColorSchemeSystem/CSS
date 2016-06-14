@@ -38,6 +38,19 @@ public class AppService {
 			return path;
 		}
 	}
+	
+	/**
+	 * 
+	 * @return
+	 */
+	public String getSnapShotsUrl() {
+		String path = Play.application().configuration().getString("paths.snapshots");
+		if(StringUtils.isEmpty(path)) {
+			return "/assets/snapshots";
+		}	else	{
+			return path;
+		}
+	}
 
 	/**
 	 *

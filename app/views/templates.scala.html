@@ -1,4 +1,4 @@
-@(dto : dtos.PagingDto[Template], member : Member, columns : Integer)
+@(dto : dtos.PagingDto[Template], member : Member, columns : Integer, snapShotsUrl : String)
 
 @main("Color Scheme",member){ 
 <div class='listContainer'>
@@ -28,7 +28,7 @@
 					<div class="col-xs-3">
 						<a href='@routes.Application.indexWithId(t.templateId)' target='_blank'>
 							<div>
-								<img width='260' height='200' src='/assets/snapshots/@(t.templateId).png'/>
+								<img width='260' height='200' src='@(snapShotsUrl)/@(t.templateId).png'/>
 							</div>
 							<div class="tempName">
 								@t.templateName
