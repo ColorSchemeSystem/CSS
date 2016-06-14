@@ -14,6 +14,10 @@
 				height: 100%;
 			}
 
+			#logo{
+
+			}
+
 			.clearfix {
 				zoom: 1;
 			}
@@ -30,6 +34,8 @@
 
 			.header .menuBar .navbar-inverse{
 				background-color: #373737;
+				padding-bottom: 5px;
+				padding-top: 5px;
 			}
 
 			.header .menuBar .navbar-header a{
@@ -324,6 +330,15 @@
 				width: 200px;
 				background-color: #FFF;
 				margin-left: 30px;
+			}
+
+			.wrapper .mypageContainer .sideMenu li a{
+				color: #000;
+			}
+
+			.wrapper .mypageContainer .sideMenu li.active a{
+				color: #FFF;
+				background-color: #a9a9a9;
 			}
 
 			#profileSubmit{
