@@ -31,7 +31,7 @@ public class AppService {
 	 * @return
 	 */
 	public String getPublicFolderPath() {
-		String path = Play.application().configuration().getString("paths.assets");
+		String path = Play.application().configuration().getString("paths.nginx");
 		if(StringUtils.isEmpty(path)) {
 			return Play.application().path().getPath() + "/public";
 		}	else	{
