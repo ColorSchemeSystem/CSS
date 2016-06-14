@@ -13,6 +13,8 @@ var iframeMethod;
 $(window).load(function(){
 	$('#loading').css("display", "block");
 	$('#loader').css("display", "block");
+	console.log("width = "+ $('#logo').innerWidth());
+	console.log("height = " + $('#logo').innerHeight());
 });
 
 function fixSideBar(){
