@@ -11,7 +11,8 @@ libraryDependencies ++= Seq(
   "net.sf.flexjson" % "flexjson" % "3.3",
   "commons-codec" % "commons-codec" % "1.10",
   "org.mindrot" % "jbcrypt" % "0.3m",
-  "mysql" % "mysql-connector-java" % "5.1.39" 
+  "mysql" % "mysql-connector-java" % "5.1.39",
+  "org.apache.httpcomponents" % "httpclient" % "4.5.2"
 )
 
 play.Project.playJavaSettings
