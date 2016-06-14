@@ -62,22 +62,15 @@ function sendHTML(formId, id){
 	$(formId).append(ele2);
 };
 
-var oldclassName = undefined;
-function display(classname) {
-	if(classname != oldclassName) {
-		$(classname).toggle();
-		//toggleHide(classname);
-		//console.log(oldclassName);
-	}
-	oldclassName = classname;
+function display(obj) {
+	$(obj).toggle();
 }
 
-function toggleHide(classname) {
-	if($(classname).css("display") == "none") {
-		 $("[class^="+$(classname).attr("class")+"]").each(function() {
-		 	var targetClass = $(this).attr("class");
-		 	$("."+targetClass).css("display", "none");
-		 });
+function toggleHide(obj) {
+	if($(obj).css("display") == "none") {
+		$("[class^="+$(obj).attr("class")+"]").each(function() {
+			$(this).css("display", "none");
+		});
 	}
 };
 
@@ -156,7 +149,6 @@ function addColorSchemeFromSelectElement(classname,assignmentName,tagName) {
 					addColorSchemeFromSelectElementSubordinate($(this).prop("tagName"), classname+" "+childTag, assignmentName);
 				});
 			} else {
-				console.log("配下なし");
 				var assignmentNameCopy = assignmentName;
 				assignmentNameCopy += classname;
 				addTrInHideTab(assignmentName,classname,classname,assignmentNameCopy,tagName);
@@ -239,10 +231,8 @@ function addColorSchemeFromSelectElementSubordinate(tagName,findPass,assignmentN
 		break;
 		case "DIV":
 		{
-			console.log("div発見");
 			// 配下にタグがあるか
 			if($('iframe').contents().find("."+findPass).children().size() > 0) {
-				console.log("配下あり");
 				$('iframe').contents().find("."+findPass).children().each(function() {
 					var childPass = findPass +" "+ $(this).prop("tagName").toLowerCase();
 					var childTag = $(this).prop("tagName");
@@ -254,7 +244,6 @@ function addColorSchemeFromSelectElementSubordinate(tagName,findPass,assignmentN
 
 			//TODO なければどうする？
 			else {
-				console.log("配下なし");
 				var assignmentNameCopy = assignmentName;
 				assignmentNameCopy += tagName;
 				addTrInHideTab(assignmentName,findPass,tagName.toLowerCase(),assignmentNameCopy,tagName.toLowerCase());
@@ -331,7 +320,6 @@ function autoCreate(classname,assignmentName) {
 }
 
 function showPopup(member_id, id){
-	console.log("id = " + id);
 	var inst = $('[data-remodal-id=modal]').remodal();
 	inst.open();
 
