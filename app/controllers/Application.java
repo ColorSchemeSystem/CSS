@@ -148,7 +148,7 @@ public class Application extends BaseController{
 	    final String fileName = String.valueOf(template.templateId) + ".html";
 	    File newFile = new File(path + fileName);
 	    file.renameTo(newFile);
-	    String target = "https://www.google.co.jp/";
+	    String target = appS.getIframesUrl() + "/" + fileName;
 		String base64ImageData = null;
 		try {
 			base64ImageData = httpS.request(ImageService.webShotUrl + "?target=" + URLEncoder.encode(target, "UTF-8"));
@@ -274,8 +274,7 @@ public class Application extends BaseController{
 				fileWriter.write(tempS.tempHtml);
 				fileWriter.close();
 				String tempPath = appS.getPublicFolderPath() + "/iframes/";
-
-			    String target = "https://www.google.co.jp/";
+				String target = appS.getIframesUrl() + "/" + tempName;
 				String base64ImageData = httpS.request(ImageService.webShotUrl + "?" + URLEncoder.encode(target, "UTF-8"));
 				final String imageFilePath = appS.getPublicFolderPath() + "/snapshots/";
 				new File(imageFilePath).mkdirs();

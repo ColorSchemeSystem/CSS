@@ -40,13 +40,24 @@ public class AppService {
 	}
 	
 	/**
-	 * 
 	 * @return
 	 */
 	public String getSnapShotsUrl() {
 		String path = Play.application().configuration().getString("paths.snapshots");
 		if(StringUtils.isEmpty(path)) {
 			return "/assets/snapshots";
+		}	else	{
+			return path;
+		}
+	}
+	
+	/**
+	 * @return
+	 */
+	public String getIframesUrl() {
+		String path = Play.application().configuration().getString("paths.iframes");
+		if(StringUtils.isEmpty(path)) {
+			return "/assets/iframes";
 		}	else	{
 			return path;
 		}
