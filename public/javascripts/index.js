@@ -67,22 +67,16 @@ function display(classname) {
 	if(classname != oldclassName) {
 		$(classname).toggle();
 		//toggleHide(classname);
-		console.log(oldclassName);
+		//console.log(oldclassName);
 	}
 	oldclassName = classname;
 }
 
 function toggleHide(classname) {
 	if($(classname).css("display") == "none") {
-		//console.log("display::"+$("[class^="+$(classname).attr("class")+"]").size());
-		//$("[class^="+$(classname).attr("class")+"]").css("display", "none");
-		 var cnt = 0;
 		 $("[class^="+$(classname).attr("class")+"]").each(function() {
-		 	//console.log("tagName::"+$(this).prop("tagName")+"  cnt:"+cnt+"  class:"+$(this).attr("class"));
 		 	var targetClass = $(this).attr("class");
 		 	$("."+targetClass).css("display", "none");
-		 	console.log("targetClass:"+targetClass+"  display:"+$("."+targetClass).css("display"));
-		 	cnt ++;
 		 });
 	}
 };
@@ -427,9 +421,12 @@ function addTr(classname,tagName) {
 	var tr = $("<tr></tr>",{
 		on : {
 			click : function(event) {
+				var targetClass = null;
 				$(".iframe"+CN).each(function() {
 					display($(this));
+					targetClass = $(this);
 				});
+				toggleHide(targetClass);
 			}
 		}
 	});
@@ -676,11 +673,12 @@ function addTrInHideTab(parentName,classname,dispName,assignmentName,tagName) {
 				$('iframe').contents().find('.hoverImage').remove();
 			},
 			click : function(event) {
-				console.log("assignmentName:iframe"+assignmentName);
+				var targetClass = null;
 				$(".iframe"+assignmentName).each(function() {
 					display($(this));
-					return;
+					targetClass = $(this);
 				});
+				toggleHide(targetClass);
 			}
 		}
 	});
@@ -746,9 +744,12 @@ function addLiHideTab(parentName,classname,dispName,assignmentName,tagName) {
 				$('iframe').contents().find('.hoverImage').remove();
 			},
 			click : function(event) {
+				var targetClass = null;
 				$(".iframe"+assignmentName).each(function() {
 					display($(this));
+					targetClass = $(this);
 				});
+				toggleHide(targetClass);
 			}
 		}
 	});
