@@ -354,7 +354,7 @@ function showPopup(member_id, id){
 }
 
 function setTimer(id){
-	iframeMethod = setInterval("loadIframe(" + id + ")", 2000);
+	//iframeMethod = setInterval("loadIframe(" + id + ")", 2000);
 }
 
 function loadIframe(id){

@@ -10,7 +10,7 @@
 				<span class="icon-bar"></span>
 			</button>
 			<a class="navbar-brand active" href="/" id="logo">
-				MyCanvas
+				<img src='@routes.Assets.at("images/logo.png")' id="logo" height="27" width="160">
 			</a>
 		</div>
 
@@ -20,7 +20,7 @@
 				<li id="readURL"><a href="#">URLからデザインを読み込む</a></li>
 				<li id="uploadTemp"><a href="@routes.Application.upload()">テンプレートのアップロード</a></li>
 			</ul>
-			<a class="navbar-right" href="@routes.AdminController.login()"><button type="button" class="btn btn-default navbar-btn btn-sm">ログイン</button></a>
+			<a class="navbar-text navbar-right" href="@routes.AdminController.login()">ログイン</a>
 		</div>
 	</div>
 </nav>

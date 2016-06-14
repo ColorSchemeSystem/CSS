@@ -34,13 +34,30 @@
 
 			.header .menuBar .navbar-inverse{
 				background-color: #373737;
-				padding-bottom: 5px;
-				padding-top: 5px;
+				font-size: 12px;
 			}
 
 			.header .menuBar .navbar-header a{
 				font-size: 30px;
-				padding-right: 40px;
+				padding-right: 50px;
+				padding-left: 30px;
+			}
+
+			.navbar-inverse .navbar-nav li a{
+				color: #FFF;
+			}
+
+			.navbar-inverse .navbar-nav li.active a{
+				color: #FFF;
+				background-color: #373737;
+			}
+
+			.navbar-inverse .navbar-nav li:hover a{
+				color: #9d9d9d;
+			}
+
+			.navbar-inverse .navbar-right{
+				color: #FFF;
 			}
 
 			.navbar-inverse{
@@ -337,8 +354,8 @@
 			}
 
 			.wrapper .mypageContainer .sideMenu li.active a{
-				color: #FFF;
-				background-color: #a9a9a9;
+				/*color: #FFF;*/
+				background-color: #d3d3d3;
 			}
 
 			#profileSubmit{

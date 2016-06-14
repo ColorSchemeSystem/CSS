@@ -7,11 +7,11 @@
 @main("myPage", member) {
 	@helper.form(action = routes.AdminController.saveProfileSetting()) {
 		<div class="mypageContainer">
-		<script type="text/javascript">
+		<!--<script type="text/javascript">
 			$(window).load(function(){
 				$('#mypage').addClass("active");
 			});
-		</script>
+		</script>-->
 		<!--<h1 style='margin-top : 20px;'>マイページ</h1>-->
 			<div class='profile'>
 				@helper.inputText(setting("memberName"),'_label -> "アカウント名",'_showConstraints -> false, 'size -> 70, 'readonly -> true)
