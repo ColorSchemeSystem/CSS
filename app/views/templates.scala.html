@@ -2,11 +2,11 @@
 
 @main("Color Scheme",member){ 
 <div class='listContainer'>
-	<script type="text/javascript">
+	<!--<script type="text/javascript">
 		$(window).load(function(){
 			$('#allTemp').addClass("active");
 		});
-	</script>
+	</script>-->
 	@if(member != null) {
 		<div class="clearfix">
 			<div class="tempFilter">
@@ -28,7 +28,7 @@
 					<div class="col-xs-3">
 						<a href='@routes.Application.indexWithId(t.templateId)' target='_blank'>
 							<div>
-								<img width='260' height='200' src='/assets/snapshots/@(t.templateId).png'/>
+								<img width='260' height='200' src='@routes.Assets.at("snapshots").absoluteURL()/@(t.templateId).png'/>
 							</div>
 							<div class="tempName">
 								@t.templateName

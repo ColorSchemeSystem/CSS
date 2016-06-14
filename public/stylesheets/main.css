@@ -14,6 +14,10 @@
 				height: 100%;
 			}
 
+			#logo{
+
+			}
+
 			.clearfix {
 				zoom: 1;
 			}
@@ -30,11 +34,30 @@
 
 			.header .menuBar .navbar-inverse{
 				background-color: #373737;
+				font-size: 12px;
 			}
 
 			.header .menuBar .navbar-header a{
 				font-size: 30px;
-				padding-right: 40px;
+				padding-right: 50px;
+				padding-left: 30px;
+			}
+
+			.navbar-inverse .navbar-nav li a{
+				color: #FFF;
+			}
+
+			.navbar-inverse .navbar-nav li.active a{
+				color: #FFF;
+				background-color: #373737;
+			}
+
+			.navbar-inverse .navbar-nav li:hover a{
+				color: #9d9d9d;
+			}
+
+			.navbar-inverse .navbar-right{
+				color: #FFF;
 			}
 
 			.navbar-inverse{
@@ -324,6 +347,15 @@
 				width: 200px;
 				background-color: #FFF;
 				margin-left: 30px;
+			}
+
+			.wrapper .mypageContainer .sideMenu li a{
+				color: #000;
+			}
+
+			.wrapper .mypageContainer .sideMenu li.active a{
+				/*color: #FFF;*/
+				background-color: #d3d3d3;
 			}
 
 			#profileSubmit{

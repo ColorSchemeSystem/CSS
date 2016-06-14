@@ -13,6 +13,8 @@ var iframeMethod;
 $(window).load(function(){
 	$('#loading').css("display", "block");
 	$('#loader').css("display", "block");
+	console.log("width = "+ $('#logo').innerWidth());
+	console.log("height = " + $('#logo').innerHeight());
 });
 
 function fixSideBar(){
@@ -338,7 +340,7 @@ function showPopup(member_id, id){
 }
 
 function setTimer(id){
-	iframeMethod = setInterval("loadIframe(" + id + ")", 2000);
+	//iframeMethod = setInterval("loadIframe(" + id + ")", 2000);
 }
 
 function loadIframe(id){
