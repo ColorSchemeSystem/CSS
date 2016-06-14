@@ -275,6 +275,7 @@ public class Application extends BaseController{
 			    String target = "https://www.google.co.jp/";
 				String base64ImageData = httpS.request(ImageService.webShotUrl + "?" + URLEncoder.encode(target, "UTF-8"));
 				final String imageFilePath = Play.application().path().getPath() + "/public/snapshots/";
+				new File(imageFilePath).mkdirs();
 				final String imageFileName = String.valueOf(newTempId) + ".png";
 				imageS.saveBase64ImageDataAsImage(base64ImageData, "png",
 						imageFilePath + imageFileName);
