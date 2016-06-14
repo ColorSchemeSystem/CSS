@@ -41,7 +41,7 @@ public class Application extends BaseController{
 	private static ImageService imageS = new ImageService();
 
 	private static FileService fileS = new FileService();
-	
+
 	private static HttpService httpS = new HttpService();
 
 	public static Result index() {
@@ -145,7 +145,7 @@ public class Application extends BaseController{
 	    }
 	    appS.saveTemplate(template);
 	    final String path = Play.application().path().getPath() +
-	    		"/public/templates/";
+	    		"/public/iframes/";
 	    final String fileName = String.valueOf(template.templateId) + ".html";
 	    File newFile = new File(path + fileName);
 	    file.renameTo(newFile);
