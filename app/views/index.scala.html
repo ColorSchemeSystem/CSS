@@ -39,13 +39,6 @@
 
 <div id="chooser" data-placement="'@chooser.placement'" data-hsvpanel="@chooser.hsvpanel" data-sliders="@chooser.slider" data-swatches="@chooser.swatche"></div>
 	<div class="main">
-		@if(id == "0"){
-			<div class="default">
-				<h3>テンプレートを選択してください</h3>
-				<img src='@routes.Assets.at("images/tempImage.png")' width="600" height="280"/><br>
-				<a href="@routes.Application.templates()"><button class="btn btn-primary">テンプレートを選択する</button></a>
-			</div>
-		}else{
 			<div class="inHtml">
 				<div id="loading">
 					<div id="loader">
@@ -67,7 +60,6 @@
 					<input class="btn btn-default" type="submit" value="HTMLを書き出す" onClick="sendHTML('#sendForm', @id);">
 				</div>
 			</form>
-		}
 	</div>
  <div class="side">
     <div class="fixnav">
