@@ -64,6 +64,134 @@ function sendHTML(formId, id){
 	$(formId).append(ele2);
 };
 
+function showPopup(member_id, id){
+	var inst = $('[data-remodal-id=modal]').remodal();
+	inst.open();
+
+	sendHTML('#saveHtmlForm', id);
+	
+	var ele = $("<input>", {
+					"type" : "hidden",
+					"name" : "member_id",
+					"value" : member_id
+				});
+	$('#saveHtmlForm').append(ele);
+}
+
+function setTimer(id){
+	iframeMethod = setInterval("loadIframe(" + id + ")", 1000);
+}
+
+function loadIframe(id){
+	checkError(id);
+}
+
+function checkError(id){
+	if(id == 0){
+		var url = "/assets/iframes/iframe1.html"
+	}else{
+		var url = "/assets/iframes/" + id + ".html"
+	}
+
+	$.ajax({ cache: false,
+		url: url,
+		success: function (data) {
+			reloadIframe(url);
+		},
+		error: function (data) {
+		}
+	});
+}
+
+function reloadIframe(url){
+	if($('#classTable').children().size() == 0){
+		clearInterval(iframeMethod);
+		$('#loading').css("display", "none");
+		$('#loader').css("display", "none");
+		var iframe = $("<iframe></iframe>", {
+			"src" : url,
+			"width" : "920px",
+			"name" : "template",
+			"id" : "iframe",
+			on : {
+				load : function(event){
+					var elements = new Array();
+					elements = $('#iframe').contents().find('*');
+					$.each(elements, function(index, item){
+						var classname = item.className.split(" ")[0];
+
+						console.log("classname = "+classname);
+						// クラスを発見
+						if(classname != "") {
+							//子要素にclassがあったらさらにタブで開く
+							if($('iframe').contents().find("."+classname).children().attr("class")) {
+								// 親にクラスがあったらreturn
+								if($('iframe').contents().find("."+classname).parent().attr("class")) {
+									console.log("もう作った");
+									return;
+								}
+
+								// 子供の数だけループしてtab作成
+								addTabTr(classname,$(this).prop("tagName").toLowerCase());
+							}
+
+							// 子クラスにクラスがない場合
+							else {
+								console.log("こなし");
+							}
+						}
+					});
+
+					// border-sizeリアルタイム処理
+					$(function() {
+						$('input#border-size').each(function() {
+							$(this).bind('keyup', setBorderSize(this));
+						});
+					});
+
+					// textのリアルタイム処理
+					$(function() {
+						$('input.editText').each(function() {
+							$(this).bind('keyup', editText(this));
+						});
+					});
+				}
+			}
+
+		});
+		$('#afterLoad').append(iframe);
+		$('#afterLoad').css("display", "block");
+		fixFrameSize();
+		fixSideBar()
+	}
+}
+
+function setBorderSize(element) {
+	var v, old = element.value;
+	return function() {
+		if(old != (v = element.value)) {
+			old = v;
+
+			var targetData = {contentName:$("."+$(this).attr("class")).data('classname'),
+								targetName:"border",
+								borderSize:"."+$(this).attr("class")};
+			var color = $("#"+$("."+$(this).attr("class")).data('named')+"-bor").val();
+			var borderSize = $(targetData.borderSize).val();
+			$('iframe').contents().find(targetData.contentName).css('border', borderSize+"px solid "+color);
+		}
+	}
+};
+
+function editText(element) {
+	var v, old = element.value;
+	return function() {
+		if(old != (v = element.value)) {
+			var text = $("#"+$(this).attr("id")).val();
+			$('iframe').contents().find($("#"+$(this).attr("id")).data('classname')).text(text);
+		}
+	}
+};
+
 function display(obj) {
 	$(obj).toggle();
 }
@@ -323,125 +451,6 @@ function autoCreate(classname,assignmentName) {
 		}
 		addColorSchemeFromSelectElement(childClassName,assignmentNameCopy,$(this).prop("tagName").toLowerCase());
 	});
-}
-
-function showPopup(member_id, id){
-	var inst = $('[data-remodal-id=modal]').remodal();
-	inst.open();
-
-	sendHTML('#saveHtmlForm', id);
-	
-	var ele = $("<input>", {
-					"type" : "hidden",
-					"name" : "member_id",
-					"value" : member_id
-				});
-	$('#saveHtmlForm').append(ele);
-}
-
-function setTimer(id){
-	iframeMethod = setInterval("loadIframe(" + id + ")", 1000);
-}
-
-function loadIframe(id){
-	checkError(id);
-}
-
-function checkError(id){
-	if(id == 0){
-		var url = "/assets/iframes/iframe1.html"
-	}else{
-		var url = "/assets/iframes/" + id + ".html"
-	}
-
-	$.ajax({ cache: false,
-    	url: url,
-    	success: function (data) {
-        	reloadIframe(url);
-    	},
-    	error: function (data) {
-    	}
-	});
-}
-
-function reloadIframe(url){
-	if($('#classTable').children().size() == 0){
-		clearInterval(iframeMethod);
-		$('#loading').css("display", "none");
-		$('#loader').css("display", "none");
-		var iframe = $("<iframe></iframe>", {
-			"src" : url,
-			"width" : "920px",
-			"name" : "template",
-			"id" : "iframe",
-			on : {
-				load : function(event){
-					var elements = new Array();
-					elements = $('#iframe').contents().find('*');
-					$.each(elements, function(index, item){
-						var classname = item.className.split(" ")[0];
-
-						// クラスを発見
-						if(classname != "") {
-							//子要素にclassがあったらさらにタブで開く
-							if($('iframe').contents().find("."+classname).children().attr("class")) {
-								// 親にクラスがあったらreturn
-								if($('iframe').contents().find("."+classname).parent().attr("class")) return;
-
-								// 子供の数だけループしてtab作成
-								addTabTr(classname,$(this).prop("tagName").toLowerCase());
-							}
-						} else console.log("classないじゃん");
-					});
-
-					// border-sizeリアルタイム処理
-					$(function() {
-						$('input#border-size').each(function() {
-							$(this).bind('keyup', setBorderSize(this));
-						});
-					});
-
-					// textのリアルタイム処理
-					$(function() {
-						$('input.editText').each(function() {
-							$(this).bind('keyup', editText(this));
-						});
-					});
-				}
-			}
-
-		});
-		$('#afterLoad').append(iframe);
-		$('#afterLoad').css("display", "block");
-		fixFrameSize();
-		fixSideBar()
-	}
-}
-
-function setBorderSize(element) {
-	var v, old = element.value;
-	return function() {
-		if(old != (v = element.value)) {
-			old = v;
-
-			var targetData = {contentName:$("."+$(this).attr("class")).data('classname'),
-								targetName:"border",
-								borderSize:"."+$(this).attr("class")};
-			var color = $("#"+$("."+$(this).attr("class")).data('named')+"-bor").val();
-			var borderSize = $(targetData.borderSize).val();
-			$('iframe').contents().find(targetData.contentName).css('border', borderSize+"px solid "+color);
-		}
-	}
-};
-
-function editText(element) {
-	var v, old = element.value;
-	return function() {
-		if(old != (v = element.value)) {
-			var text = $("#"+$(this).attr("id")).val();
-			$('iframe').contents().find($("#"+$(this).attr("id")).data('classname')).text(text);
-		}
-	}
 };
 
 // 一番上の要素をクラス名を表示してクリックすると配下にいるタグ達が表示されるtrを追加する
