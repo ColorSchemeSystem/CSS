@@ -271,6 +271,7 @@ public class Application extends BaseController{
 			    String target = "https://www.google.co.jp/";
 			    Promise<WS.Response> response = WS.url(ImageService.webShotUrl).setQueryParameter("target", target)
 			    		.setTimeout(1000 * 60).get();
+			    response.wait();
 				String base64ImageData = response.get().getBody();
 				final String imageFilePath = Play.application().path().getPath() + "/public/snapshots/";
 				final String imageFileName = String.valueOf(newTempId) + ".png";
