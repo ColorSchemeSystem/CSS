@@ -144,8 +144,7 @@ public class Application extends BaseController{
 	    	template.member = member;
 	    }
 	    appS.saveTemplate(template);
-	    final String path = Play.application().path().getPath() +
-	    		"/public/iframes/";
+	    final String path = appS.getPublicFolderPath() + "/iframes/";
 	    final String fileName = String.valueOf(template.templateId) + ".html";
 	    File newFile = new File(path + fileName);
 	    file.renameTo(newFile);
@@ -156,7 +155,7 @@ public class Application extends BaseController{
 		} catch (UnsupportedEncodingException e) {
 			e.printStackTrace();
 		}
-		final String imageFilePath = Play.application().path().getPath() + "/public/snapshots/";
+		final String imageFilePath = appS.getPublicFolderPath() + "/snapshots/";
 		new File(imageFilePath).mkdirs();
 		final String imageFileName = String.valueOf(template.templateId) + ".png";
 		imageS.saveBase64ImageDataAsImage(base64ImageData, "png",
@@ -179,7 +178,7 @@ public class Application extends BaseController{
 	    	image.member = member;
 	    }
 	    appS.saveImage(image);
-	    final String imageFilePath = Play.application().path().getPath() + "/public/member-images/";
+	    final String imageFilePath = appS.getPublicFolderPath() + "/member-images/";
 		final String imageFileName = String.valueOf(image.imageId) + ".png";
 		file.renameTo(new File(imageFilePath + imageFileName));
 	}

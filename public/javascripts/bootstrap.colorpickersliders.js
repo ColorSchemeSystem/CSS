@@ -1389,19 +1389,11 @@
 
       // targetに色設定
       function setTargetColor(targetData,color) {
-        var style = '';
-        style += '<style type="text/css" id=';
-        style += targetData.contentName;
-        style += '>';
-        style += '.item1 { backgroundColor:red; }';
         if(targetData.targetName == "background") $('iframe').contents().find(targetData.contentName).css('backgroundColor',color);
-        else if(targetData.targetName == "border") $('iframe').contents().find(targetData.contentName).css('border-color',color);
-        else if(targetData.targetName == "font") $('iframe').contents().find(targetData.contentName).css('color',color);
-        style += '</style>';
-        //$('iframe').contents().find('head').append(style);
-        //var src = $("iframe").attr("src");
-        //$("iframe").attr("src","");
-        //$("iframe").attr("src",src);
+        else if (targetData.targetName == "border") {
+          var borderSize = $(targetData.borderSize).val();
+          $('iframe').contents().find(targetData.contentName).css('border', borderSize+"px solid "+color);
+        } else if (targetData.targetName == "font") $('iframe').contents().find(targetData.contentName).css('color',color);
       }
 
       // 違う
