@@ -421,7 +421,6 @@ function editText(element) {
 	return function() {
 		if(old != (v = element.value)) {
 			var text = $("#"+$(this).attr("id")).val();
-			if(text == "<script>") text = "";
 			$('iframe').contents().find($("#"+$(this).attr("id")).data('classname')).text(text);
 		}
 	}
