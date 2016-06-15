@@ -316,7 +316,9 @@ function addBorder(name, targetPass) {
 	// ボーダーサイズ変更できる様に
 	var tr2 = $("<tr class='iframe"+name+"'></tr>");
 	var td3 = $("<td>border-size</td>");
-	var td4 = $("<input type='text' class='"+name+"-bor-size' id='border-size' value='0' data-classname='"+classname+"' data-name='"+name+"' >");
+	var size = 0;
+	if($(targetPass).css("border") != undefined && $(targetPass).css("border") != "") size = $(targetPass).css('border-width').substr(0,1);
+	var td4 = $("<input type='text' class='"+name+"-bor-size' id='border-size' value='"+size+"' data-classname='"+classname+"' data-name='"+name+"' >");
 	tr2.append(td3);
 	tr2.append(td4);
 	tr2.css("display", "none");
