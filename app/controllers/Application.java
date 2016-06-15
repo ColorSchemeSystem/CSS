@@ -20,6 +20,7 @@ import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.lang3.StringUtils;
 
 import com.avaje.ebean.Query;
+import com.github.javafaker.Faker;
 
 import dtos.PagingDto;
 import views.html.*;
@@ -226,10 +227,11 @@ public class Application extends BaseController{
 		fileS.saveFile("index.html", styleCleaner.removeStyleTagAndStyleAttrs(html.tempHtml));
 		String[] files = {"index.html","style.css"};
 		try {
-			fileS.zip("template.zip",files);
+			String zipFileName = "template_" + new Faker().name().firstName() + ".zip";
+			fileS.zip(zipFileName,files);
 			response().setContentType("application/x-download");
-			response().setHeader("Content-disposition","attachment; filename=template.zip");
-			return ok(new File("template.zip"));
+			response().setHeader("Content-disposition","attachment; filename=" + zipFileName);
+			return ok(new File(zipFileName));
 		} catch (IOException e) {
 			e.printStackTrace();
 			return redirect(routes.Application.indexWithId(Long.parseLong(html.temp_id)));
