@@ -26,7 +26,15 @@ import models.Template;
 import play.Play;
 
 public class AppService {
-
+	/**
+	 * @return
+	 */
+	public String convertToSrcDoc(String html) {
+		html = html.replace("\"", "&quot;");
+		html = html.replace("&", "&amp;");
+		return html;
+	}
+	
 	/**
 	 * @return
 	 */

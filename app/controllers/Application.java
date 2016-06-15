@@ -79,8 +79,7 @@ public class Application extends BaseController{
 			chooser = query.findUnique();
 			return ok(index.render(mem, chooser, form, id.toString(), ""));
 		}
-		
-		return ok(index.render(null, chooser, form, id.toString(),compS.decompress(temp.html)));
+		return ok(index.render(null, chooser, form, id.toString(),appS.convertToSrcDoc(compS.decompress(temp.html))));
 	}
 
 	/**
