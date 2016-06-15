@@ -273,6 +273,10 @@ function addSetting(classname, targetPass, obj) {
 	addEditText(classname, targetPass, obj);
 };
 
+function gentleness() {
+
+};
+
 /*
 *  背景色の配色を追加
 */
