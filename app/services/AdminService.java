@@ -2,9 +2,11 @@ package services;
 
 import org.mindrot.jbcrypt.BCrypt;
 
-import models.Chooser;
-import models.Member;
-import models.Template;
+import models.*;
+import play.data.Form;
+import play.data.validation.ValidationError;
+import forms.*;
+import java.util.*;
 
 public class AdminService {
 	/**
@@ -86,5 +88,19 @@ public class AdminService {
 	 */
 	public Chooser findChooserByChooserId(Long chooserId) {
 		return Chooser.find.byId(chooserId);
+	}
+
+	public Form<Member> addMemberErrors(Form<Member> form, String error, String errorColumn){
+		List<ValidationError> errors = new ArrayList<ValidationError>();
+		errors.add(new ValidationError(errorColumn, error));
+		form.errors().put(errorColumn, errors);
+		return form;
+	}
+
+	public Form<ModifyPassword> addPasswordErrors(Form<ModifyPassword> form, String error, String errorColumn){
+		List<ValidationError> errors = new ArrayList<ValidationError>();
+		errors.add(new ValidationError(errorColumn, error));
+		form.errors().put(errorColumn, errors);
+		return form;
 	}
 }

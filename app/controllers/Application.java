@@ -112,7 +112,7 @@ public class Application extends BaseController{
 	    	}
 	    }
 	    List<ValidationError> errors = new ArrayList<ValidationError>();
-	    errors.add(new ValidationError("tmpFileName","ファイルを選択してください。"));
+	    errors.add(new ValidationError("tmpFileName","正しくファイルを選択してください。"));
 	    form.errors().put("tmpFileName", errors);
 	    return ok(upload.render(form,isLoggedIn()));
 	}
