@@ -43,7 +43,7 @@ function fixFrameSize() {
 		var height = body.scrollHeight;
 		var iframe = window.parent.document.getElementsByTagName("iframe")[0];
 		iframe.style.height = height + "px";
-		iframe.scrolling = "no";
+		//iframe.scrolling = "no";
 	}
 };
 
@@ -181,8 +181,9 @@ function toggleHide(obj) {
 *  引数(表示したい元のobj)
 */
 function allScribing(obj, assignmentName, number, targetPass) {
-	if($(obj).prop("tagName") == "SCRIPT") return;
-	var childName = assignmentName + "-" + number+"-"+$(obj).prop("tagName").toLowerCase() + "-child";
+	var tagName = $(obj).prop("tagName");
+	if(tagName == "SCRIPT" || tagName == "BR" || tagName == "IMG") return;
+	var childName = assignmentName + "-" + number+"-"+tagName.toLowerCase() + "-child";
 
 	// タブの追加
 	addTr(obj, assignmentName, childName, targetPass);
@@ -206,7 +207,9 @@ function allScribing(obj, assignmentName, number, targetPass) {
 */
 function addTr(obj, classname, childName, targetPass) {
 	var viewName = $(obj).attr("class");
+	var idName = $(obj).attr("id");
 	var tagName = $(obj).prop("tagName").toLowerCase();
+	if(viewName == undefined) viewName = idName;
 	if(viewName == undefined) viewName = tagName;
 	var td = $("<td></td>",{
 		text : viewName
@@ -273,6 +276,9 @@ function addSetting(classname, targetPass, obj) {
 	addEditText(classname, targetPass, obj);
 };
 
+/*
+*  タグ別などの優しさ
+*/
 function gentleness() {
 
 };
@@ -369,7 +375,10 @@ function setBorderSize(element) {
 function addFont(name, targetPass, obj) {
 	var classname = targetPass;
 	var text = $('iframe').contents().find(classname).text().substr(0,1);
-	if(text == 0 || $(obj).html().substr(0,1) == "<") return;
+	if(text == 0) {
+		text = $(obj).html().substr(0,1);
+		if(text == 0) return;
+	}
 	var tr = $("<tr class='iframe"+name+"'></tr>");
 	var td = $("<td>font</td>");
 	var td2 = $("<input type='text' class='form-control' id='"+name+"-font' value='#A6FF00' data-color-format='hex'>");
@@ -399,7 +408,11 @@ function addFont(name, targetPass, obj) {
 function addEditText(name, targetPass, obj) {
 	var classname = targetPass;
 	var text = $('iframe').contents().find(classname).text().substr(0,1);
-	if(text == 0 || $(obj).html().substr(0,1) == "<") return;
+	if(text == 0) {
+		text = $(obj).html().substr(0,1);
+		if(text == 0) return;
+	}
+	console.log("targetPass:"+targetPass+"  text:"+text);
 	text = $('iframe').contents().find(classname).text();
 	var tr = $("<tr class='iframe"+name+"'></tr>");
 	var td = $("<td>text</td>");
