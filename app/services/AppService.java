@@ -29,10 +29,11 @@ public class AppService {
 	/**
 	 * @return
 	 */
-	public String convertToSrcDoc(String html) {
-		html = html.replace("\"", "&quot;");
-		html = html.replace("&", "&amp;");
-		return html;
+	public String escapeHtml(String html) {
+		return html.replace("&", "&amp;")
+                .replace("<", "&lt;")
+                .replace(">", "&gt;")
+                .replace("\"", "&quot;");
 	}
 	
 	/**
