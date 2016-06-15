@@ -6,10 +6,10 @@
 		<div class="clearfix">
 			<div class="tempFilter">
 				<ul class="nav nav-tabs">
-					<li role="presentation" id="allTemplate" class="active"><a href='@routes.Application.templates()'>
+					<li role="presentation" id="allTemplate"><a href='@routes.Application.templates()'>
 						全てのテンプレートを表示 
 					</a></li>
-					<li role="presentation" id="myTemplate"><a href='@routes.Application.templates()?type=member'>
+					<li role="presentation" id="myTemplate" class="active"><a href='@routes.Application.templates()?type=member'>
 						@(member.memberName)さんのテンプレートのみを表示
 					</a></li>
 				</ul>

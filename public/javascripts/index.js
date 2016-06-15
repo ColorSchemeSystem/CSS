@@ -78,6 +78,15 @@ function showPopup(member_id, id){
 
 function setTimer(id){
 	iframeMethod = setInterval("loadIframe(" + id + ")", 1000);
+	timeout = setTimeout("loadTimeOut()", 10000);
+}
+
+function loadTimeOut(){
+	clearInterval(iframeMethod);
+	clearTimeout(timeout);
+	$('#loading').css("display", "none");
+	$('#loader').css("display", "none");
+	$('#timeOut').css("display", "block");
 }
 
 function loadIframe(id){
@@ -86,9 +95,9 @@ function loadIframe(id){
 
 function checkError(id){
 	if(id == 0){
-		var url = "/assets/iframes/iframe1.html"
+		var url = config.iframes + "/iframe1.html"
 	}else{
-		var url = "/assets/iframes/" + id + ".html"
+		var url = config.iframes + "/" + id + ".html"
 	}
 
 	$.ajax({ cache: false,
@@ -103,6 +112,7 @@ function checkError(id){
 
 function reloadIframe(url){
 	if($('#classTable').children().size() == 0){
+		clearTimeout(timeout);
 		clearInterval(iframeMethod);
 		$('#loading').css("display", "none");
 		$('#loader').css("display", "none");

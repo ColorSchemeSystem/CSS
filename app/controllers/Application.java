@@ -47,10 +47,6 @@ public class Application extends BaseController{
 	public static Result index() {
 		Chooser chooser = new Chooser();
 		Member mem = (Member)getObjectFormSession("Member");
-		File file = new File(Play.application().path().getPath() + "/public/iframes/iframe1.html");
-		String html = appS.readHtmlFile(file);
-		List<String> htmlTag = appS.extractClasses(html);
-		String path = "iframes/iframe1.html";
 		TemplateSave tempS = new TemplateSave();
 		tempS.flg = 0;
 		Form<TemplateSave> form = Form.form(TemplateSave.class).fill(tempS);
@@ -62,33 +58,24 @@ public class Application extends BaseController{
 				mem.chooser = new Chooser();
 				chooser = new Chooser();
 			}
-			return ok(index.render(mem, chooser, path, htmlTag, form, "0"));
+			return ok(index.render(mem, chooser, form, "0"));
 		}
-		return ok(index.render(null, chooser, path, htmlTag, form, "0"));
+		return ok(index.render(null, chooser, form, "0"));
 	}
 
 	public static Result indexWithId(Long id){
 		Chooser chooser = new Chooser();
 		Member mem = (Member)getObjectFormSession("Member");
 		Template temp = appS.getTemp(id);
-		String path;
-		if(temp != null){
-			path = "iframes/" + id + ".html";
-		} else {
-			path = "iframes/iframe1.html";
-		}
-		File file = new File(Play.application().path().getPath() + "/public/" + path);
-		String html = appS.readHtmlFile(file);
-		List<String> htmlTag = appS.extractClasses(html);
 		TemplateSave tempS = new TemplateSave();
 		tempS.flg = 0;
 		Form<TemplateSave> form = Form.form(TemplateSave.class).fill(tempS);
 		if(mem != null) {
 			Query<Chooser> query = Chooser.find.where("chooserId = '"+mem.chooser.chooserId+"'");
 			chooser = query.findUnique();
-			return ok(index.render(mem, chooser, path, htmlTag, form, id.toString()));
+			return ok(index.render(mem, chooser, form, id.toString()));
 		}
-		return ok(index.render(null, chooser, path, htmlTag, form, id.toString()));
+		return ok(index.render(null, chooser, form, id.toString()));
 	}
 
 	/**
@@ -125,7 +112,7 @@ public class Application extends BaseController{
 	    	}
 	    }
 	    List<ValidationError> errors = new ArrayList<ValidationError>();
-	    errors.add(new ValidationError("tmpFileName","ファイルを選択してください。"));
+	    errors.add(new ValidationError("tmpFileName","正しくファイルを選択してください。"));
 	    form.errors().put("tmpFileName", errors);
 	    return ok(upload.render(form,isLoggedIn()));
 	}
@@ -148,7 +135,14 @@ public class Application extends BaseController{
 	    final String fileName = String.valueOf(template.templateId) + ".html";
 	    File newFile = new File(path + fileName);
 	    file.renameTo(newFile);
-	    String target = "https://www.google.co.jp/";
+	    String iframeUrl = appS.getIframesUrl();
+	    String target = "";
+	    if(iframeUrl != null) {
+	    	target = iframeUrl + "/" + fileName;
+	    }	else	{
+	    	target = "https://www.google.co.jp/";
+	    }
+	    Logger.info("target : " + target);
 		String base64ImageData = null;
 		try {
 			base64ImageData = httpS.request(ImageService.webShotUrl + "?target=" + URLEncoder.encode(target, "UTF-8"));
@@ -214,16 +208,18 @@ public class Application extends BaseController{
 		PagingDto<Template> pagingDto;
 		if(StringUtils.isNotEmpty(type) && type.equals("member") && member != null) {
 			pagingDto = appS.findTemplatesWithPages(page, 20 , member.memberId);
+			return ok(myTemplates.render(pagingDto,member,appS.getSnapShotsUrl()));
 		} else {
 			pagingDto = appS.findTemplatesWithPages(page, 20);
+			return ok(templates.render(pagingDto,member,appS.getSnapShotsUrl()));
 		}
-		return ok(templates.render(pagingDto,member,5,appS.getSnapShotsUrl()));
 	}
 
 	public static Result download(){
 		Form<TemplateDownload> form = Form.form(TemplateDownload.class).bindFromRequest();
 		TemplateDownload html = form.get();
 		html.tempHtml = "<html>" + html.tempHtml + "</html>";
+		Logger.info("html : " + html.tempHtml);
 		StyleParser styleParser = new StyleParser();
 		StyleCleaner styleCleaner = new StyleCleaner();
 		fileS.saveFile("style.css", styleParser.parse(html.tempHtml).toString());
@@ -274,15 +270,20 @@ public class Application extends BaseController{
 				fileWriter.write(tempS.tempHtml);
 				fileWriter.close();
 				String tempPath = appS.getPublicFolderPath() + "/iframes/";
-
-			    String target = "https://www.google.co.jp/";
+				String iframeUrl = appS.getIframesUrl();
+				String target = "";
+				if(iframeUrl != null) {
+					target = iframeUrl + "/" + tempName;
+				}	else	{
+					target = "https://www.google.co.jp/";
+				}
+				Logger.info("target : " + target);
 				String base64ImageData = httpS.request(ImageService.webShotUrl + "?" + URLEncoder.encode(target, "UTF-8"));
 				final String imageFilePath = appS.getPublicFolderPath() + "/snapshots/";
 				new File(imageFilePath).mkdirs();
 				final String imageFileName = String.valueOf(newTempId) + ".png";
 				imageS.saveBase64ImageDataAsImage(base64ImageData, "png",
 						imageFilePath + imageFileName);
-
 				file.renameTo(new File(tempPath, tempName));
 				return redirect(routes.Application.indexWithId(newTempId));
 			} catch(Exception e) {

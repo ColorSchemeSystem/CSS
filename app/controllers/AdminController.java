@@ -59,18 +59,22 @@ public class AdminController extends BaseController {
 			// 名前を取得しデータベース検索
 			Member mem = adminS.findMemberByMemberName(form.get().memberName);
 			if(mem == null) {
-				return badRequest(login.render(null, "ログインに失敗しました", form));
+				adminS.addMemberErrors(form, "ユーザIDが誤っています", "memberName");
+				return badRequest(login.render(null, "ログイン", form));
 			}
 			// パスワード確認
 			String password = form.get().password;
 			if(!adminS.checkpw(password, mem.password)) {
 				// 一致していなかったらログイン画面へ
-				return badRequest(login.render(null, "ログインに失敗しました", form));
+				adminS.addMemberErrors(form, "パスワードが誤っています", "password");
+				return badRequest(login.render(null, "ログイン", form));
 			}
 			// ログインする
 			writeObjectOnSession("Member", mem);
 		} else {
-			return badRequest(login.render(null, "ログインに失敗しました", form));
+			adminS.addMemberErrors(form, "ユーザIDが誤っています", "memberName");
+			adminS.addMemberErrors(form, "パスワードが誤っています", "password");
+			return badRequest(login.render(null, "ログイン", form));
 		}
 		return redirect("/");
 	}
@@ -100,7 +104,8 @@ public class AdminController extends BaseController {
 		Form<Member> form = Form.form(Member.class).bindFromRequest();
 		if(!form.hasErrors()) {
 			if(adminS.memberExists(form.get().memberName)) {
-				return badRequest(createAccount.render(null, "既に同じ名前のアカウントが存在します。", form));
+				adminS.addMemberErrors(form, "同じユーザーIDがすでに存在しています", "memberName");
+				return badRequest(createAccount.render(null, "新規登録", form));
 			}	else	{
 				Member mem = new Member();
 				mem.memberName = form.get().memberName;
@@ -114,7 +119,7 @@ public class AdminController extends BaseController {
 			}
 		} else {
 			// 新規アカウント登録画面へ
-			return badRequest(createAccount.render(null, "ERROR!　もう一度入力してください", form));
+			return badRequest(createAccount.render(null, "新規登録", form));
 		}
 	}
 
@@ -229,23 +234,26 @@ public class AdminController extends BaseController {
 		if(!form.hasErrors()) {
 			boolean changeable = true;
 			if(!adminS.checkpw(form.get().password,member.password)) {
+				adminS.addPasswordErrors(form, "パスワードが誤っています", "password");
 				changeable = false;
 			}
 			if(!form.get().newPassword.equals(form.get().confirmNewPassword)) {
 				changeable = false;
+				adminS.addPasswordErrors(form, "パスワードが一致していません", "newPassword");
+				adminS.addPasswordErrors(form, "パスワードが一致していません", "confirmNewPassword");
 			}
 			if(changeable) {
 				member = adminS.findMemberById(member.memberId);
-				member.password = form.get().newPassword;
+				member.password = adminS.passwordHash(form.get().newPassword);
 				adminS.updateMember(member);
 				removeObjectSession("Member");
 				writeObjectOnSession("Member", member);
-				return redirect(routes.AdminController.editPass());
+				return ok(editPass.render(form,member,"パスワードを変更しました"));
 			}	else	{
-				return ok(editPass.render(form,member,"入力値が不正です。"));
+				return ok(editPass.render(form,member,""));
 			}
 		}	else	{
-			return ok(editPass.render(form,member,"入力値が不正です。"));
+			return ok(editPass.render(form,member,""));
 		}
 	}
 }

@@ -12,8 +12,8 @@ create table choosers (
   hsvpanel                  boolean,
   slider                    boolean,
   swatche                   boolean,
-  constraint pk_choosers primary key (chooser_id))
-;
+  constraint pk_choosers primary key (chooser_id)
+ );
 
 create table ColorSchemes (
   color_scheme_id           bigint not null,
@@ -24,8 +24,8 @@ create table ColorSchemes (
   class_name                varchar(255),
   color_hex                 varchar(255),
   display_name              varchar(255),
-  constraint pk_ColorSchemes primary key (color_scheme_id))
-;
+  constraint pk_ColorSchemes primary key (color_scheme_id)
+ );
 
 create table Images (
   image_id                  bigint not null,
@@ -36,8 +36,8 @@ create table Images (
   image_name                varchar(255),
   image_message             varchar(255),
   image_type                varchar(255),
-  constraint pk_Images primary key (image_id))
-;
+  constraint pk_Images primary key (image_id)
+ );
 
 create table Members (
   member_id                 bigint not null,
@@ -50,8 +50,8 @@ create table Members (
   mail                      varchar(255),
   chooser_chooser_id        bigint,
   last_login                timestamp,
-  constraint pk_Members primary key (member_id))
-;
+  constraint pk_Members primary key (member_id)
+ );
 
 create table Templates (
   template_id               bigint not null,
@@ -62,8 +62,8 @@ create table Templates (
   template_name             varchar(255),
   template_message          varchar(255),
   access_flag               integer,
-  constraint pk_Templates primary key (template_id))
-;
+  constraint pk_Templates primary key (template_id)
+);
 
 create sequence choosers_seq;
 
