@@ -2,7 +2,7 @@
 * index.scala.htmlで主に使われるjs
 * 作成日	       2016/06/09
 * 最終更新者     Momoi Yuji
-* 更新日        2016/06/09
+* 更新日        2016/06/15
 */
 
 /*******************************************************************************
@@ -13,8 +13,6 @@ var iframeMethod;
 $(window).load(function(){
 	$('#loading').css("display", "block");
 	$('#loader').css("display", "block");
-	console.log("width = "+ $('#logo').innerWidth());
-	console.log("height = " + $('#logo').innerHeight());
 });
 
 function fixSideBar(){
@@ -118,38 +116,12 @@ function reloadIframe(url){
 					var body = $('iframe').contents().find('body');
 
 					// body配下のタグを全て取得
-					var cnt = 1;
 					$(body).children().each(function() {
 						// タグを全て取り出し表示
-						allScribing($(this), "body-child", cnt, "body "+$(this).prop("tagName").toLowerCase());
-						cnt++;
-					});
-
-					var elements = new Array();
-					elements = $('#iframe').contents().find('*');
-					$.each(elements, function(index, item){
-						var classname = item.className.split(" ")[0];
-
-						// console.log("classname = "+classname);
-						// // クラスを発見
-						// if(classname != "") {
-						// 	//子要素にclassがあったらさらにタブで開く
-						// 	if($('iframe').contents().find("."+classname).children().attr("class")) {
-						// 		// 親にクラスがあったらreturn
-						// 		if($('iframe').contents().find("."+classname).parent().attr("class")) {
-						// 			console.log("もう作った");
-						// 			return;
-						// 		}
-
-						// 		// 子供の数だけループしてtab作成
-						// 		addTabTr(classname,$(this).prop("tagName").toLowerCase());
-						// 	}
-
-						// 	// 子クラスにクラスがない場合
-						// 	else {
-						// 		console.log("こなし");
-						// 	}
-						// }
+						var pass = $(this).attr("class");
+						if(pass == undefined) pass = "body "+$(this).prop("tagName").toLowerCase();
+						else pass = "."+pass;
+						allScribing($(this), "body-child", $(this).index(), pass);
 					});
 
 					// border-sizeリアルタイム処理
@@ -159,12 +131,12 @@ function reloadIframe(url){
 						});
 					});
 
-					// // textのリアルタイム処理
-					// $(function() {
-					// 	$('input.editText').each(function() {
-					// 		$(this).bind('keyup', editText(this));
-					// 	});
-					// });
+					// textのリアルタイム処理
+					$(function() {
+						$('input.editText').each(function() {
+							$(this).bind('keyup', editText(this));
+						});
+					});
 				}
 			}
 
@@ -172,7 +144,7 @@ function reloadIframe(url){
 		$('#afterLoad').append(iframe);
 		$('#afterLoad').css("display", "block");
 		fixFrameSize();
-		fixSideBar()
+		fixSideBar();
 	}
 };
 
@@ -204,19 +176,17 @@ function allScribing(obj, assignmentName, number, targetPass) {
 	// タブの追加
 	addTr(obj, assignmentName, childName, targetPass);
 	// 設定項目の追加
-	if($(obj).prop("tagName") == "LI") targetPass += ":eq("+(number-1)+")";
-	addSetting(childName, targetPass);
+	targetPass += ":eq("+number+")";
+	addSetting(childName, targetPass, obj);
 
 	assignmentName = childName;
-	var cnt = 1;
-	$(obj).children().each(function() {
+	$('iframe').contents().find(obj).children().each(function() {
 		var copy = assignmentName;
-		//TODO divなどもeqで番号指定で編集できる様に
-		//TODO classがあれば置き換え
-		var pass = undefined;
-		if(pass == undefined) pass = $(this).prop("tagName").toLowerCase();
-		allScribing($(this), copy, cnt, targetPass+" "+pass);
-		cnt ++;
+		if($(this).attr("class") != undefined) {
+			allScribing($(this), copy, $(this).index(), "."+$(this).attr("class"));	
+		} else {
+			allScribing($(this), copy, $(this).index(), targetPass+" "+$(this).prop("tagName").toLowerCase());
+		}
 	});
 };
 
@@ -235,8 +205,34 @@ function addTr(obj, classname, childName, targetPass) {
 		"class" : "iframe"+classname,
 		"data-targetPass" : targetPass,
 		on : {
+			mouseover : function(event){
+				var content = $('iframe').contents().find(targetPass);
+				var element = $("<div></div>", {
+						"class" : "hoverImage"
+				});
+				var css = {
+					color : "red",
+					position : "absolute",
+					width : content.innerWidth(),
+					height : content.innerHeight(),
+					background : "red",
+					filter : "alpha(opacity = 30)",
+					MozOpacity : 0.3,
+					opacity : 0.3
+				};
+				content.css("position", "relative");
+				element.css(css);
+				element.css("top", 0);
+				element.css("left", 0);
+				element.css("z-index", 1000);
+				content.append(element);
+			},
+			mouseout : function(classname){
+				var content = $('iframe').contents().find(classname);
+				content.css("position", "");
+				$('iframe').contents().find('.hoverImage').remove();
+			},
 			click : function(event) {
-				//console.log(classname);
 				var targetClass = null;
 				$(".iframe"+childName).each(function() {
 					display($(this));
@@ -259,11 +255,11 @@ function addTr(obj, classname, childName, targetPass) {
 /*
 *  設定項目追加
 */
-function addSetting(classname, targetPass) {
+function addSetting(classname, targetPass, obj) {
 	addBackground(classname, targetPass);
 	addBorder(classname, targetPass);
-	addFont(classname, targetPass);
-	addEditText(classname, targetPass);
+	addFont(classname, targetPass, obj);
+	addEditText(classname, targetPass, obj);
 };
 
 /*
@@ -279,7 +275,6 @@ function addBackground(name, targetPass) {
 	tr.css("display", "none");
 	$('#classTable').append(tr);
 	var classname = targetPass;
-	//console.log(classname);
 
 	var color = $('iframe').contents().find(classname).css("background-color");
 	if(color == 'rgba(0, 0, 0, 0)' || color == undefined) color = 'rgb(127, 127, 127)';
@@ -356,7 +351,10 @@ function setBorderSize(element) {
 /*
 *  フォントの配色を追加
 */
-function addFont(name, targetPass) {
+function addFont(name, targetPass, obj) {
+	var classname = targetPass;
+	var text = $('iframe').contents().find(classname).text().substr(0,1);
+	if(text == 0 || $(obj).html().substr(0,1) == "<") return;
 	var tr = $("<tr class='iframe"+name+"'></tr>");
 	var td = $("<td>font</td>");
 	var td2 = $("<input type='text' class='form-control' id='"+name+"-font' value='#A6FF00' data-color-format='hex'>");
@@ -365,7 +363,6 @@ function addFont(name, targetPass) {
 	tr.append(td2);
 	tr.css("display", "none");
 	$('#classTable').append(tr);
-	var classname = targetPass;
 
 	var color = $('iframe').contents().find(classname).css('color');
 	if(color == 'rgba(0, 0, 0, 0)' || color == undefined) color = 'rgb(127, 127, 127)';
@@ -384,8 +381,11 @@ function addFont(name, targetPass) {
 /*
 *  テキストの変更
 */
-function addEditText(name, targetPass) {
+function addEditText(name, targetPass, obj) {
 	var classname = targetPass;
+	var text = $('iframe').contents().find(classname).text().substr(0,1);
+	if(text == 0 || $(obj).html().substr(0,1) == "<") return;
+	text = $('iframe').contents().find(classname).text();
 	var tr = $("<tr class='iframe"+name+"'></tr>");
 	var td = $("<td>text</td>");
 	var td2 = $("<input type='text' id='"+name+"-text' class='editText' data-classname='"+classname+"'>");
@@ -395,8 +395,20 @@ function addEditText(name, targetPass) {
 	tr.css("display", "none");
 	$('#classTable').append(tr);
 
-	var text = $('iframe').contents().find(classname).text();
 	$("#"+name+"-text").val(text);
+};
+
+/*
+*  テキストのリアルタイム変更(keyup)
+*/
+function editText(element) {
+	var v, old = element.value;
+	return function() {
+		if(old != (v = element.value)) {
+			var text = $("#"+$(this).attr("id")).val();
+			$('iframe').contents().find($("#"+$(this).attr("id")).data('classname')).text(text);
+		}
+	}
 };
 
 //==============================================================================
