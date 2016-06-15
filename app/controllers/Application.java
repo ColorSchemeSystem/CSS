@@ -148,7 +148,14 @@ public class Application extends BaseController{
 	    final String fileName = String.valueOf(template.templateId) + ".html";
 	    File newFile = new File(path + fileName);
 	    file.renameTo(newFile);
-	    String target = appS.getIframesUrl() + "/" + fileName;
+	    String iframeUrl = appS.getIframesUrl();
+	    String target = "";
+	    if(iframeUrl != null) {
+	    	target = iframeUrl + "/" + fileName;
+	    }	else	{
+	    	target = "https://www.google.co.jp/";
+	    }
+	    Logger.info("target : " + target);
 		String base64ImageData = null;
 		try {
 			base64ImageData = httpS.request(ImageService.webShotUrl + "?target=" + URLEncoder.encode(target, "UTF-8"));
@@ -275,18 +282,20 @@ public class Application extends BaseController{
 				fileWriter.write(tempS.tempHtml);
 				fileWriter.close();
 				String tempPath = appS.getPublicFolderPath() + "/iframes/";
-				String target = appS.getIframesUrl() + "/" + tempName;
-				String base64ImageData = httpS.request(ImageService.webShotUrl + "?" + URLEncoder.encode(target, "UTF-8"));
-				if(StringUtils.isEmpty(base64ImageData)) {
+				String iframeUrl = appS.getIframesUrl();
+				String target = "";
+				if(iframeUrl != null) {
+					target = iframeUrl + "/" + tempName;
+				}	else	{
 					target = "https://www.google.co.jp/";
-					base64ImageData = httpS.request(ImageService.webShotUrl + "?" + URLEncoder.encode(target, "UTF-8"));
 				}
+				Logger.info("target : " + target);
+				String base64ImageData = httpS.request(ImageService.webShotUrl + "?" + URLEncoder.encode(target, "UTF-8"));
 				final String imageFilePath = appS.getPublicFolderPath() + "/snapshots/";
 				new File(imageFilePath).mkdirs();
 				final String imageFileName = String.valueOf(newTempId) + ".png";
 				imageS.saveBase64ImageDataAsImage(base64ImageData, "png",
 						imageFilePath + imageFileName);
-
 				file.renameTo(new File(tempPath, tempName));
 				return redirect(routes.Application.indexWithId(newTempId));
 			} catch(Exception e) {

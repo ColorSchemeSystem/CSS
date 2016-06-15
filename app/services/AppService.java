@@ -44,10 +44,10 @@ public class AppService {
 	 */
 	public String getSnapShotsUrl() {
 		String path = Play.application().configuration().getString("paths.snapshots");
-		if(StringUtils.isEmpty(path)) {
-			return "/assets/snapshots";
-		}	else	{
+		if(!StringUtils.isEmpty(path)) {
 			return path;
+		}	else	{
+			return "/assets/snapshots";
 		}
 	}
 	
@@ -56,10 +56,10 @@ public class AppService {
 	 */
 	public String getIframesUrl() {
 		String path = Play.application().configuration().getString("paths.iframes");
-		if(StringUtils.isEmpty(path)) {
-			return "/assets/iframes";
-		}	else	{
+		if(!StringUtils.isEmpty(path)) {
 			return path;
+		}	else	{
+			return null;
 		}
 	}
 
