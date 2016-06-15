@@ -13,8 +13,6 @@ var iframeMethod;
 $(window).load(function(){
 	$('#loading').css("display", "block");
 	$('#loader').css("display", "block");
-	console.log("width = "+ $('#logo').innerWidth());
-	console.log("height = " + $('#logo').innerHeight());
 });
 
 function fixSideBar(){
@@ -341,6 +339,15 @@ function showPopup(member_id, id){
 
 function setTimer(id){
 	iframeMethod = setInterval("loadIframe(" + id + ")", 1000);
+	timeout = setTimeout("loadTimeOut()", 10000);
+}
+
+function loadTimeOut(){
+	clearInterval(iframeMethod);
+	clearTimeout(timeout);
+	$('#loading').css("display", "none");
+	$('#loader').css("display", "none");
+	$('#timeOut').css("display", "block");
 }
 
 function loadIframe(id){
@@ -366,6 +373,7 @@ function checkError(id){
 
 function reloadIframe(url){
 	if($('#classTable').children().size() == 0){
+		clearTimeout(timeout);
 		clearInterval(iframeMethod);
 		$('#loading').css("display", "none");
 		$('#loader').css("display", "none");
@@ -380,7 +388,7 @@ function reloadIframe(url){
 					elements = $('#iframe').contents().find('*');
 					$.each(elements, function(index, item){
 						var classname = item.className.split(" ")[0];
-
+						console.log("class = " + classname);
 						// クラスを発見
 						if(classname != "") {
 							//子要素にclassがあったらさらにタブで開く

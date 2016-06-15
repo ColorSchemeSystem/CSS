@@ -122,7 +122,7 @@
 				display: none;
 				width: 920px;
 				height: 500px;
-				background: #FFF;
+				background-color: #FFF;
 				border: 1px solid #000;
 				z-index: 1;
 			}
@@ -139,10 +139,24 @@
 				z-index: 2;
 			}
 
+			#timeOut{
+				display: none;
+				width: 920px;
+				height: 500px;
+				background-color: #FFF;
+				text-align: center;
+				border: 1px solid #000;
+				padding-top: 240px;
+			}
+
+			#timeOut h4{
+				color: #808080;
+			}
+
 			.side  {
 				float: right;
 				position: relative;
-				width: 230px;
+				margin-right: 0px;
 				padding-bottom: 32768px;
 				margin-bottom: -32768px;
 				background-color: #FFF;
