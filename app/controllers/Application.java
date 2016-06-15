@@ -277,6 +277,10 @@ public class Application extends BaseController{
 				String tempPath = appS.getPublicFolderPath() + "/iframes/";
 				String target = appS.getIframesUrl() + "/" + tempName;
 				String base64ImageData = httpS.request(ImageService.webShotUrl + "?" + URLEncoder.encode(target, "UTF-8"));
+				if(StringUtils.isEmpty(base64ImageData)) {
+					target = "https://www.google.co.jp/";
+					base64ImageData = httpS.request(ImageService.webShotUrl + "?" + URLEncoder.encode(target, "UTF-8"));
+				}
 				final String imageFilePath = appS.getPublicFolderPath() + "/snapshots/";
 				new File(imageFilePath).mkdirs();
 				final String imageFileName = String.valueOf(newTempId) + ".png";
