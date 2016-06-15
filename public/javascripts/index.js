@@ -356,9 +356,9 @@ function loadIframe(id){
 
 function checkError(id){
 	if(id == 0){
-		var url = "/assets/iframes/iframe1.html"
+		var url = config.iframes + "/iframe1.html"
 	}else{
-		var url = "/assets/iframes/" + id + ".html"
+		var url = config.iframes + "/" + id + ".html"
 	}
 
 	$.ajax({ cache: false,
