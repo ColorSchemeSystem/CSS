@@ -12,7 +12,8 @@ libraryDependencies ++= Seq(
   "commons-codec" % "commons-codec" % "1.10",
   "org.mindrot" % "jbcrypt" % "0.3m",
   "mysql" % "mysql-connector-java" % "5.1.39",
-  "org.apache.httpcomponents" % "httpclient" % "4.5.2"
+  "org.apache.httpcomponents" % "httpclient" % "4.5.2",
+  "com.github.javafaker" % "javafaker" % "0.10"
 )
 
 play.Project.playJavaSettings
