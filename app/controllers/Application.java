@@ -17,6 +17,7 @@ import java.util.List;
 import javax.imageio.ImageIO;
 
 import org.apache.commons.codec.binary.Base64;
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
 
 import com.avaje.ebean.Query;
@@ -44,6 +45,8 @@ public class Application extends BaseController{
 	private static FileService fileS = new FileService();
 
 	private static HttpService httpS = new HttpService();
+	
+	private static CompressionService compS = new CompressionService();
 
 	public static Result index() {
 		Chooser chooser = new Chooser();
@@ -59,9 +62,9 @@ public class Application extends BaseController{
 				mem.chooser = new Chooser();
 				chooser = new Chooser();
 			}
-			return ok(index.render(mem, chooser, form, "0"));
+			return ok(index.render(mem, chooser, form, "0",""));
 		}
-		return ok(index.render(null, chooser, form, "0"));
+		return ok(index.render(null, chooser, form, "0",""));
 	}
 
 	public static Result indexWithId(Long id){
@@ -74,9 +77,10 @@ public class Application extends BaseController{
 		if(mem != null) {
 			Query<Chooser> query = Chooser.find.where("chooserId = '"+mem.chooser.chooserId+"'");
 			chooser = query.findUnique();
-			return ok(index.render(mem, chooser, form, id.toString()));
+			return ok(index.render(mem, chooser, form, id.toString(), ""));
 		}
-		return ok(index.render(null, chooser, form, id.toString()));
+		
+		return ok(index.render(null, chooser, form, id.toString(),compS.decompress(temp.html)));
 	}
 
 	/**
@@ -127,6 +131,11 @@ public class Application extends BaseController{
 		Template template = new Template();
 	    template.templateName = form.get().templateName;
 	    template.templateMessage = form.get().templateMessage;
+	    try {
+			template.html = compS.compress(FileUtils.readFileToString(file, "UTF-8"));
+		} catch (IOException e1) {
+			e1.printStackTrace();
+		}
 	    Member member = isLoggedIn();
 	    if(member != null) {
 	    	template.member = member;

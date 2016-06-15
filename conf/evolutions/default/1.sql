@@ -62,6 +62,7 @@ create table Templates (
   template_name             varchar(255),
   template_message          varchar(255),
   access_flag               integer,
+  html                      blob,
   constraint pk_Templates primary key (template_id))
 ;
 
