@@ -288,7 +288,8 @@ public class Application extends BaseController{
 					target = "https://www.google.co.jp/";
 				}
 				Logger.info("target : " + target);
-				String base64ImageData = httpS.request(ImageService.webShotUrl + "?" + URLEncoder.encode(target, "UTF-8"));
+				String base64ImageData = httpS.request(ImageService.webShotUrl 
+						+ "?target=" + URLEncoder.encode(target, "UTF-8"));
 				final String imageFilePath = appS.getPublicFolderPath() + "/snapshots/";
 				new File(imageFilePath).mkdirs();
 				final String imageFileName = String.valueOf(newTempId) + ".png";
