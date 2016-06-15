@@ -156,7 +156,7 @@
 			.side  {
 				float: right;
 				position: relative;
-				margin-right: 0px;
+				width: 230px;
 				padding-bottom: 32768px;
 				margin-bottom: -32768px;
 				background-color: #FFF;
