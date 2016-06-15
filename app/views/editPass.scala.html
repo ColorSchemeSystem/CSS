@@ -14,10 +14,10 @@
 		</script>-->
 		<!--<h1 style='margin-top : 20px;'>マイページ</h1>-->
 			<div class='password'>
-				<p>@message</p>
-				@helper.inputText(myform("password"),'_label -> "現在のパスワード",'_showConstraints -> false, 'size -> 70)
-				@helper.inputText(myform("newPassword"),'_label -> "新しいパスワード",'_showConstraints -> false, 'size -> 70)
-				@helper.inputText(myform("confirmNewPassword"),'_label -> "新しいパスワード再入力",'_showConstraints -> false, 'size -> 70)
+				<p>@message</p><br>
+				@helper.inputText(myform("password"),'_label -> "現在のパスワード",'_showConstraints -> false, 'size -> 70, 'type -> "password")
+				@helper.inputText(myform("newPassword"),'_label -> "新しいパスワード",'_showConstraints -> false, 'size -> 70, 'type -> "password")
+				@helper.inputText(myform("confirmNewPassword"),'_label -> "新しいパスワード再入力",'_showConstraints -> false, 'size -> 70, 'type -> "password")
 				<input type="submit" value="変更を保存" id="passSubmit" class="btn btn-primary">
 			</div>
 			<div class="sideMenu">
