@@ -1,5 +1,7 @@
 error.required=必須項目です。
 constraint.required=必須項目です。
+error.email=メール形式で入力してください
+error.email.required=メール形式で入力してください
 
 constraint.pattern=半角英数で入力してください。
 error.pattern=半角英数以外の文字が含まれています。
