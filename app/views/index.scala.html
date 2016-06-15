@@ -1,4 +1,4 @@
-@(user: Member, chooser: Chooser, myForm: Form[forms.TemplateSave], id: String)
+@(user: Member, chooser: Chooser, myForm: Form[forms.TemplateSave], id: String, content : String)
 
 @import helper._
 
@@ -57,7 +57,8 @@
 					<h4>htmlの読み込みに失敗しました</h4>
 					<h4>再読み込みをしてください</h4>
 				</div>
-				<div id="afterLoad">
+				<div id="afterLoad" data-content="@content">
+				@iframeContent
 				</div>
 			</div>
 			<form method="post" id="sendForm" name="sendForm" action="/template/download">

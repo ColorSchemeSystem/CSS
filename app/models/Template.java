@@ -21,6 +21,9 @@ public class Template extends BaseModel {
 	public String templateMessage;
 
 	public Integer accessFlag;
+	
+	@Lob
+	public byte[] html;
 
 	public static Finder<Long, Template> find = new Finder<Long, Template>(Long.class, Template.class);
 
