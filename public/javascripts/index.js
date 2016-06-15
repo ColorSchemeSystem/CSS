@@ -181,6 +181,7 @@ function toggleHide(obj) {
 *  引数(表示したい元のobj)
 */
 function allScribing(obj, assignmentName, number, targetPass) {
+	if($(obj).prop("tagName") == "SCRIPT") return;
 	var childName = assignmentName + "-" + number+"-"+$(obj).prop("tagName").toLowerCase() + "-child";
 
 	// タブの追加
