@@ -38,9 +38,9 @@ public class AppService {
 			return path;
 		}
 	}
-	
+
 	/**
-	 * 
+	 *
 	 * @return
 	 */
 	public String getSnapShotsUrl() {
@@ -80,7 +80,7 @@ public class AppService {
 		if(memberId == null) {
 			templatePage = Template.find.findPagingList(itemPerPage).getPage(page -1);
 		}	else	{
-			templatePage = Template.find.where().eq("memberId", memberId).findPagingList(itemPerPage).getPage(page -1);
+			templatePage = Template.find.where().eq("Member_Member_Id", memberId).findPagingList(itemPerPage).getPage(page -1);
 		}
 		PagingDto<Template> dto = new PagingDto<Template>();
 		dto.data = templatePage.getList();

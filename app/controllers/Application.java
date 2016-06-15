@@ -214,10 +214,11 @@ public class Application extends BaseController{
 		PagingDto<Template> pagingDto;
 		if(StringUtils.isNotEmpty(type) && type.equals("member") && member != null) {
 			pagingDto = appS.findTemplatesWithPages(page, 20 , member.memberId);
+			return ok(myTemplates.render(pagingDto,member,appS.getSnapShotsUrl()));
 		} else {
 			pagingDto = appS.findTemplatesWithPages(page, 20);
+			return ok(templates.render(pagingDto,member,appS.getSnapShotsUrl()));
 		}
-		return ok(templates.render(pagingDto,member,5,appS.getSnapShotsUrl()));
 	}
 
 	public static Result download(){
