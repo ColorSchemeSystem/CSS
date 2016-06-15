@@ -1,4 +1,4 @@
-@(user: Member, chooser: Chooser, path: String, tags: List[String], myForm: Form[forms.TemplateSave], id: String)
+@(user: Member, chooser: Chooser, myForm: Form[forms.TemplateSave], id: String)
 
 @import helper._
 
@@ -54,7 +54,6 @@
 					</div>
 				</div>
 				<div id="afterLoad">
-					<!--<iframe src="@routes.Assets.at(path)" width="920px" name="template" id="iframe"></iframe>-->
 				</div>
 			</div>
 			<form method="post" id="sendForm" name="sendForm" action="/template/download">

@@ -47,10 +47,6 @@ public class Application extends BaseController{
 	public static Result index() {
 		Chooser chooser = new Chooser();
 		Member mem = (Member)getObjectFormSession("Member");
-		File file = new File(Play.application().path().getPath() + "/public/iframes/iframe1.html");
-		String html = appS.readHtmlFile(file);
-		List<String> htmlTag = appS.extractClasses(html);
-		String path = "iframes/iframe1.html";
 		TemplateSave tempS = new TemplateSave();
 		tempS.flg = 0;
 		Form<TemplateSave> form = Form.form(TemplateSave.class).fill(tempS);
@@ -62,33 +58,24 @@ public class Application extends BaseController{
 				mem.chooser = new Chooser();
 				chooser = new Chooser();
 			}
-			return ok(index.render(mem, chooser, path, htmlTag, form, "0"));
+			return ok(index.render(mem, chooser, form, "0"));
 		}
-		return ok(index.render(null, chooser, path, htmlTag, form, "0"));
+		return ok(index.render(null, chooser, form, "0"));
 	}
 
 	public static Result indexWithId(Long id){
 		Chooser chooser = new Chooser();
 		Member mem = (Member)getObjectFormSession("Member");
 		Template temp = appS.getTemp(id);
-		String path;
-		if(temp != null){
-			path = "iframes/" + id + ".html";
-		} else {
-			path = "iframes/iframe1.html";
-		}
-		File file = new File(Play.application().path().getPath() + "/public/" + path);
-		String html = appS.readHtmlFile(file);
-		List<String> htmlTag = appS.extractClasses(html);
 		TemplateSave tempS = new TemplateSave();
 		tempS.flg = 0;
 		Form<TemplateSave> form = Form.form(TemplateSave.class).fill(tempS);
 		if(mem != null) {
 			Query<Chooser> query = Chooser.find.where("chooserId = '"+mem.chooser.chooserId+"'");
 			chooser = query.findUnique();
-			return ok(index.render(mem, chooser, path, htmlTag, form, id.toString()));
+			return ok(index.render(mem, chooser, form, id.toString()));
 		}
-		return ok(index.render(null, chooser, path, htmlTag, form, id.toString()));
+		return ok(index.render(null, chooser, form, id.toString()));
 	}
 
 	/**
