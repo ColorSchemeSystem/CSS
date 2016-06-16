@@ -10,6 +10,7 @@ import play.cache.Cache;
 import play.db.ebean.Model.Finder;
 import play.libs.WS;
 import play.libs.F.Promise;
+import play.libs.Json;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -343,7 +344,7 @@ public class Application extends BaseController{
 	 */
 	public static Result analyze() {
 		Form<Analyze> form = Form.form(Analyze.class);
-		return ok(analyze.render(form,new HashMap<String,String>()));
+		return ok(analyze.render(form,""));
 	}
 	
 	/**
@@ -352,15 +353,24 @@ public class Application extends BaseController{
 	 */
 	public static Result doAnalyze() {
 		Form<Analyze> form = Form.form(Analyze.class).bindFromRequest();
-		Map<String,String> result = new LinkedHashMap<String,String>();
-		try {
-			String base64ImageData = httpS.request(ImageService.webShotUrl 
-					+ "?target=" + URLEncoder.encode(form.get().targetUrl, "UTF-8"));
-			BufferedImage image = imageS.convertBase64ImageDataToBufferedImage(base64ImageData, "png");
-			result = imageS.analyze(image);
-		} catch (UnsupportedEncodingException e) {
-			e.printStackTrace();
+		if(!form.hasErrors()) {
+			Map<String,String> result = new LinkedHashMap<String,String>();
+			try {
+				String base64ImageData = httpS.request(ImageService.webShotUrl 
+						+ "?target=" + URLEncoder.encode(form.get().targetUrl, "UTF-8"));
+				BufferedImage image = imageS.convertBase64ImageDataToBufferedImage(base64ImageData, "png");
+				result = imageS.analyze(image);
+			} catch (UnsupportedEncodingException e) {
+				e.printStackTrace();
+			}
+			String data = "";
+			for(String key : result.keySet()) {
+				data += key + ":" + result.get(key) + ",";
+			}
+			data = data.substring(0, data.length()-1);
+			return ok(analyze.render(form,data));
+		}	else	{
+			return ok(analyze.render(form,""));
 		}
-		return ok(analyze.render(form,result));
 	}
 }
