@@ -250,9 +250,7 @@ public class Application extends BaseController{
 				temp.accessFlag = 0;
 			}
 			if(tempS.member_id != null){
-				System.out.println("メンバーID = " + tempS.member_id);
 				temp.member = appS.findMemberById(tempS.member_id);
-				System.out.println("メンバー = " + temp.member);
 			} else {
 				temp.member = null;
 			}

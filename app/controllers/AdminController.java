@@ -152,7 +152,6 @@ public class AdminController extends BaseController {
 			return redirect(routes.AdminController.login());
 		}
 		Chooser chooser = adminS.findChooserByChooserId(mem.chooser.chooserId);
-		System.out.println("hsv"+chooser.hsvpanel);
 		MyPage setting = new MyPage();
 		setting.memberId = mem.memberId;
 		setting.memberName = mem.memberName;
@@ -172,7 +171,6 @@ public class AdminController extends BaseController {
 		Form<MyPage> form = Form.form(MyPage.class).bindFromRequest();
 		Member mem = isLoggedIn();
 		if(mem == null) {
-			System.out.println("memnone");
 			return badRequest(editColor.render(mem, form));
 		}
 		if(!form.hasErrors()) {
@@ -182,7 +180,6 @@ public class AdminController extends BaseController {
 			chooser.swatche		= form.get().swatche;
 			chooser.update();
 		} else {
-			System.out.println("bad");
 			return badRequest(editColor.render(mem, form));
 		}
 		return ok(editColor.render(mem, form));
@@ -199,9 +196,7 @@ public class AdminController extends BaseController {
 				mem.memberName = form.get().memberName;
 				mem.mail = form.get().mail;
 				mem.nickName = form.get().nickName;
-				System.out.println("beforemem = " + mem.nickName);
 				adminS.updateMember(mem);
-				System.out.println("aftermem = " + mem.nickName);
 			}
 		} else {
 			return badRequest(editProfile.render(mem, form));
