@@ -90,7 +90,8 @@ function loadTimeOut(){
 }
 
 function loadIframe(id){
-	checkError(id);
+	var html = $('#afterLoad').data("content");
+	reloadIframe(html);
 }
 
 function checkError(id){
@@ -103,21 +104,21 @@ function checkError(id){
 	$.ajax({ cache: false,
 		url: url,
 		success: function (data) {
-			reloadIframe(url);
+			reloadIframe(html);
 		},
 		error: function (data) {
 		}
 	});
 }
 
-function reloadIframe(url){
+function reloadIframe(html){
 	if($('#classTable').children().size() == 0){
 		clearTimeout(timeout);
 		clearInterval(iframeMethod);
 		$('#loading').css("display", "none");
 		$('#loader').css("display", "none");
 		var iframe = $("<iframe></iframe>", {
-			"src" : url,
+			"srcdoc" : html,
 			"width" : "920px",
 			"name" : "template",
 			"id" : "iframe",

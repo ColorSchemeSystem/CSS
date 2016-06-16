@@ -45,7 +45,7 @@ public class Application extends BaseController{
 	private static FileService fileS = new FileService();
 
 	private static HttpService httpS = new HttpService();
-	
+
 	private static CompressionService compS = new CompressionService();
 
 	public static Result index() {
@@ -77,7 +77,7 @@ public class Application extends BaseController{
 		if(mem != null) {
 			Query<Chooser> query = Chooser.find.where("chooserId = '"+mem.chooser.chooserId+"'");
 			chooser = query.findUnique();
-			return ok(index.render(mem, chooser, form, id.toString(), ""));
+			return ok(index.render(mem, chooser, form, id.toString(), appS.escapeHtml(compS.decompress(temp.html))));
 		}
 		return ok(index.render(null, chooser, form, id.toString(),appS.escapeHtml(compS.decompress(temp.html))));
 	}

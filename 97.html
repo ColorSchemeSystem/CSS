@@ -1,0 +1,168 @@
+<html><head>
+    <script src="http://fb.me/react-0.13.3.js"></script>
+    <script src="http://fb.me/JSXTransformer-0.13.3.js"></script>
+  <script>
+
+     // 親：<Parent />の定義
+     var Parent = React.createClass({displayName: "Parent",
+       // State（※状態は親が管理）
+       // この値はブラウザを閉じたり、リロードするまでは保持される
+       getInitialState: function () {
+         return {
+           textVal: "",
+           children: []
+         };
+       },
+
+       // State(textVal)を変更
+       setStateTextVal: function(textVal) {
+         this.setState({ textVal: textVal }); 
+       },
+
+       // State(children)を変更
+       setStateChildren: function(textVal) {
+         var textVals = this.state.children.concat(textVal);
+         this.setState({ children: textVals });
+       },
+
+       // <Parent />の表示
+       // ここで子となる<ChildInput />と<Child />を記述
+       render: function() {
+         return (
+           React.createElement("div", null, 
+             React.createElement("p", null, "入力してEnterキーを押す"), 
+             React.createElement(ChildInput, {onChange: this.setStateTextVal, onSave: this.setStateChildren}), 
+             React.createElement(Child, {textVal: this.state.textVal, children: this.state.children})
+           )
+         );
+       }
+     });
+
+     // 子1：<ChildInput />の定義（※props経由で親を参照できる）
+     var ChildInput = React.createClass({displayName: "ChildInput",
+       _onChange: function (e) {
+         this.props.onChange(e.target.value);
+       },
+
+       _onKeyDown: function (e) {
+         if (e.keyCode === 13) { // Enterキー
+           this.props.onSave(e.target.value);
+           e.target.value = "";
+         }
+       },
+
+       // <ChildInput />の表示
+       render: function() {
+         return React.createElement("input", {type: "text", onChange: this._onChange, onKeyDown: this._onKeyDown});
+       }
+     });
+
+     // 子2：<Child />の定義（※props経由で親を参照できる）
+     var Child = React.createClass({displayName: "Child",
+       // <Child />の表示
+       render: function() {
+         var key = 0;
+         var textVals = this.props.children.map(function (textVal) {
+           // 時間が同じ。つまり、キーが押されるごとに、まとめて再描画されていることに注目
+           //（サーバーサイドっぽいと言われる所以）
+           var date = new Date().toString();
+           return React.createElement("li", {key: key++}, key, ".", textVal, "(", date, ")");
+         });
+
+         return (
+           React.createElement("div", null, 
+             React.createElement("p", null, this.props.textVal), 
+             React.createElement("ul", null, textVals)
+           )
+         );
+       }
+     });
+
+     // id='app' に <Parent />を表示する（マウント）
+     var m = React.render(React.createElement(Parent, null), document.getElementById('app'));
+    
+//# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJmaWxlIjoidHJhbnNmb3JtZWQuanMiLCJzb3VyY2VzIjpbIklubGluZSBKU1ggc2NyaXB0Il0sIm5hbWVzIjpbXSwibWFwcGluZ3MiOiJBQUFBOztLQUVLLGtCQUFrQjtBQUN2QixLQUFLLElBQUksNEJBQTRCLHNCQUFBO0FBQ3JDOztPQUVPLGVBQWUsRUFBRSxZQUFZO1NBQzNCLE9BQU87V0FDTCxPQUFPLEVBQUUsRUFBRTtXQUNYLFFBQVEsRUFBRSxFQUFFO1VBQ2IsQ0FBQztBQUNYLFFBQVE7QUFDUjs7T0FFTyxlQUFlLEVBQUUsU0FBUyxPQUFPLEVBQUU7U0FDakMsSUFBSSxDQUFDLFFBQVEsQ0FBQyxFQUFFLE9BQU8sRUFBRSxPQUFPLEVBQUUsQ0FBQyxDQUFDO0FBQzdDLFFBQVE7QUFDUjs7T0FFTyxnQkFBZ0IsRUFBRSxTQUFTLE9BQU8sRUFBRTtTQUNsQyxJQUFJLFFBQVEsR0FBRyxJQUFJLENBQUMsS0FBSyxDQUFDLFFBQVEsQ0FBQyxNQUFNLENBQUMsT0FBTyxDQUFDLENBQUM7U0FDbkQsSUFBSSxDQUFDLFFBQVEsQ0FBQyxFQUFFLFFBQVEsRUFBRSxRQUFRLEVBQUUsQ0FBQyxDQUFDO0FBQy9DLFFBQVE7QUFDUjtBQUNBOztPQUVPLE1BQU0sRUFBRSxXQUFXO1NBQ2pCO1dBQ0Usb0JBQUEsS0FBSSxFQUFBLElBQUMsRUFBQTthQUNILG9CQUFBLEdBQUUsRUFBQSxJQUFDLEVBQUEsZ0JBQWtCLENBQUEsRUFBQTthQUNyQixvQkFBQyxVQUFVLEVBQUEsQ0FBQSxDQUFDLFFBQUEsRUFBUSxDQUFFLElBQUksQ0FBQyxlQUFlLEVBQUMsQ0FBQyxNQUFBLEVBQU0sQ0FBRSxJQUFJLENBQUMsZ0JBQWlCLENBQUEsQ0FBRyxDQUFBLEVBQUE7YUFDN0Usb0JBQUMsS0FBSyxFQUFBLENBQUEsQ0FBQyxPQUFBLEVBQU8sQ0FBRSxJQUFJLENBQUMsS0FBSyxDQUFDLE9BQU8sRUFBQyxDQUFDLFFBQUEsRUFBUSxDQUFFLElBQUksQ0FBQyxLQUFLLENBQUMsUUFBUyxDQUFBLENBQUcsQ0FBQTtXQUNqRSxDQUFBO1dBQ047UUFDSDtBQUNSLE1BQU0sQ0FBQyxDQUFDOztLQUVILHlDQUF5QztLQUN6QyxJQUFJLGdDQUFnQywwQkFBQTtPQUNsQyxTQUFTLEVBQUUsVUFBVSxDQUFDLEVBQUU7U0FDdEIsSUFBSSxDQUFDLEtBQUssQ0FBQyxRQUFRLENBQUMsQ0FBQyxDQUFDLE1BQU0sQ0FBQyxLQUFLLENBQUMsQ0FBQztBQUM3QyxRQUFROztPQUVELFVBQVUsRUFBRSxVQUFVLENBQUMsRUFBRTtTQUN2QixJQUFJLENBQUMsQ0FBQyxPQUFPLEtBQUssRUFBRSxFQUFFO1dBQ3BCLElBQUksQ0FBQyxLQUFLLENBQUMsTUFBTSxDQUFDLENBQUMsQ0FBQyxNQUFNLENBQUMsS0FBSyxDQUFDLENBQUM7V0FDbEMsQ0FBQyxDQUFDLE1BQU0sQ0FBQyxLQUFLLEdBQUcsRUFBRSxDQUFDO1VBQ3JCO0FBQ1YsUUFBUTtBQUNSOztPQUVPLE1BQU0sRUFBRSxXQUFXO1NBQ2pCLE9BQU8sb0JBQUEsT0FBTSxFQUFBLENBQUEsQ0FBQyxJQUFBLEVBQUksQ0FBQyxNQUFBLEVBQU0sQ0FBQyxRQUFBLEVBQVEsQ0FBRSxJQUFJLENBQUMsU0FBUyxFQUFDLENBQUMsU0FBQSxFQUFTLENBQUUsSUFBSSxDQUFDLFVBQVcsQ0FBQSxDQUFHLENBQUEsQ0FBQztRQUNwRjtBQUNSLE1BQU0sQ0FBQyxDQUFDOztLQUVILG9DQUFvQztBQUN6QyxLQUFLLElBQUksMkJBQTJCLHFCQUFBOztPQUU3QixNQUFNLEVBQUUsV0FBVztTQUNqQixJQUFJLEdBQUcsR0FBRyxDQUFDLENBQUM7QUFDckIsU0FBUyxJQUFJLFFBQVEsR0FBRyxJQUFJLENBQUMsS0FBSyxDQUFDLFFBQVEsQ0FBQyxHQUFHLENBQUMsVUFBVSxPQUFPLEVBQUU7QUFDbkU7O1dBRVcsSUFBSSxJQUFJLEdBQUcsSUFBSSxJQUFJLEVBQUUsQ0FBQyxRQUFRLEVBQUUsQ0FBQztXQUNqQyxPQUFPLG9CQUFBLElBQUcsRUFBQSxDQUFBLENBQUMsR0FBQSxFQUFHLENBQUUsR0FBRyxFQUFJLENBQUEsRUFBQyxHQUFHLEVBQUMsR0FBQSxFQUFFLE9BQU8sRUFBQyxHQUFBLEVBQUUsSUFBSSxFQUFDLEdBQU0sQ0FBQSxDQUFDO0FBQy9ELFVBQVUsQ0FBQyxDQUFDOztTQUVIO1dBQ0Usb0JBQUEsS0FBSSxFQUFBLElBQUMsRUFBQTthQUNILG9CQUFBLEdBQUUsRUFBQSxJQUFDLEVBQUMsSUFBSSxDQUFDLEtBQUssQ0FBQyxPQUFZLENBQUEsRUFBQTthQUMzQixvQkFBQSxJQUFHLEVBQUEsSUFBQyxFQUFDLFFBQWMsQ0FBQTtXQUNmLENBQUE7V0FDTjtRQUNIO0FBQ1IsTUFBTSxDQUFDLENBQUM7O0tBRUgsbUNBQW1DO0tBQ25DLElBQUksQ0FBQyxHQUFHLEtBQUssQ0FBQyxNQUFNLENBQUMsb0JBQUMsTUFBTSxFQUFBLElBQUEsQ0FBRyxDQUFBLEVBQUUsUUFBUSxDQUFDLGNBQWMsQ0FBQyxLQUFLLENBQUMsQ0FBQyxDQUFDIiwic291cmNlc0NvbnRlbnQiOlsiXG5cbiAgICAgLy8g6Kaq77yaPFBhcmVudCAvPuOBruWumue+qVxuICAgICB2YXIgUGFyZW50ID0gUmVhY3QuY3JlYXRlQ2xhc3Moe1xuICAgICAgIC8vIFN0YXRl77yI4oC754q25oWL44Gv6Kaq44GM566h55CG77yJXG4gICAgICAgLy8g44GT44Gu5YCk44Gv44OW44Op44Km44K244KS6ZaJ44GY44Gf44KK44CB44Oq44Ot44O844OJ44GZ44KL44G+44Gn44Gv5L+d5oyB44GV44KM44KLXG4gICAgICAgZ2V0SW5pdGlhbFN0YXRlOiBmdW5jdGlvbiAoKSB7XG4gICAgICAgICByZXR1cm4ge1xuICAgICAgICAgICB0ZXh0VmFsOiBcIlwiLFxuICAgICAgICAgICBjaGlsZHJlbjogW11cbiAgICAgICAgIH07XG4gICAgICAgfSxcblxuICAgICAgIC8vIFN0YXRlKHRleHRWYWwp44KS5aSJ5pu0XG4gICAgICAgc2V0U3RhdGVUZXh0VmFsOiBmdW5jdGlvbih0ZXh0VmFsKSB7XG4gICAgICAgICB0aGlzLnNldFN0YXRlKHsgdGV4dFZhbDogdGV4dFZhbCB9KTsgXG4gICAgICAgfSxcblxuICAgICAgIC8vIFN0YXRlKGNoaWxkcmVuKeOCkuWkieabtFxuICAgICAgIHNldFN0YXRlQ2hpbGRyZW46IGZ1bmN0aW9uKHRleHRWYWwpIHtcbiAgICAgICAgIHZhciB0ZXh0VmFscyA9IHRoaXMuc3RhdGUuY2hpbGRyZW4uY29uY2F0KHRleHRWYWwpO1xuICAgICAgICAgdGhpcy5zZXRTdGF0ZSh7IGNoaWxkcmVuOiB0ZXh0VmFscyB9KTtcbiAgICAgICB9LFxuXG4gICAgICAgLy8gPFBhcmVudCAvPuOBruihqOekulxuICAgICAgIC8vIOOBk+OBk+OBp+WtkOOBqOOBquOCizxDaGlsZElucHV0IC8+44GoPENoaWxkIC8+44KS6KiY6L+wXG4gICAgICAgcmVuZGVyOiBmdW5jdGlvbigpIHtcbiAgICAgICAgIHJldHVybiAoXG4gICAgICAgICAgIDxkaXY+XG4gICAgICAgICAgICAgPHA+5YWl5Yqb44GX44GmRW50ZXLjgq3jg7zjgpLmirzjgZk8L3A+XG4gICAgICAgICAgICAgPENoaWxkSW5wdXQgb25DaGFuZ2U9e3RoaXMuc2V0U3RhdGVUZXh0VmFsfSBvblNhdmU9e3RoaXMuc2V0U3RhdGVDaGlsZHJlbn0gLz5cbiAgICAgICAgICAgICA8Q2hpbGQgdGV4dFZhbD17dGhpcy5zdGF0ZS50ZXh0VmFsfSBjaGlsZHJlbj17dGhpcy5zdGF0ZS5jaGlsZHJlbn0gLz5cbiAgICAgICAgICAgPC9kaXY+XG4gICAgICAgICApO1xuICAgICAgIH1cbiAgICAgfSk7XG5cbiAgICAgLy8g5a2QMe+8mjxDaGlsZElucHV0IC8+44Gu5a6a576p77yI4oC7cHJvcHPntYznlLHjgafopqrjgpLlj4LnhafjgafjgY3jgovvvIlcbiAgICAgdmFyIENoaWxkSW5wdXQgPSBSZWFjdC5jcmVhdGVDbGFzcyh7XG4gICAgICAgX29uQ2hhbmdlOiBmdW5jdGlvbiAoZSkge1xuICAgICAgICAgdGhpcy5wcm9wcy5vbkNoYW5nZShlLnRhcmdldC52YWx1ZSk7XG4gICAgICAgfSxcblxuICAgICAgIF9vbktleURvd246IGZ1bmN0aW9uIChlKSB7XG4gICAgICAgICBpZiAoZS5rZXlDb2RlID09PSAxMykgeyAvLyBFbnRlcuOCreODvFxuICAgICAgICAgICB0aGlzLnByb3BzLm9uU2F2ZShlLnRhcmdldC52YWx1ZSk7XG4gICAgICAgICAgIGUudGFyZ2V0LnZhbHVlID0gXCJcIjtcbiAgICAgICAgIH1cbiAgICAgICB9LFxuXG4gICAgICAgLy8gPENoaWxkSW5wdXQgLz7jga7ooajnpLpcbiAgICAgICByZW5kZXI6IGZ1bmN0aW9uKCkge1xuICAgICAgICAgcmV0dXJuIDxpbnB1dCB0eXBlPVwidGV4dFwiIG9uQ2hhbmdlPXt0aGlzLl9vbkNoYW5nZX0gb25LZXlEb3duPXt0aGlzLl9vbktleURvd259IC8+O1xuICAgICAgIH1cbiAgICAgfSk7XG5cbiAgICAgLy8g5a2QMu+8mjxDaGlsZCAvPuOBruWumue+qe+8iOKAu3Byb3Bz57WM55Sx44Gn6Kaq44KS5Y+C54Wn44Gn44GN44KL77yJXG4gICAgIHZhciBDaGlsZCA9IFJlYWN0LmNyZWF0ZUNsYXNzKHtcbiAgICAgICAvLyA8Q2hpbGQgLz7jga7ooajnpLpcbiAgICAgICByZW5kZXI6IGZ1bmN0aW9uKCkge1xuICAgICAgICAgdmFyIGtleSA9IDA7XG4gICAgICAgICB2YXIgdGV4dFZhbHMgPSB0aGlzLnByb3BzLmNoaWxkcmVuLm1hcChmdW5jdGlvbiAodGV4dFZhbCkge1xuICAgICAgICAgICAvLyDmmYLplpPjgYzlkIzjgZjjgILjgaTjgb7jgorjgIHjgq3jg7zjgYzmirzjgZXjgozjgovjgZTjgajjgavjgIHjgb7jgajjgoHjgablho3mj4/nlLvjgZXjgozjgabjgYTjgovjgZPjgajjgavms6jnm65cbiAgICAgICAgICAgLy/vvIjjgrXjg7zjg5Djg7zjgrXjgqTjg4njgaPjgb3jgYTjgajoqIDjgo/jgozjgovmiYDku6XvvIlcbiAgICAgICAgICAgdmFyIGRhdGUgPSBuZXcgRGF0ZSgpLnRvU3RyaW5nKCk7XG4gICAgICAgICAgIHJldHVybiA8bGkga2V5PXtrZXkrK30+e2tleX0ue3RleHRWYWx9KHtkYXRlfSk8L2xpPjtcbiAgICAgICAgIH0pO1xuXG4gICAgICAgICByZXR1cm4gKFxuICAgICAgICAgICA8ZGl2PlxuICAgICAgICAgICAgIDxwPnt0aGlzLnByb3BzLnRleHRWYWx9PC9wPlxuICAgICAgICAgICAgIDx1bD57dGV4dFZhbHN9PC91bD5cbiAgICAgICAgICAgPC9kaXY+XG4gICAgICAgICApO1xuICAgICAgIH1cbiAgICAgfSk7XG5cbiAgICAgLy8gaWQ9J2FwcCcg44GrIDxQYXJlbnQgLz7jgpLooajnpLrjgZnjgovvvIjjg57jgqbjg7Pjg4jvvIlcbiAgICAgdmFyIG0gPSBSZWFjdC5yZW5kZXIoPFBhcmVudCAvPiwgZG9jdW1lbnQuZ2V0RWxlbWVudEJ5SWQoJ2FwcCcpKTtcbiAgICAiXX0=</script></head>
+  <body>
+    <div id="app" style="border: 0px solid rgb(0, 0, 0); background-color: rgb(127, 127, 127);"><div data-reactid=".0" style="border: 0px solid rgb(0, 0, 0); background-color: rgb(127, 127, 127);"><p data-reactid=".0.0" style="border: 0px solid rgb(0, 0, 0); color: rgb(0, 0, 0); background-color: rgb(127, 127, 127);">入力してEnterキーを押す</p><input type="text" data-reactid=".0.1"><div data-reactid=".0.2"><p data-reactid=".0.2.0"></p><ul data-reactid=".0.2.1"></ul></div></div></div>
+    <script type="text/jsx">
+
+     // 親：<Parent />の定義
+     var Parent = React.createClass({
+       // State（※状態は親が管理）
+       // この値はブラウザを閉じたり、リロードするまでは保持される
+       getInitialState: function () {
+         return {
+           textVal: "",
+           children: []
+         };
+       },
+
+       // State(textVal)を変更
+       setStateTextVal: function(textVal) {
+         this.setState({ textVal: textVal }); 
+       },
+
+       // State(children)を変更
+       setStateChildren: function(textVal) {
+         var textVals = this.state.children.concat(textVal);
+         this.setState({ children: textVals });
+       },
+
+       // <Parent />の表示
+       // ここで子となる<ChildInput />と<Child />を記述
+       render: function() {
+         return (
+           <div>
+             <p>入力してEnterキーを押す</p>
+             <ChildInput onChange={this.setStateTextVal} onSave={this.setStateChildren} />
+             <Child textVal={this.state.textVal} children={this.state.children} />
+           </div>
+         );
+       }
+     });
+
+     // 子1：<ChildInput />の定義（※props経由で親を参照できる）
+     var ChildInput = React.createClass({
+       _onChange: function (e) {
+         this.props.onChange(e.target.value);
+       },
+
+       _onKeyDown: function (e) {
+         if (e.keyCode === 13) { // Enterキー
+           this.props.onSave(e.target.value);
+           e.target.value = "";
+         }
+       },
+
+       // <ChildInput />の表示
+       render: function() {
+         return <input type="text" onChange={this._onChange} onKeyDown={this._onKeyDown} />;
+       }
+     });
+
+     // 子2：<Child />の定義（※props経由で親を参照できる）
+     var Child = React.createClass({
+       // <Child />の表示
+       render: function() {
+         var key = 0;
+         var textVals = this.props.children.map(function (textVal) {
+           // 時間が同じ。つまり、キーが押されるごとに、まとめて再描画されていることに注目
+           //（サーバーサイドっぽいと言われる所以）
+           var date = new Date().toString();
+           return <li key={key++}>{key}.{textVal}({date})</li>;
+         });
+
+         return (
+           <div>
+             <p>{this.props.textVal}</p>
+             <ul>{textVals}</ul>
+           </div>
+         );
+       }
+     });
+
+     // id='app' に <Parent />を表示する（マウント）
+     var m = React.render(<Parent />, document.getElementById('app'));
+    </script>
+  
+</body></html>
