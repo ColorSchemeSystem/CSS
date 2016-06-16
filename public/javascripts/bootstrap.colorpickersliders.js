@@ -1389,7 +1389,10 @@
 
       // targetに色設定
       function setTargetColor(targetData,color) {
-        if(targetData.targetName == "background") $('iframe').contents().find(targetData.contentName).css('backgroundColor',color);
+        if(targetData.targetName == "background") {
+          $('iframe').contents().find(targetData.contentName).css('backgroundColor',color);
+          console.log(targetData.contentName);
+        }
         else if (targetData.targetName == "border") {
           var borderSize = $(targetData.borderSize).val();
           $('iframe').contents().find(targetData.contentName).css('border', borderSize+"px solid "+color);
