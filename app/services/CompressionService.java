@@ -24,7 +24,6 @@ public class CompressionService {
 		for(int i = 0; i < length; i++) {
 			result[i] = output[i];
 		}
-		System.out.println(result + "\n\n\n\n");
 		return result;
 	}
 
@@ -45,7 +44,6 @@ public class CompressionService {
 		} catch (UnsupportedEncodingException e) {
 			e.printStackTrace();
 		}
-		System.out.println(str + "\n\n\n\n");
 		return str;
 	}
 }
