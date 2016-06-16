@@ -101,28 +101,25 @@ public class Application extends BaseController{
 	 * @return
 	 */
 	public static Result doUpload() {
-		Form<TemplateUpload> form = Form.form(TemplateUpload.class)
-				.bindFromRequest();
 		MultipartFormData body = request().body().
 				asMultipartFormData();
-		FilePart picture = body.getFile("tmpFileName");
-	    if(!form.hasErrors() && picture != null && picture.getFile() != null) {
+		FilePart picture = body.getFile("file");
+	    if(picture != null && picture.getFile() != null) {
+	    	System.out.println("okですー");
 	    	if(picture != null && picture.getFile() != null && picture.getContentType().equals("text/html")) {
-	    		saveHtml(picture.getFile(),form);
-	    		return redirect(routes.Application.templates());
+	    		System.out.println("okですー2");
+	    		saveHtml(picture);
+	    		return ok();
 	    	} else {
 	    		Member member = isLoggedIn();
 	    		if(member == null) {
-	    			return redirect(routes.Application.upload());
+	    			return ok();
 	    		}
-	    		saveImage(picture.getFile(),picture.getContentType(),form);
-	    		return redirect(routes.Application.images());
+	    		saveImage(picture,picture.getContentType());
+	    		return ok();
 	    	}
 	    }
-	    List<ValidationError> errors = new ArrayList<ValidationError>();
-	    errors.add(new ValidationError("tmpFileName","正しくファイルを選択してください。"));
-	    form.errors().put("tmpFileName", errors);
-	    return ok(upload.render(form,isLoggedIn()));
+	    return badRequest();
 	}
 
 	/**
@@ -130,10 +127,10 @@ public class Application extends BaseController{
 	 * @param file
 	 * @param form
 	 */
-	private static void saveHtml(File file, Form<TemplateUpload> form) {
+	private static void saveHtml(FilePart fileP) {
 		Template template = new Template();
-	    template.templateName = form.get().templateName;
-	    template.templateMessage = form.get().templateMessage;
+	    template.templateName = fileP.getFilename();
+	    File file = fileP.getFile();
 	    try {
 			template.html = compS.compress(FileUtils.readFileToString(file, "UTF-8"));
 		} catch (IOException e1) {
@@ -175,11 +172,11 @@ public class Application extends BaseController{
 	 * @param type
 	 * @param form
 	 */
-	private static void saveImage(File file, String type, Form<TemplateUpload> form) {
+	private static void saveImage(FilePart fileP, String type) {
 		Image image = new Image();
-		image.imageName = form.get().templateName;
-		image.imageMessage = form.get().templateMessage;
+		image.imageName = fileP.getFilename();
 		image.imageType = "png";
+		File file = fileP.getFile();
 		Member member = isLoggedIn();
 	    if(member != null) {
 	    	image.member = member;

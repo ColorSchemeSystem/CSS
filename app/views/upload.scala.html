@@ -10,20 +10,12 @@
 		});
 	</script>-->
 	<h2>テンプレートアップロード</h2>
-	<p class="explain">
-	@if(member == null) {
-		あなたの好きなhtmlファイルをアップロードできます。
-	}	else	{
-		あなたの好きな htmlファイル or 画像ファイル をアップロードできます。
+	@if(member == null){
+		<div id="dragAndDropHandler"><h3>htmlファイルをアップロードできます<br>ここにドロップしてください</h3></div>
+	}else{
+		<div id="dragAndDropHandler"><h3>html/imgファイルをアップロードできます<br>ここにドロップしてください</h3></div>	
 	}
-	</p>
-	@helper.form(action = routes.Application.doUpload,
-	'enctype -> "multipart/form-data") {
-		@myhelper.inputFile(templateForm("tmpFileName"),'type -> "file")
-		@helper.inputText(templateForm("templateName"),'_label -> "テンプレートの名前", 'size -> 70)
-		@helper.textarea(templateForm("templateMessage"),'_label -> "テンプレートの説明", 'cols -> 70, 'rows -> 10)
-		<input class='update-confirm btn btn-primary' type="submit" value="アップロード">
-	}
+	<div id="status1"></div>
 </div>
 }
 
