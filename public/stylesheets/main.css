@@ -139,6 +139,10 @@
 				z-index: 2;
 			}
 
+			#loader h3{
+				color: #808080;
+			}
+
 			#timeOut{
 				display: none;
 				width: 920px;
