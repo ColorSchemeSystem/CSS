@@ -13,12 +13,12 @@ import play.libs.F.Promise;
 
 import java.util.ArrayList;
 import java.util.List;
-
 import javax.imageio.ImageIO;
 
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.StringEscapeUtils;
 
 import com.avaje.ebean.Query;
 import com.github.javafaker.Faker;
@@ -50,7 +50,7 @@ public class Application extends BaseController{
 
 	public static Result index() {
 		Chooser chooser = new Chooser();
-		Member mem = (Member)getObjectFormSession("Member");
+		Member mem = isLoggedIn();
 		TemplateSave tempS = new TemplateSave();
 		tempS.flg = 0;
 		Form<TemplateSave> form = Form.form(TemplateSave.class).fill(tempS);
@@ -69,7 +69,7 @@ public class Application extends BaseController{
 
 	public static Result indexWithId(Long id){
 		Chooser chooser = new Chooser();
-		Member mem = (Member)getObjectFormSession("Member");
+		Member mem = isLoggedIn();
 		Template temp = appS.getTemp(id);
 		TemplateSave tempS = new TemplateSave();
 		tempS.flg = 0;
@@ -288,7 +288,7 @@ public class Application extends BaseController{
 					target = "https://www.google.co.jp/";
 				}
 				Logger.info("target : " + target);
-				String base64ImageData = httpS.request(ImageService.webShotUrl 
+				String base64ImageData = httpS.request(ImageService.webShotUrl
 						+ "?target=" + URLEncoder.encode(target, "UTF-8"));
 				final String imageFilePath = appS.getPublicFolderPath() + "/snapshots/";
 				new File(imageFilePath).mkdirs();
@@ -311,8 +311,25 @@ public class Application extends BaseController{
 		TemplateDownload html = form.get();
 		html.tempHtml = "<html>" + html.tempHtml + "</html>";
 		if(html.tempHtml != null){
-			return ok(html.tempHtml).as("text/html");
+			return ok(previewTemplate.render(html.tempHtml, html.temp_id));
 		}
 		return redirect("/");
+	}
+
+	public static Result backToIndex(Long id){
+		Form<TemplateDownload> getForm = Form.form(TemplateDownload.class).bindFromRequest();
+		TemplateDownload html = getForm.get();
+		Chooser chooser = new Chooser();
+		Member mem = isLoggedIn();
+		Template temp = appS.getTemp(id);
+		TemplateSave tempS = new TemplateSave();
+		Form<TemplateSave> form = Form.form(TemplateSave.class);
+		html.tempHtml = StringEscapeUtils.escapeHtml4(html.tempHtml);
+		if(mem != null) {
+			Query<Chooser> query = Chooser.find.where("chooserId = '"+mem.chooser.chooserId+"'");
+			chooser = query.findUnique();
+			return ok(index.render(mem, chooser, form, id.toString(), html.tempHtml));
+		}
+		return ok(index.render(null, chooser, form, id.toString(), html.tempHtml));
 	}
 }

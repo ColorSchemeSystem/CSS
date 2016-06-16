@@ -43,11 +43,10 @@ function fixFrameSize() {
 		var height = body.scrollHeight;
 		var iframe = window.parent.document.getElementsByTagName("iframe")[0];
 		iframe.style.height = height + "px";
-		iframe.scrolling = "no";
 	}
 };
 
-function sendHTML(formId, id){
+function sendHTML(formId, id, content){
 	var ele = $("<input>", {
 					"type" : "hidden",
 					"name" : "tempHtml",
@@ -122,6 +121,7 @@ function reloadIframe(html){
 			"width" : "920px",
 			"name" : "template",
 			"id" : "iframe",
+			"sandbox" : "allow-same-origin",
 			on : {
 				load : function(event){
 					var body = $('iframe').contents().find('body');

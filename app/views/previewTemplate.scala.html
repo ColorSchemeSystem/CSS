@@ -1,6 +1,12 @@
-@(html: String, user: Member)
+@(html: String, id: String)
 
-@main("Color Scheme", user){ 
-	@html
-	<button id="homeBack" class="btn btn-default">編集ページに戻る</button>
-}
+<link href='@routes.Assets.at("stylesheets/bootstrap.colorpickersliders.css")' rel="stylesheet" type="text/css" media="all">
+<link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.2.0/js/bootstrap.min.js"></script>
+<form action="/template/@id" method="post">
+	<input type="hidden" value="@html" name="tempHtml"/>
+	<input type="hidden" value="@id" name="temp_id">
+	<input type=submit id="homeBack" class="btn btn-default btn-lg" style="margin-top: 20px; margin-left: 20px;" value="編集ページに戻る">
+</form>
+@Html(html)
+
