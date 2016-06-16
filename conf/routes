@@ -24,6 +24,8 @@ GET     /upload             controllers.Application.upload()
 POST    /upload             controllers.Application.doUpload()
 GET     /templates          controllers.Application.templates()
 GET     /images             controllers.Application.images()
+GET     /analyze            controllers.Application.analyze()
+POST    /analyze            controllers.Application.doAnalyze()
 
 # Map static resources from the /public folder to the /assets URL path
 GET     /assets/*file               controllers.Assets.at(path="/public", file)

@@ -1,0 +1,13 @@
+@(myform: Form[forms.Analyze] , result : Map[String,String])
+
+@main("analyze", null) {
+	<div class='container'>
+	@helper.form(action = routes.Application.doAnalyze()) {
+		@helper.inputText(myform("targetUrl"),'_label -> "分析したいサイトのURL", 'size -> 45)
+		<input class="btn btn-info" type="submit" value="分析する">
+	}
+	@for((colorHex, percent) <- result){
+		<div style='width : 40px;height : 40px; background-color : #@colorHex'>@percent</div>
+  	}
+	</div>
+}

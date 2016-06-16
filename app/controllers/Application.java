@@ -12,7 +12,10 @@ import play.libs.WS;
 import play.libs.F.Promise;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.imageio.ImageIO;
 
@@ -314,5 +317,32 @@ public class Application extends BaseController{
 			return ok(html.tempHtml).as("text/html");
 		}
 		return redirect("/");
+	}
+	
+	/**
+	 * @return
+	 * 外部のサイトで使われている色を分析する。
+	 */
+	public static Result analyze() {
+		Form<Analyze> form = Form.form(Analyze.class);
+		return ok(analyze.render(form,new HashMap<String,String>()));
+	}
+	
+	/**
+	 * @return
+	 * 外部のサイトで使われている色を分析する。
+	 */
+	public static Result doAnalyze() {
+		Form<Analyze> form = Form.form(Analyze.class).bindFromRequest();
+		Map<String,String> result = new LinkedHashMap<String,String>();
+		try {
+			String base64ImageData = httpS.request(ImageService.webShotUrl 
+					+ "?target=" + URLEncoder.encode(form.get().targetUrl, "UTF-8"));
+			BufferedImage image = imageS.convertBase64ImageDataToBufferedImage(base64ImageData, "png");
+			result = imageS.analyze(image);
+		} catch (UnsupportedEncodingException e) {
+			e.printStackTrace();
+		}
+		return ok(analyze.render(form,result));
 	}
 }
