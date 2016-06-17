@@ -1,4 +1,4 @@
-@(member: models.Member, setting: Form[forms.MyPage])
+@(member: models.Member, setting: Form[forms.MyPage], message : String)
 
 @import helper._
 
@@ -7,6 +7,9 @@
 @main("myPage", member) {
 	@helper.form(action = routes.AdminController.saveProfileSetting()) {
 		<div class="mypageContainer">
+			@if(!message.isEmpty()) {
+				<h3 style="text-align:center;">@message</h3>
+			}
 		<!--<script type="text/javascript">
 			$(window).load(function(){
 				$('#mypage').addClass("active");
