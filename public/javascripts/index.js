@@ -14,6 +14,10 @@ var NamedClassName = [];
 $(window).load(function(){
 	$('#loading').css("display", "block");
 	$('#loader').css("display", "block");
+	$('#afterLoad').css("display", "none");
+	var html = $('#afterLoad').data("content");
+	reloadIframe(html);
+	timeout = setTimeout("loadTimeOut()", 10000);
 });
 
 function fixSideBar(){
@@ -39,16 +43,16 @@ function fixSideBar(){
 }
 
 function fixFrameSize() {
+	var height = $('#iframe').innerHeight + 0
 	if (window.parent) {
 		var body = document.body;
 		var height = body.scrollHeight;
 		var iframe = window.parent.document.getElementsByTagName("iframe")[0];
 		iframe.style.height = height + "px";
-		//iframe.scrolling = "no";
 	}
 };
 
-function sendHTML(formId, id){
+function sendHTML(formId, id, content){
 	var ele = $("<input>", {
 					"type" : "hidden",
 					"name" : "tempHtml",
@@ -77,55 +81,33 @@ function showPopup(member_id, id){
 	$('#saveHtmlForm').append(ele);
 }
 
-function setTimer(id){
-	iframeMethod = setInterval("loadIframe(" + id + ")", 1000);
-	timeout = setTimeout("loadTimeOut()", 10000);
-}
-
 function loadTimeOut(){
-	clearInterval(iframeMethod);
 	clearTimeout(timeout);
 	$('#loading').css("display", "none");
 	$('#loader').css("display", "none");
 	$('#timeOut').css("display", "block");
 }
 
-function loadIframe(id){
-	checkError(id);
-}
-
-function checkError(id){
-	if(id == 0){
-		var url = config.iframes + "/iframe1.html"
-	}else{
-		var url = config.iframes + "/" + id + ".html"
-	}
-
-	$.ajax({ cache: false,
-		url: url,
-		success: function (data) {
-			reloadIframe(url);
-		},
-		error: function (data) {
-		}
-	});
-}
-
-function reloadIframe(url){
+function reloadIframe(html){
 	if($('#classTable').children().size() == 0){
-		clearTimeout(timeout);
-		clearInterval(iframeMethod);
-		$('#loading').css("display", "none");
-		$('#loader').css("display", "none");
 		var iframe = $("<iframe></iframe>", {
-			"src" : url,
+			"srcdoc" : html,
 			"width" : "920px",
 			"name" : "template",
 			"id" : "iframe",
+			"sandbox" : "allow-same-origin",
 			on : {
 				load : function(event){
-					var body = $('iframe').contents().find('body');
+					clearTimeout(timeout);
+					$('#loading').css("display", "none");
+					$('#loader').css("display", "none");
+					$('#afterLoad').css("display", "block");
 
+					if (typeof $(this).attr('height') == 'undefined') {
+						$(this).height(this.contentWindow.document.documentElement.scrollHeight+10);
+					}
+					fixSideBar();
+					var body = $('iframe').contents().find('body');
 					// body配下のタグを全て取得
 					$(body).children().each(function() {
 						// タグを全て取り出し表示
@@ -164,9 +146,6 @@ function reloadIframe(url){
 
 		});
 		$('#afterLoad').append(iframe);
-		$('#afterLoad').css("display", "block");
-		fixFrameSize();
-		fixSideBar();
 	}
 };
 

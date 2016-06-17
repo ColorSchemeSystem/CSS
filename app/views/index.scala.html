@@ -1,4 +1,4 @@
-@(user: Member, chooser: Chooser, myForm: Form[forms.TemplateSave], id: String)
+@(user: Member, chooser: Chooser, myForm: Form[forms.TemplateSave], id: String, content : String)
 
 @import helper._
 
@@ -49,15 +49,14 @@
 			<div class="inHtml">
 				<div id="loading">
 					<div id="loader">
-					    <img src='@routes.Assets.at("images/loading.gif")' width="80" height="80" alt="Now Loading..." onLoad="setTimer(@id)"/>
-					    <p>Now Loading...</p>
+					    <h3>Now Loading...</h3>
 					</div>
 				</div>
 				<div id="timeOut">
 					<h4>htmlの読み込みに失敗しました</h4>
 					<h4>再読み込みをしてください</h4>
 				</div>
-				<div id="afterLoad">
+				<div id="afterLoad" data-content="@Html(content)">
 				</div>
 			</div>
 			<form method="post" id="sendForm" name="sendForm" action="/template/download">
@@ -67,7 +66,7 @@
 				}else{
 					<input class="btn btn-default" type="button" value="HTMLを保存" onClick="showPopup(@user.memberId, @id);">
 				}
-					<input class="btn btn-default" type="submit" value="HTMLを書き出す" onClick="sendHTML('#sendForm', @id);">
+					<input class="btn btn-default" type="submit" value="HTMLをダウンロード" onClick="sendHTML('#sendForm', @id);">
 				</div>
 			</form>
 		}

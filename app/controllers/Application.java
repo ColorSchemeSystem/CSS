@@ -10,14 +10,20 @@ import play.cache.Cache;
 import play.db.ebean.Model.Finder;
 import play.libs.WS;
 import play.libs.F.Promise;
+import play.libs.Json;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.imageio.ImageIO;
 
 import org.apache.commons.codec.binary.Base64;
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.StringEscapeUtils;
 
 import com.avaje.ebean.Query;
 import com.github.javafaker.Faker;
@@ -45,9 +51,11 @@ public class Application extends BaseController{
 
 	private static HttpService httpS = new HttpService();
 
+	private static CompressionService compS = new CompressionService();
+
 	public static Result index() {
 		Chooser chooser = new Chooser();
-		Member mem = (Member)getObjectFormSession("Member");
+		Member mem = isLoggedIn();
 		TemplateSave tempS = new TemplateSave();
 		tempS.flg = 0;
 		Form<TemplateSave> form = Form.form(TemplateSave.class).fill(tempS);
@@ -59,14 +67,14 @@ public class Application extends BaseController{
 				mem.chooser = new Chooser();
 				chooser = new Chooser();
 			}
-			return ok(index.render(mem, chooser, form, "0"));
+			return ok(index.render(mem, chooser, form, "0",""));
 		}
-		return ok(index.render(null, chooser, form, "0"));
+		return ok(index.render(null, chooser, form, "0",""));
 	}
 
 	public static Result indexWithId(Long id){
 		Chooser chooser = new Chooser();
-		Member mem = (Member)getObjectFormSession("Member");
+		Member mem = isLoggedIn();
 		Template temp = appS.getTemp(id);
 		TemplateSave tempS = new TemplateSave();
 		tempS.flg = 0;
@@ -74,9 +82,9 @@ public class Application extends BaseController{
 		if(mem != null) {
 			Query<Chooser> query = Chooser.find.where("chooserId = '"+mem.chooser.chooserId+"'");
 			chooser = query.findUnique();
-			return ok(index.render(mem, chooser, form, id.toString()));
+			return ok(index.render(mem, chooser, form, id.toString(), appS.escapeHtml(compS.decompress(temp.html))));
 		}
-		return ok(index.render(null, chooser, form, id.toString()));
+		return ok(index.render(null, chooser, form, id.toString(),appS.escapeHtml(compS.decompress(temp.html))));
 	}
 
 	/**
@@ -94,28 +102,25 @@ public class Application extends BaseController{
 	 * @return
 	 */
 	public static Result doUpload() {
-		Form<TemplateUpload> form = Form.form(TemplateUpload.class)
-				.bindFromRequest();
 		MultipartFormData body = request().body().
 				asMultipartFormData();
-		FilePart picture = body.getFile("tmpFileName");
-	    if(!form.hasErrors() && picture != null && picture.getFile() != null) {
+		FilePart picture = body.getFile("file");
+	    if(picture != null && picture.getFile() != null) {
+	    	System.out.println("okですー");
 	    	if(picture != null && picture.getFile() != null && picture.getContentType().equals("text/html")) {
-	    		saveHtml(picture.getFile(),form);
-	    		return redirect(routes.Application.templates());
+	    		System.out.println("okですー2");
+	    		saveHtml(picture);
+	    		return ok();
 	    	} else {
 	    		Member member = isLoggedIn();
 	    		if(member == null) {
-	    			return redirect(routes.Application.upload());
+	    			return ok();
 	    		}
-	    		saveImage(picture.getFile(),picture.getContentType(),form);
-	    		return redirect(routes.Application.images());
+	    		saveImage(picture,picture.getContentType());
+	    		return ok();
 	    	}
 	    }
-	    List<ValidationError> errors = new ArrayList<ValidationError>();
-	    errors.add(new ValidationError("tmpFileName","正しくファイルを選択してください。"));
-	    form.errors().put("tmpFileName", errors);
-	    return ok(upload.render(form,isLoggedIn()));
+	    return badRequest();
 	}
 
 	/**
@@ -123,10 +128,15 @@ public class Application extends BaseController{
 	 * @param file
 	 * @param form
 	 */
-	private static void saveHtml(File file, Form<TemplateUpload> form) {
+	private static void saveHtml(FilePart fileP) {
 		Template template = new Template();
-	    template.templateName = form.get().templateName;
-	    template.templateMessage = form.get().templateMessage;
+	    template.templateName = fileP.getFilename();
+	    File file = fileP.getFile();
+	    try {
+			template.html = compS.compress(FileUtils.readFileToString(file, "UTF-8"));
+		} catch (IOException e1) {
+			e1.printStackTrace();
+		}
 	    Member member = isLoggedIn();
 	    if(member != null) {
 	    	template.member = member;
@@ -163,11 +173,11 @@ public class Application extends BaseController{
 	 * @param type
 	 * @param form
 	 */
-	private static void saveImage(File file, String type, Form<TemplateUpload> form) {
+	private static void saveImage(FilePart fileP, String type) {
 		Image image = new Image();
-		image.imageName = form.get().templateName;
-		image.imageMessage = form.get().templateMessage;
+		image.imageName = fileP.getFilename();
 		image.imageType = "png";
+		File file = fileP.getFile();
 		Member member = isLoggedIn();
 	    if(member != null) {
 	    	image.member = member;
@@ -278,7 +288,8 @@ public class Application extends BaseController{
 					target = "https://www.google.co.jp/";
 				}
 				Logger.info("target : " + target);
-				String base64ImageData = httpS.request(ImageService.webShotUrl + "?" + URLEncoder.encode(target, "UTF-8"));
+				String base64ImageData = httpS.request(ImageService.webShotUrl
+						+ "?target=" + URLEncoder.encode(target, "UTF-8"));
 				final String imageFilePath = appS.getPublicFolderPath() + "/snapshots/";
 				new File(imageFilePath).mkdirs();
 				final String imageFileName = String.valueOf(newTempId) + ".png";
@@ -300,8 +311,61 @@ public class Application extends BaseController{
 		TemplateDownload html = form.get();
 		html.tempHtml = "<html>" + html.tempHtml + "</html>";
 		if(html.tempHtml != null){
-			return ok(html.tempHtml).as("text/html");
+			return ok(previewTemplate.render(html.tempHtml, html.temp_id));
 		}
 		return redirect("/");
+	}
+
+	public static Result backToIndex(Long id){
+		Form<TemplateDownload> getForm = Form.form(TemplateDownload.class).bindFromRequest();
+		TemplateDownload html = getForm.get();
+		Chooser chooser = new Chooser();
+		Member mem = isLoggedIn();
+		Template temp = appS.getTemp(id);
+		TemplateSave tempS = new TemplateSave();
+		Form<TemplateSave> form = Form.form(TemplateSave.class);
+		html.tempHtml = StringEscapeUtils.escapeHtml4(html.tempHtml);
+		if(mem != null) {
+			Query<Chooser> query = Chooser.find.where("chooserId = '"+mem.chooser.chooserId+"'");
+			chooser = query.findUnique();
+			return ok(index.render(mem, chooser, form, id.toString(), html.tempHtml));
+		}
+		return ok(index.render(null, chooser, form, id.toString(), html.tempHtml));
+	}
+	
+	/**
+	 * @return
+	 * 外部のサイトで使われている色を分析する。
+	 */
+	public static Result analyze() {
+		Form<Analyze> form = Form.form(Analyze.class);
+		return ok(analyze.render(form,""));
+	}
+	
+	/**
+	 * @return
+	 * 外部のサイトで使われている色を分析する。
+	 */
+	public static Result doAnalyze() {
+		Form<Analyze> form = Form.form(Analyze.class).bindFromRequest();
+		if(!form.hasErrors()) {
+			Map<String,String> result = new LinkedHashMap<String,String>();
+			try {
+				String base64ImageData = httpS.request(ImageService.webShotUrl 
+						+ "?target=" + URLEncoder.encode(form.get().targetUrl, "UTF-8"));
+				BufferedImage image = imageS.convertBase64ImageDataToBufferedImage(base64ImageData, "png");
+				result = imageS.analyze(image);
+			} catch (UnsupportedEncodingException e) {
+				e.printStackTrace();
+			}
+			String data = "";
+			for(String key : result.keySet()) {
+				data += key + ":" + result.get(key) + ",";
+			}
+			data = data.substring(0, data.length()-1);
+			return ok(analyze.render(form,data));
+		}	else	{
+			return ok(analyze.render(form,""));
+		}
 	}
 }

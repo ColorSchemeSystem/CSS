@@ -26,7 +26,16 @@ import models.Template;
 import play.Play;
 
 public class AppService {
-
+	/**
+	 * @return
+	 */
+	public String escapeHtml(String html) {
+		return html.replace("&", "&amp;")
+                .replace("<", "&lt;")
+                .replace(">", "&gt;")
+                .replace("\"", "&quot;");
+	}
+	
 	/**
 	 * @return
 	 */
