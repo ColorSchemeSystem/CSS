@@ -1,42 +1,46 @@
 @(myform: Form[forms.Analyze] , colorsData : String)
 
+@import helper._
+
+@implicitField = @{ FieldConstructor(fieldConstructor.fieldC.f) }
+
 @main("analyze", null) {
-	<div class='container'>
+	<div class='analyzeContainer'>
 	@helper.form(action = routes.Application.doAnalyze()) {
-		@helper.inputText(myform("targetUrl"),'_label -> "分析したいサイトのURL", 'size -> 45)
-		<input class="btn btn-info" type="submit" value="分析する">
+		@helper.inputText(myform("targetUrl"),'_label -> "分析したいサイトのURL", 'size -> 45, 'placeholder -> "分析したいサイトのURLを入力してください")
+		<input class="btn btn-primary" type="submit" value="分析する">
 	}
+
+
 	@if(org.apache.commons.lang3.StringUtils.isNotEmpty(colorsData)) {
-  		<div id="piechart" style="width: 900px; height: 500px; margin-top : 40px; margin-bottom : 40px;" data-colors="@Html(colorsData)">
+  		<div id="piechart" data-colors="@Html(colorsData)">
   		</div>
   	}
   	<script type="text/javascript">
-      var dataStr = $('#piechart').data('colors');
-      if(!_.isEmpty(dataStr)) {
-    	  google.charts.load('current', {'packages':['corechart']});
-    	  var colorsData = dataStr.split(",");
-          var chartData = [];
-          chartData.push(['colorHex','per']);
-          var colors = [];
-          for(var i in colorsData) {
-        	  var arr = colorsData[i].split(":");
-        	  chartData.push(["#" + arr[0],Number(arr[1])]);
-        	  colors.push("#" + arr[0]);
+      google.charts.load('current', {'packages':['corechart']});
+      var colorsData = $('#piechart').data('colors').split(",");
+      var chartData = [];
+      chartData.push(['colorHex','per']);
+      var colors = [];
+      for(var i in colorsData) {
+    	  var arr = colorsData[i].split(":");
+    	  chartData.push(["#" + arr[0],Number(arr[1])]);
+    	  colors.push("#" + arr[0]);
+      }
+      google.charts.setOnLoadCallback(drawChart);
+      function drawChart() {
+        var data = google.visualization.arrayToDataTable(chartData);
+        var options = {
+          title : '配色の解析結果',
+          colors : colors,
+          backgroundColor: '#f4f4f4',
+          border: "1px solid #000",
+          pieSliceTextStyle: {
+              color: '#000000'
           }
-          google.charts.setOnLoadCallback(drawChart);
-          function drawChart() {
-            var data = google.visualization.arrayToDataTable(chartData);
-            var options = {
-              title : '配色の解析結果',
-              colors : colors,
-              backgroundColor: '#FFDDDB',
-              pieSliceTextStyle: {
-                  color: '#000000'
-              }
-            };
-            var chart = new google.visualization.PieChart(document.getElementById('piechart'));
-            chart.draw(data, options);
-          }  
+        };
+        var chart = new google.visualization.PieChart(document.getElementById('piechart'));
+        chart.draw(data, options);
       }
     </script>
 	</div>

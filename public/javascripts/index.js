@@ -207,6 +207,10 @@ function allScribing(obj, assignmentName, number, targetPass, viewName) {
 */
 function addTr(obj, classname, childName, targetPass, viewName) {
 	var tagName = $(obj).prop("tagName").toLowerCase();
+	if(tagName == viewName) {
+		var idName = $('iframe').contents().find(targetPass).attr("id");
+		if(idName != undefined) viewName = idName;
+	}
 	var td = $("<td></td>",{
 		text : viewName
 	});
@@ -288,7 +292,6 @@ function textCheck(obj) {
 		if(text == "<" || text == undefined) return;
 		text = $(obj).html().replace(/\s|　/g,"");
 		if(text == 0 || text == "" || text == undefined) {
-			console.log("return"+"  text:"+text +"  html:"+$(obj).html().replace(/\s|　/g,""));
 			return false;
 		}
 	}
@@ -297,7 +300,6 @@ function textCheck(obj) {
 		if(text == "<" || text == undefined) return;
 		text = $(obj).text().replace(/\s|　/g,"");
 		if(text == 0 || text == "" || text == undefined) {
-			console.log("return"+"  text:"+text +"  html:"+$(obj).html().replace(/\s|　/g,""));
 			return fales;
 		}
 	}
@@ -310,6 +312,29 @@ function textCheck(obj) {
 */
 function gentleness() {
 
+};
+
+/*
+*  色の変換
+*/
+function changedColor(color, targetPass) {
+	var c = color;
+	if(color == undefined) color = new RGBColor("#777");
+	color = new RGBColor(color);
+	if(color.ok == false) {
+		while(color.ok == false) {
+			var parent = undefined;
+			if(targetPass != undefined) parent = $('iframe').contents().find(targetPass).parent();
+			if(parent != undefined) {
+				color = new RGBColor(parent.css("background-color"));
+				targetPass = parent.attr("class");
+			} else {
+				var rgb = "rgb("+255+", "+255+", "+255+")";
+				color = new RGBColor(rgb);
+			}
+		}
+	}
+	return color.toHex();
 };
 
 /*
@@ -327,10 +352,8 @@ function addBackground(name, targetPass) {
 	var classname = targetPass;
 
 	var color = $('iframe').contents().find(classname).css("background-color");
-	if(color == 'rgba(0, 0, 0, 0)' || color == undefined) color = new RGBColor("rgb(170, 170, 170)");
-	else color = new RGBColor(color);
-	var rgb = "rgb("+color.r+", "+color.g+", "+color.b+")";
-	$("#"+name+"-back").val(rgb);
+	color = changedColor(color, targetPass);
+	$("#"+name+"-back").val(color);
 
 	var dataBack = {contentName:classname, targetName:"background"};
 	$("input#"+name+"-back").ColorPickerSliders({
@@ -357,10 +380,8 @@ function addBorder(name, targetPass) {
 	var classname = targetPass;
 
 	var color = $('iframe').contents().find(classname).css('border-color');
-	if(color == 'rgba(0, 0, 0, 0)' || color == undefined) color = new RGBColor("rgb(170, 170, 170)");
-	else color = new RGBColor(color);
-	var rgb = "rgb("+color.r+", "+color.g+", "+color.b+")";
-	$("#"+name+"-bor").val(rgb);
+	color = changedColor(color);
+	$("#"+name+"-bor").val(color);
 
 	// ボーダーサイズ変更できる様に
 	var tr2 = $("<tr class='iframe"+name+"'></tr>");
@@ -417,10 +438,8 @@ function addFont(name, targetPass, obj) {
 	$('#classTable').append(tr);
 
 	var color = $('iframe').contents().find(classname).css('color');
-	if(color == 'rgba(0, 0, 0, 0)' || color == undefined) color = new RGBColor("rgb(170, 170, 170)");
-	else color = new RGBColor(color);
-	var rgb = "rgb("+color.r+", "+color.g+", "+color.b+")";
-	$("#"+name+"-font").val(rgb);
+	color = changedColor(color);
+	$("#"+name+"-font").val(color);
 
 	var dataFont = {contentName:classname, targetName:"font"};
 	$("input#"+name+"-font").ColorPickerSliders({

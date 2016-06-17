@@ -39,7 +39,7 @@
 
 			.header .menuBar .navbar-header a{
 				font-size: 30px;
-				padding-right: 50px;
+				padding-right: 40px;
 				padding-left: 30px;
 			}
 
@@ -352,7 +352,7 @@
 			/*テンプレート一覧のCSS*/
 
 			.wrapper .listContainer{
-				margin: 40px 30px 40px 30px;
+				margin: 20px;
 				text-align: center;
 			}
 
@@ -390,6 +390,9 @@
 				margin-left: 10px;
 				margin-right: 10px;
 			}
+
+
+
 
 			/*画像一覧のCSS*/
 			.wrapper .imgContainer{
@@ -498,6 +501,58 @@
 				margin-left: 110px;
 				width: 255px;
 			}
+
+
+
+
+			/*カラー分析ページのCSS*/
+			.wrapper .analyzeContainer{
+				padding-top: 20px;
+				padding-left: 30px;
+			}
+
+			.wrapper .analyzeContainer input{
+				margin-bottom: 20px;
+			}
+
+			#piechart{
+				text-align: center;
+				margin: 0px auto 0px auto;
+				width: 900px; 
+				height: 500px; 
+			}
+
+
+
+
+			/*カラーページのCSS*/
+			.wrapper .colorContainer{
+				padding: 20px;
+			}
+
+			.wrapper .colorContainer .nav{
+				width: 500px;
+			}
+
+			.wrapper .colorContainer a{
+				color: #000;
+
+			}
+
+			.wrapper .colorContainer p{
+				color: #808080;
+				margin-top: 30px;
+			}
+
+			.wrapper .colorContainer .colorContent .colorName{
+				width: 190px;
+				height: 100px;
+				margin-bottom: 10px;
+				text-align: center;
+				padding-top: 30px;
+			}
+
+
 
 
 
