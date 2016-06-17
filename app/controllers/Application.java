@@ -53,7 +53,7 @@ public class Application extends BaseController{
 	private static HttpService httpS = new HttpService();
 
 	private static CompressionService compS = new CompressionService();
-	
+
 	private static ColorService colorS = new ColorService();
 
 	public static Result index() {
@@ -335,7 +335,7 @@ public class Application extends BaseController{
 		}
 		return ok(index.render(null, chooser, form, id.toString(), html.tempHtml));
 	}
-	
+
 	/**
 	 * @return
 	 * 外部のサイトで使われている色を分析する。
@@ -344,7 +344,7 @@ public class Application extends BaseController{
 		Form<Analyze> form = Form.form(Analyze.class);
 		return ok(analyze.render(form,""));
 	}
-	
+
 	/**
 	 * @return
 	 * 外部のサイトで使われている色を分析する。
@@ -354,7 +354,7 @@ public class Application extends BaseController{
 		if(!form.hasErrors()) {
 			Map<String,String> result = new LinkedHashMap<String,String>();
 			try {
-				String base64ImageData = httpS.request(ImageService.webShotUrl 
+				String base64ImageData = httpS.request(ImageService.webShotUrl
 						+ "?target=" + URLEncoder.encode(form.get().targetUrl, "UTF-8"));
 				BufferedImage image = imageS.convertBase64ImageDataToBufferedImage(base64ImageData, "png");
 				result = imageS.analyze(image);
@@ -371,7 +371,7 @@ public class Application extends BaseController{
 			return ok(analyze.render(form,""));
 		}
 	}
-	
+
 	/**
 	 * @return
 	 */
@@ -390,6 +390,6 @@ public class Application extends BaseController{
 		}	else {
 			colorsList = colorS.getPrimaryColors();
 		}
-		return ok(colors.render(colorsList));
+		return ok(colors.render(colorsList, type));
 	}
 }
