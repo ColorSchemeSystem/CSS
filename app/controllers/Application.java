@@ -10,6 +10,7 @@ import play.cache.Cache;
 import play.db.ebean.Model.Finder;
 import play.libs.WS;
 import play.libs.F.Promise;
+import play.libs.Json;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -28,6 +29,7 @@ import com.avaje.ebean.Query;
 import com.github.javafaker.Faker;
 
 import dtos.PagingDto;
+import entity.Color;
 import views.html.*;
 import models.*;
 import parsers.style.StyleCleaner;
@@ -51,6 +53,8 @@ public class Application extends BaseController{
 	private static HttpService httpS = new HttpService();
 
 	private static CompressionService compS = new CompressionService();
+	
+	private static ColorService colorS = new ColorService();
 
 	public static Result index() {
 		Chooser chooser = new Chooser();
@@ -259,9 +263,7 @@ public class Application extends BaseController{
 				temp.accessFlag = 0;
 			}
 			if(tempS.member_id != null){
-				System.out.println("メンバーID = " + tempS.member_id);
 				temp.member = appS.findMemberById(tempS.member_id);
-				System.out.println("メンバー = " + temp.member);
 			} else {
 				temp.member = null;
 			}
@@ -340,7 +342,7 @@ public class Application extends BaseController{
 	 */
 	public static Result analyze() {
 		Form<Analyze> form = Form.form(Analyze.class);
-		return ok(analyze.render(form,new HashMap<String,String>()));
+		return ok(analyze.render(form,""));
 	}
 	
 	/**
@@ -349,15 +351,32 @@ public class Application extends BaseController{
 	 */
 	public static Result doAnalyze() {
 		Form<Analyze> form = Form.form(Analyze.class).bindFromRequest();
-		Map<String,String> result = new LinkedHashMap<String,String>();
-		try {
-			String base64ImageData = httpS.request(ImageService.webShotUrl 
-					+ "?target=" + URLEncoder.encode(form.get().targetUrl, "UTF-8"));
-			BufferedImage image = imageS.convertBase64ImageDataToBufferedImage(base64ImageData, "png");
-			result = imageS.analyze(image);
-		} catch (UnsupportedEncodingException e) {
-			e.printStackTrace();
+		if(!form.hasErrors()) {
+			Map<String,String> result = new LinkedHashMap<String,String>();
+			try {
+				String base64ImageData = httpS.request(ImageService.webShotUrl 
+						+ "?target=" + URLEncoder.encode(form.get().targetUrl, "UTF-8"));
+				BufferedImage image = imageS.convertBase64ImageDataToBufferedImage(base64ImageData, "png");
+				result = imageS.analyze(image);
+			} catch (UnsupportedEncodingException e) {
+				e.printStackTrace();
+			}
+			String data = "";
+			for(String key : result.keySet()) {
+				data += key + ":" + result.get(key) + ",";
+			}
+			data = data.substring(0, data.length()-1);
+			return ok(analyze.render(form,data));
+		}	else	{
+			return ok(analyze.render(form,""));
 		}
-		return ok(analyze.render(form,result));
+	}
+	
+	/**
+	 * @return
+	 */
+	public static Result colors() {
+		List<Color> colorsList = colorS.getPrimaryColors();
+		return ok(colors.render(colorsList,5));
 	}
 }

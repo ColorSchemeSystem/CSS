@@ -1,0 +1,15 @@
+@(colors : List[entity.Color] , columns : Integer)
+
+@main("色見本帳", null) {
+	<div class='container'>
+	<ul>
+		<li><a href=''></a></li>
+		<li><a href=''></a></li>
+		<li><a href=''></a></li>
+	</ul>
+		@for((color, index) <- colors.zipWithIndex) {
+			
+			@color.colorName
+		}
+	</div>
+}

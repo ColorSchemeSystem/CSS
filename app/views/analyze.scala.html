@@ -1,4 +1,4 @@
-@(myform: Form[forms.Analyze] , result : Map[String,String])
+@(myform: Form[forms.Analyze] , colorsData : String)
 
 @main("analyze", null) {
 	<div class='container'>
@@ -6,8 +6,35 @@
 		@helper.inputText(myform("targetUrl"),'_label -> "分析したいサイトのURL", 'size -> 45)
 		<input class="btn btn-info" type="submit" value="分析する">
 	}
-	@for((colorHex, percent) <- result){
-		<div style='width : 40px;height : 40px; background-color : #@colorHex'>@percent</div>
+	@if(org.apache.commons.lang3.StringUtils.isNotEmpty(colorsData)) {
+  		<div id="piechart" style="width: 900px; height: 500px; margin-top : 40px; margin-bottom : 40px;" data-colors="@Html(colorsData)">
+  		</div>
   	}
+  	<script type="text/javascript">
+      google.charts.load('current', {'packages':['corechart']});
+      var colorsData = $('#piechart').data('colors').split(",");
+      var chartData = [];
+      chartData.push(['colorHex','per']);
+      var colors = [];
+      for(var i in colorsData) {
+    	  var arr = colorsData[i].split(":");
+    	  chartData.push(["#" + arr[0],Number(arr[1])]);
+    	  colors.push("#" + arr[0]);
+      }
+      google.charts.setOnLoadCallback(drawChart);
+      function drawChart() {
+        var data = google.visualization.arrayToDataTable(chartData);
+        var options = {
+          title : '配色の解析結果',
+          colors : colors,
+          backgroundColor: '#FFDDDB',
+          pieSliceTextStyle: {
+              color: '#000000'
+          }
+        };
+        var chart = new google.visualization.PieChart(document.getElementById('piechart'));
+        chart.draw(data, options);
+      }
+    </script>
 	</div>
 }
