@@ -9,6 +9,7 @@
 // スクライピングをタグの入れ子にして表示
 *******************************************************************************/
 var iframeMethod;
+var NamedClassName = [];
 
 $(window).load(function(){
 	$('#loading').css("display", "block");
@@ -129,9 +130,18 @@ function reloadIframe(url){
 					$(body).children().each(function() {
 						// タグを全て取り出し表示
 						var pass = $(this).attr("class");
-						if(pass == undefined) pass = "body "+$(this).prop("tagName").toLowerCase();
-						else pass = "."+pass;
-						allScribing($(this), "body-child", $(this).index(), pass);
+						var viewName = "";
+						if(pass == undefined) {
+							viewName = $(this).prop("tagName").toLowerCase();
+							pass = viewName + NamedClassName.length;
+							$(this).addClass(pass);
+							NamedClassName.push(pass);
+							pass = "."+pass;
+						} else {
+							viewName = pass;
+							pass = "."+pass;
+						}
+						allScribing($(this), "body-child", $(this).index(), pass, viewName);
 					});
 
 					// border-sizeリアルタイム処理
@@ -148,7 +158,7 @@ function reloadIframe(url){
 						});
 					});
 
-					console.log($('iframe').contents().find('.header:eq(0) div:eq(0) p').text());
+					console.log($('iframe').contents().find('.div2 p').text());
 				}
 			}
 
@@ -182,34 +192,43 @@ function toggleHide(obj) {
 *　タグを取り出し表示
 *  引数(表示したい元のobj)
 */
-function allScribing(obj, assignmentName, number, targetPass) {
-	//console.log(targetPass);
+function allScribing(obj, assignmentName, number, targetPass, viewName) {
+	console.log(viewName);
 	var tagName = $(obj).prop("tagName");
 	if(tagName == "SCRIPT" || tagName == "BR" || tagName == "IMG") return;
 	var childName = assignmentName + "-" + number+"-"+tagName.toLowerCase() + "-child";
 
 	// タブの追加
-	addTr(obj, assignmentName, childName, targetPass);
+	addTr(obj, assignmentName, childName, targetPass, viewName);
 	// 設定項目の追加
-	var nextTargetPass = targetPass+":eq("+number+")";
+	var nextTargetPass;
+	if(viewName == "li") nextTargetPass = targetPass+":eq("+number+")";
+	else nextTargetPass = targetPass;
 	addSetting(childName, targetPass, obj);
 
 	assignmentName = childName;
 	$('iframe').contents().find(obj).children().each(function() {
 		var copy = assignmentName;
-		allScribing($(this), copy, $(this).index(), nextTargetPass+" "+$(this).prop("tagName").toLowerCase());
+		viewName = $(this).attr("class");
+		var pass = nextTargetPass+" "+$(this).prop("tagName").toLowerCase();
+		if(viewName == undefined) {
+			viewName = $(this).prop("tagName").toLowerCase();
+			if($(this).prop("tagName") == "DIV") {
+				pass = viewName + NamedClassName.length;
+				$(this).addClass(pass);
+				NamedClassName.push(pass);
+				pass = "."+pass;
+			}
+		}
+		allScribing($(this), copy, $(this).index(), pass, viewName);
 	});
 };
 
 /*
 *  開閉タブ作成
 */
-function addTr(obj, classname, childName, targetPass) {
-	var viewName = $(obj).attr("class");
-	var idName = $(obj).attr("id");
+function addTr(obj, classname, childName, targetPass, viewName) {
 	var tagName = $(obj).prop("tagName").toLowerCase();
-	if(viewName == undefined) viewName = idName;
-	if(viewName == undefined) viewName = tagName;
 	var td = $("<td></td>",{
 		text : viewName
 	});
