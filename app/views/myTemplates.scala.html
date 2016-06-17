@@ -52,5 +52,18 @@
 	    	case _ => { <li class="next"><a href="@routes.Application.templates()?page=@(dto.currentPage + 1)">次へ &rarr;</a></li> }
 		}
 	</ul>
+	<div id="popUp">
+		<div class="remodal" data-remodal-id="modal" role="dialog" aria-labelledby="modal1Title" aria-describedby="modal1Desc">
+		  <button data-remodal-action="close" class="remodal-close" aria-label="Close"></button>
+		  <div class="remodal-content">
+		  	<h3 id="tempN"></h3>
+		  	<img src='#' width="260" height="200" id="shumbPopup"/><br><br>
+		  	作成者<br><input type="text" id="userN" readonly="true" size="40"></input><br><br>
+		  	コメント<br><textarea id="tempM" rows="4" cols="40" readonly="true"></textarea><br><br>
+			<button data-remodal-action="cancel" class="remodal-cancel">キャンセル</button>
+		  	<a href="#" id="buttonToEdit"><button class="remodal-confirm">編集ページへ</button></a>
+		  </div>
+		</div>
+	</div>
 </div>
 }		
