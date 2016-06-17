@@ -7,6 +7,9 @@
 @main("myPage", member) {
 	@helper.form(action = routes.AdminController.doModifyPassword()) {
 		<div class="mypageContainer">
+			@if(!message.isEmpty()) {
+				<h3 style="text-align:center;">@message</h3>
+			}
 		<!--<script type="text/javascript">
 			$(window).load(function(){
 				$('#mypage').addClass("active");
@@ -14,7 +17,6 @@
 		</script>-->
 		<!--<h1 style='margin-top : 20px;'>マイページ</h1>-->
 			<div class='password'>
-				<p>@message</p><br>
 				@helper.inputText(myform("password"),'_label -> "現在のパスワード",'_showConstraints -> false, 'size -> 70, 'type -> "password")
 				@helper.inputText(myform("newPassword"),'_label -> "新しいパスワード",'_showConstraints -> false, 'size -> 70, 'type -> "password")
 				@helper.inputText(myform("confirmNewPassword"),'_label -> "新しいパスワード再入力",'_showConstraints -> false, 'size -> 70, 'type -> "password")
