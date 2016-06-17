@@ -11,29 +11,32 @@
   		</div>
   	}
   	<script type="text/javascript">
-      google.charts.load('current', {'packages':['corechart']});
-      var colorsData = $('#piechart').data('colors').split(",");
-      var chartData = [];
-      chartData.push(['colorHex','per']);
-      var colors = [];
-      for(var i in colorsData) {
-    	  var arr = colorsData[i].split(":");
-    	  chartData.push(["#" + arr[0],Number(arr[1])]);
-    	  colors.push("#" + arr[0]);
-      }
-      google.charts.setOnLoadCallback(drawChart);
-      function drawChart() {
-        var data = google.visualization.arrayToDataTable(chartData);
-        var options = {
-          title : '配色の解析結果',
-          colors : colors,
-          backgroundColor: '#FFDDDB',
-          pieSliceTextStyle: {
-              color: '#000000'
+      var dataStr = $('#piechart').data('colors');
+      if(!_.isEmpty(dataStr)) {
+    	  google.charts.load('current', {'packages':['corechart']});
+    	  var colorsData = dataStr.split(",");
+          var chartData = [];
+          chartData.push(['colorHex','per']);
+          var colors = [];
+          for(var i in colorsData) {
+        	  var arr = colorsData[i].split(":");
+        	  chartData.push(["#" + arr[0],Number(arr[1])]);
+        	  colors.push("#" + arr[0]);
           }
-        };
-        var chart = new google.visualization.PieChart(document.getElementById('piechart'));
-        chart.draw(data, options);
+          google.charts.setOnLoadCallback(drawChart);
+          function drawChart() {
+            var data = google.visualization.arrayToDataTable(chartData);
+            var options = {
+              title : '配色の解析結果',
+              colors : colors,
+              backgroundColor: '#FFDDDB',
+              pieSliceTextStyle: {
+                  color: '#000000'
+              }
+            };
+            var chart = new google.visualization.PieChart(document.getElementById('piechart'));
+            chart.draw(data, options);
+          }  
       }
     </script>
 	</div>
