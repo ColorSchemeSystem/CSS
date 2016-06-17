@@ -1,121 +1,46 @@
 @charset "UTF-8"
 
-body {
-    margin : 0;
+.div0 {
+    width : 500px;
+    position : relative;
+    border : 0px solid rgb(0, 0, 0);
+    background-color : rgb(255, 255, 255);
 }
 
-.clearfix {
-    clear : both;
+.div5 {
+    border : 0px solid rgb(0, 0, 0);
+    position : relative;
+    background-color : rgb(255, 255, 255);
 }
 
-.header .titleBar {
-    padding : 0px 0px 0px 30px;
-    font-size : 30px;
+.div4 {
+    border : 0px solid rgb(0, 0, 0);
+    position : relative;
+    background-color : rgb(255, 192, 203);
 }
 
-.header .titleBar p {
-    margin : 0px;
-    padding : 10px;
-}
-
-.menu {
-    width : 100%;
-    padding : 0;
-    margin : 0;
-    list-style-type : none;
-}
-
-.menu li {
-    width : 20%;
+.div3 {
+    width : 30%;
+    height : 100px;
     float : left;
-    padding : 0;
-    margin : 0;
-    text-align : center;
+    border : 0px solid rgb(0, 0, 0);
+    background-color : rgb(0, 0, 255);
 }
 
-.menu li a {
-    width : auto;
-    color : #fff;
-    font-size : 12px;
-    font-weight : bold;
-    padding : 10px 0;
-    text-decoration : none;
-    display : block;
-    background : #666;
-}
-
-.menu li a:hover {
-    background : #555;
-}
-
-.wrapper {
-    max-width : 1200px;
-    margin-left : auto;
-    margin-right : auto;
-}
-
-.content {
+.div2 {
+    width : 40%;
+    height : 100px;
     float : left;
-    width : 70%;
-    background-color : gray;
-    height : 500px;
-    margin : 20px;
-    padding : 10px;
+    border : 0px solid rgb(0, 0, 0);
+    background-color : rgb(0, 128, 0);
 }
 
-.content p {
-    color : white;
-}
-
-.sideBar {
-    float : right;
-    width : 15%;
-    background-color : gray;
-    margin : 20px;
-    padding : 10px;
-}
-
-.sideBar ul {
-    list-style-type : none;
-}
-
-.sideBar ul li a {
-    color : white;
-    text-decoration : none;
-}
-
-.footer {
-    border-top : 1px solid black;
-    height : 50px;
-    text-align : center;
-}
-
-.titleBar {
-    background-color : rgb(127, 127, 127);
-}
-
-.sideBar {
-    color : rgb(166, 255, 0);
-    background-color : rgb(128, 128, 128);
-}
-
-.footer {
-    background-color : rgb(127, 127, 127);
-}
-
-.wrapper {
-    border-color : rgb(166, 255, 0);
-    background-color : rgb(166, 255, 0);
-}
-
-.menu {
-    border-color : rgb(166, 255, 0);
-    background-color : rgb(166, 255, 0);
-}
-
-.content {
-    border : 10px solid rgb(166, 255, 0);
-    color : rgb(166, 255, 0);
-    background-color : rgb(166, 255, 0);
+.div1 {
+    width : 30%;
+    height : 100px;
+    float : left;
+    border : 0px solid rgb(0, 0, 0);
+    color : rgb(0, 0, 0);
+    background-color : rgb(255, 0, 0);
 }
 
