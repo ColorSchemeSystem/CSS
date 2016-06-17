@@ -28,7 +28,7 @@ function sendFileToServer(formData,status){
             status.setProgress(100);     
         }
     });
-  
+    $('.uploadContainer h4').css("display", "block");
     //status.setAbort(jqXHR);
 }
 
