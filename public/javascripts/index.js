@@ -175,11 +175,11 @@ function allScribing(obj, assignmentName, number, targetPass, viewName) {
 	var childName = assignmentName + "-" + number+"-"+tagName.toLowerCase() + "-child";
 
 	// タブの追加
+	var nextTargetPass;
+	if(viewName == "li") targetPass = targetPass+":eq("+number+")";
+	nextTargetPass = targetPass;
 	addTr(obj, assignmentName, childName, targetPass, viewName);
 	// 設定項目の追加
-	var nextTargetPass;
-	if(viewName == "li") nextTargetPass = targetPass+":eq("+number+")";
-	else nextTargetPass = targetPass;
 	addSetting(childName, targetPass, obj);
 
 	assignmentName = childName;

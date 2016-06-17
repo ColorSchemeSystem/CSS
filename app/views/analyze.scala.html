@@ -11,14 +11,14 @@
 		<input class="btn btn-primary" type="submit" value="分析する">
 	}
 
-
 	@if(org.apache.commons.lang3.StringUtils.isNotEmpty(colorsData)) {
   		<div id="piechart" data-colors="@Html(colorsData)">
   		</div>
   	}
   	<script type="text/javascript">
+  	var colorsData = $('#piechart').data('colors').split(",");
+  	if(!_.isEmpty(colorsData)) {
       google.charts.load('current', {'packages':['corechart']});
-      var colorsData = $('#piechart').data('colors').split(",");
       var chartData = [];
       chartData.push(['colorHex','per']);
       var colors = [];
@@ -42,6 +42,7 @@
         var chart = new google.visualization.PieChart(document.getElementById('piechart'));
         chart.draw(data, options);
       }
+  	}
     </script>
 	</div>
 }
