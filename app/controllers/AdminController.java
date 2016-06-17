@@ -142,7 +142,7 @@ public class AdminController extends BaseController {
 		setting.slider		= chooser.slider;
 		setting.swatche		= chooser.swatche;
 		form = form.fill(setting);
-		return ok(editProfile.render(mem, form));
+		return ok(editProfile.render(mem, form, ""));
 	}
 
 	public static Result editColor(){
@@ -161,7 +161,7 @@ public class AdminController extends BaseController {
 		setting.slider		= chooser.slider;
 		setting.swatche		= chooser.swatche;
 		form = form.fill(setting);
-		return ok(editColor.render(mem, form));
+		return ok(editColor.render(mem, form, ""));
 	}
 
 	/**
@@ -171,7 +171,7 @@ public class AdminController extends BaseController {
 		Form<MyPage> form = Form.form(MyPage.class).bindFromRequest();
 		Member mem = isLoggedIn();
 		if(mem == null) {
-			return badRequest(editColor.render(mem, form));
+			return redirect(routes.AdminController.login());
 		}
 		if(!form.hasErrors()) {
 			Chooser chooser = adminS.findChooserByChooserId(mem.chooser.chooserId);
@@ -180,16 +180,16 @@ public class AdminController extends BaseController {
 			chooser.swatche		= form.get().swatche;
 			chooser.update();
 		} else {
-			return badRequest(editColor.render(mem, form));
+			return badRequest(editColor.render(mem, form, "保存に失敗しました"));
 		}
-		return ok(editColor.render(mem, form));
+		return ok(editColor.render(mem, form, "保存しました"));
 	}
 
 	public static Result saveProfileSetting(){
 		Form<MyPage> form = Form.form(MyPage.class).bindFromRequest();
 		Member mem = isLoggedIn();
 		if(mem == null) {
-			return badRequest(editColor.render(mem, form));
+			return redirect(routes.AdminController.login());
 		}
 		if(!form.hasErrors()) {
 			if(!mem.memberName.equals(form.get().memberName) || !mem.mail.equals(form.get().mail) || !mem.nickName.equals(form.get().nickName)) {
@@ -199,9 +199,9 @@ public class AdminController extends BaseController {
 				adminS.updateMember(mem);
 			}
 		} else {
-			return badRequest(editProfile.render(mem, form));
+			return badRequest(editProfile.render(mem, form, "保存に失敗しました"));
 		}
-		return ok(editProfile.render(mem, form));
+		return ok(editProfile.render(mem, form, "保存しました"));
 	}
 
 	/**
@@ -243,11 +243,14 @@ public class AdminController extends BaseController {
 				adminS.updateMember(member);
 				removeObjectSession("Member");
 				writeObjectOnSession("Member", member);
+				form = Form.form(ModifyPassword.class);
 				return ok(editPass.render(form,member,"パスワードを変更しました"));
 			}	else	{
+				form = Form.form(ModifyPassword.class);
 				return ok(editPass.render(form,member,""));
 			}
 		}	else	{
+			form = Form.form(ModifyPassword.class);
 			return ok(editPass.render(form,member,""));
 		}
 	}
