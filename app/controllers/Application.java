@@ -29,6 +29,7 @@ import com.avaje.ebean.Query;
 import com.github.javafaker.Faker;
 
 import dtos.PagingDto;
+import entity.Color;
 import views.html.*;
 import models.*;
 import parsers.style.StyleCleaner;
@@ -52,6 +53,8 @@ public class Application extends BaseController{
 	private static HttpService httpS = new HttpService();
 
 	private static CompressionService compS = new CompressionService();
+	
+	private static ColorService colorS = new ColorService();
 
 	public static Result index() {
 		Chooser chooser = new Chooser();
@@ -367,5 +370,13 @@ public class Application extends BaseController{
 		}	else	{
 			return ok(analyze.render(form,""));
 		}
+	}
+	
+	/**
+	 * @return
+	 */
+	public static Result colors() {
+		List<Color> colorsList = colorS.getPrimaryColors();
+		return ok(colors.render(colorsList,5));
 	}
 }
