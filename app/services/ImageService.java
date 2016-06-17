@@ -25,7 +25,7 @@ import entity.RGB;
 import play.Logger;
 
 public class ImageService {
-	public static final String webShotUrl = "http://ec2-52-36-100-161.us-west-2.compute.amazonaws.com:5000";
+	public static final String webShotUrl = "http://ec2-52-11-169-235.us-west-2.compute.amazonaws.com:5000";
 	
 	/**
 	 * 

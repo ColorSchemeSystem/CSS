@@ -4,7 +4,7 @@ This is your new Play application aaa
 This file will be packaged with your application, when using `play dist`.
 
 ## 本番URL
-http://ec2-52-36-100-161.us-west-2.compute.amazonaws.com:9000/
+http://ec2-52-11-169-235.us-west-2.compute.amazonaws.com:9000/
 
 ## データベース設計
 
