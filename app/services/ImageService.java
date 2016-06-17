@@ -25,7 +25,7 @@ import entity.RGB;
 import play.Logger;
 
 public class ImageService {
-	public static final String webShotUrl = "https://salty-taiga-57624.herokuapp.com/";
+	public static final String webShotUrl = "http://ec2-52-36-100-161.us-west-2.compute.amazonaws.com:5000";
 	
 	/**
 	 * 
