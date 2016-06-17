@@ -1391,7 +1391,7 @@
       function setTargetColor(targetData,color) {
         if(targetData.targetName == "background") {
           $('iframe').contents().find(targetData.contentName).css('backgroundColor',color);
-          console.log(targetData.contentName);
+          //console.log(targetData.contentName);
         }
         else if (targetData.targetName == "border") {
           var borderSize = $(targetData.borderSize).val();

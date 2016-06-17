@@ -147,6 +147,8 @@ function reloadIframe(url){
 							$(this).bind('keyup', editText(this));
 						});
 					});
+
+					console.log($('iframe').contents().find('.header:eq(0) div:eq(0) p').text());
 				}
 			}
 
@@ -181,6 +183,7 @@ function toggleHide(obj) {
 *  引数(表示したい元のobj)
 */
 function allScribing(obj, assignmentName, number, targetPass) {
+	//console.log(targetPass);
 	var tagName = $(obj).prop("tagName");
 	if(tagName == "SCRIPT" || tagName == "BR" || tagName == "IMG") return;
 	var childName = assignmentName + "-" + number+"-"+tagName.toLowerCase() + "-child";
@@ -191,21 +194,10 @@ function allScribing(obj, assignmentName, number, targetPass) {
 	var nextTargetPass = targetPass+":eq("+number+")";
 	addSetting(childName, targetPass, obj);
 
-	if($('iframe').contents().find(nextTargetPass).html() == undefined) {
-		console.log("target発見できません -> "+targetPass +"  obj.index:"+$('iframe').contents().find(targetPass).index());
-	} else {
-		console.log("target発見 -> "+$('iframe').contents().find(targetPass).html());
-		targetPass = nextTargetPass;
-	}
-
 	assignmentName = childName;
 	$('iframe').contents().find(obj).children().each(function() {
 		var copy = assignmentName;
-		/*if($(this).attr("class") != undefined) {
-			allScribing($(this), copy, $(this).index(), "."+$(this).attr("class"));	
-		} else {*/
-			allScribing($(this), copy, $(this).index(), targetPass+" "+$(this).prop("tagName").toLowerCase());
-		//}
+		allScribing($(this), copy, $(this).index(), nextTargetPass+" "+$(this).prop("tagName").toLowerCase());
 	});
 };
 
@@ -464,7 +456,7 @@ function addEditText(name, targetPass, obj) {
 	//text = $('iframe').contents().find(classname).text().replace(/\s|　/g,"");
 	var tr = $("<tr class='iframe"+name+"'></tr>");
 	var td = $("<td>text</td>");
-	var td2 = $("<input type='text' id='"+name+"-text' class='editText' data-classname='"+obj+"'>");
+	var td2 = $("<input type='text' id='"+name+"-text' class='editText' data-classname='"+classname+"'>");
 
 	tr.append(td);
 	tr.append(td2);
@@ -482,8 +474,7 @@ function editText(element) {
 	return function() {
 		if(old != (v = element.value)) {
 			var text = $("#"+$(this).attr("id")).val();
-			$('iframe').contents().find($($(this).attr("id")).data('classname')).text(text);
-			console.log($('iframe').contents().find($($(this).attr("id")).data('classname')).text());
+			$('iframe').contents().find($("#"+$(this).attr("id")).data('classname')).text(text);
 		}
 	}
 };
