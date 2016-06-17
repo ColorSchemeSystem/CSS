@@ -123,7 +123,7 @@ function reloadIframe(html){
 							viewName = pass;
 							pass = "."+pass;
 						}
-						allScribing($(this), "body-child", $(this).index(), pass, viewName);
+						allScribing($(this), "body-child", $(this).index(), pass, viewName, new RGBColor("#333"));
 					});
 
 					// border-sizeリアルタイム処理
@@ -169,7 +169,7 @@ function toggleHide(obj) {
 *　タグを取り出し表示
 *  引数(表示したい元のobj)
 */
-function allScribing(obj, assignmentName, number, targetPass, viewName) {
+function allScribing(obj, assignmentName, number, targetPass, viewName, color) {
 	var tagName = $(obj).prop("tagName");
 	if(tagName == "SCRIPT" || tagName == "BR" || tagName == "IMG") return;
 	var childName = assignmentName + "-" + number+"-"+tagName.toLowerCase() + "-child";
@@ -178,12 +178,13 @@ function allScribing(obj, assignmentName, number, targetPass, viewName) {
 	var nextTargetPass;
 	if(viewName == "li") targetPass = targetPass+":eq("+number+")";
 	nextTargetPass = targetPass;
-	addTr(obj, assignmentName, childName, targetPass, viewName);
+	addTr(obj, assignmentName, childName, targetPass, viewName, color);
 	// 設定項目の追加
 	addSetting(childName, targetPass, obj);
 
 	assignmentName = childName;
 	$('iframe').contents().find(obj).children().each(function() {
+		var colorCopy = new RGBColor(color.toRGB());
 		var copy = assignmentName;
 		viewName = $(this).attr("class");
 		var pass = nextTargetPass+" "+$(this).prop("tagName").toLowerCase();
@@ -198,14 +199,22 @@ function allScribing(obj, assignmentName, number, targetPass, viewName) {
 		} else {
 			pass = "." + viewName;
 		}
-		allScribing($(this), copy, $(this).index(), pass, viewName);
+		var chengeColor = new RGBColor("#222");
+		if((colorCopy.r + chengeColor.r) < new RGBColor("#CCC").r) {
+			colorCopy.r += chengeColor.r;
+			colorCopy.g += chengeColor.g;
+			colorCopy.b += chengeColor.b;
+		} else if(colorCopy.r < new RGBColor("#CCC").r) {
+			colorCopy = new RGBColor("#CCC");
+		}
+		allScribing($(this), copy, $(this).index(), pass, viewName, colorCopy);
 	});
 };
 
 /*
 *  開閉タブ作成
 */
-function addTr(obj, classname, childName, targetPass, viewName) {
+function addTr(obj, classname, childName, targetPass, viewName, color) {
 	var tagName = $(obj).prop("tagName").toLowerCase();
 	if(tagName == viewName) {
 		var idName = $('iframe').contents().find(targetPass).attr("id");
@@ -247,7 +256,6 @@ function addTr(obj, classname, childName, targetPass, viewName) {
 				$('iframe').contents().find('.hoverImage').remove();
 			},
 			click : function(event) {
-				console.log(targetPass);
 				var targetClass = null;
 				$(".iframe"+childName).each(function() {
 					display($(this));
@@ -262,7 +270,7 @@ function addTr(obj, classname, childName, targetPass, viewName) {
 	td2.css("color", "white");
 	tr.append(td);
 	tr.append(td2);
-	tr.css("background-color", "#999");
+	tr.css("background-color", color.toRGB());
 	if($(obj).parent().prop("tagName") != "BODY") tr.css("display", "none");
 	$('#classTable').append(tr);
 };
