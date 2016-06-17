@@ -356,6 +356,12 @@ public class Application extends BaseController{
 			try {
 				String base64ImageData = httpS.request(ImageService.webShotUrl
 						+ "?target=" + URLEncoder.encode(form.get().targetUrl, "UTF-8"));
+				if(base64ImageData == null || base64ImageData.equals("URLを指定してください。")) {
+					List<ValidationError> errors = new ArrayList<ValidationError>();
+					errors.add(new ValidationError("targetUrl", "無効なURLです。"));
+					form.errors().put("targetUrl", errors);
+					return ok(analyze.render(form,""));
+				}
 				BufferedImage image = imageS.convertBase64ImageDataToBufferedImage(base64ImageData, "png");
 				result = imageS.analyze(image);
 			} catch (UnsupportedEncodingException e) {
