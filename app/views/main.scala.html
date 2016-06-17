@@ -33,6 +33,12 @@
 		<script src='@routes.Assets.at("javascripts/fileUpload.js")'></script>
 		<script src='@routes.Assets.at("javascripts/tempPopup.js")'></script>
 		<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+		<script src='@routes.Assets.at("javascripts/clipboard.min.js")'></script>
+		<script>
+        $(function () {
+          var clipboard = new Clipboard('.clip');
+        });
+    </script>
 	</head>
 
 	<body>

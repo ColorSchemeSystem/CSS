@@ -376,7 +376,20 @@ public class Application extends BaseController{
 	 * @return
 	 */
 	public static Result colors() {
-		List<Color> colorsList = colorS.getPrimaryColors();
-		return ok(colors.render(colorsList,5));
+		String type = "primary";
+		try {
+			type = request().queryString().get("type")[0];
+		} catch(Exception e) {
+			e.printStackTrace();
+		}
+		List<Color> colorsList = new ArrayList<Color>();
+		if(type.equals("safe")) {
+			colorsList = colorS.getWebSafeColors();
+		}	else if(type.equals("standard")) {
+			colorsList = colorS.getStandardColors();
+		}	else {
+			colorsList = colorS.getPrimaryColors();
+		}
+		return ok(colors.render(colorsList));
 	}
 }

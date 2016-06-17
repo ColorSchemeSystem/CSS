@@ -1,15 +1,29 @@
-@(colors : List[entity.Color] , columns : Integer)
+@(colors : List[entity.Color])
 
 @main("色見本帳", null) {
 	<div class='container'>
 	<ul>
-		<li><a href=''></a></li>
-		<li><a href=''></a></li>
-		<li><a href=''></a></li>
+		<li><a href='@routes.Application.colors()?type=primary'>原色140色</a></li>
+		<li><a href='@routes.Application.colors()?type=safe'>WEBセーフカラー216色</a></li>
+		<li><a href='@routes.Application.colors()?type=standard'>スタンダードカラー16色</a></li>
 	</ul>
+	<p>クリックすると16進数がコピーされます。</p>
 		@for((color, index) <- colors.zipWithIndex) {
-			
-			@color.colorName
+			@if((index + 1) % 6 == 1) {
+				<div class='row'>
+			}
+			<div class="col-xs-2 clip" style='background-color : @color.colorHex; height : 125px; cursor: pointer' data-clipboard-text="@color.colorHex">
+				@if(color.colorName != null) {
+					@color.colorName<br>
+				}
+				@color.colorHex<br>
+			</div>
+			@if((index + 1) % 6 == 0) {
+				</div>
+			}
+		}
+		@if(colors.size() % 6 != 0) {
+			</div>
 		}
 	</div>
 }
