@@ -82,13 +82,17 @@ public class ImageService {
 		for (Map.Entry entry : entries2) {
 			histgram.put((String) entry.getKey(), (Long) entry.getValue());
 		}
-		final int total = image.getWidth() * image.getHeight();
+		final long total = image.getWidth() * image.getHeight();
+		long removedPixels = 0;
 		for(String colorHex : histgram.keySet()) {
 			double percent = ((double) histgram.get(colorHex) / (double) total) * 100.0;
 			if(percent < 0.1) {
+				removedPixels += histgram.get(colorHex);
 				histgram.remove(colorHex);
 			}
 		}
+		double removedPixelsPercentage = ((double) removedPixels / (double) total) * 100.0;
+		Logger.info(String.format("%.1f", removedPixelsPercentage) + "%のピクセルが削除されました。");
 		for(String colorHex : histgram.keySet()) {
 			int minDistance = Integer.MAX_VALUE;	
 			String closestColorHex = null;
