@@ -5,10 +5,12 @@ import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -65,38 +67,43 @@ public class ImageService {
 	 * @param image
 	 */
 	public Map<String,String> analyze(BufferedImage image) {
-		Map<String,Long> tmpHistgram = new ConcurrentHashMap<String,Long>();
+		Map<String,Long> histgram = new HashMap<String,Long>();
 		for(int h = 0; h < image.getHeight(); h++) {
 			for(int w = 0; w < image.getWidth(); w++) {
 				RGB rgb = new RGB(image.getRGB(w, h));
-				if(tmpHistgram.containsKey(rgb.toHexString())) {
-					tmpHistgram.put(rgb.toHexString(), tmpHistgram.get(rgb.toHexString()) + 1L);
+				if(histgram.containsKey(rgb.toHexString())) {
+					histgram.put(rgb.toHexString(), histgram.get(rgb.toHexString()) + 1L);
 				}	else	{
-					tmpHistgram.put(rgb.toHexString(), 1L);
+					histgram.put(rgb.toHexString(), 1L);
 				}
 			}
 		}
-		List<Map.Entry> entries2 = new ArrayList<Map.Entry>(tmpHistgram.entrySet());
+		List<Map.Entry> entries2 = new ArrayList<Map.Entry>(histgram.entrySet());
 		Collections.sort(entries2, new AscComparator());
-		Map<String,Long> histgram = new ConcurrentHashMap<String,Long>();
+		List<String> colorHexes = new ArrayList<String>();
 		for (Map.Entry entry : entries2) {
-			histgram.put((String) entry.getKey(), (Long) entry.getValue());
+			colorHexes.add((String) entry.getKey());
 		}
 		final long total = image.getWidth() * image.getHeight();
 		long removedPixels = 0;
-		for(String colorHex : histgram.keySet()) {
+		Iterator<String> iterator = colorHexes.iterator();
+		while(iterator.hasNext()){
+			String colorHex = iterator.next();
 			double percent = ((double) histgram.get(colorHex) / (double) total) * 100.0;
 			if(percent < 0.1) {
 				removedPixels += histgram.get(colorHex);
-				histgram.remove(colorHex);
+				iterator.remove();
 			}
 		}
 		double removedPixelsPercentage = ((double) removedPixels / (double) total) * 100.0;
 		Logger.info(String.format("%.1f", removedPixelsPercentage) + "%のピクセルが削除されました。");
-		for(String colorHex : histgram.keySet()) {
-			int minDistance = Integer.MAX_VALUE;	
+		Set<String> removingColorHexes = new HashSet<String>();
+		for(int i = 0; i < colorHexes.size(); i++) {
+			int minDistance = Integer.MAX_VALUE;
+			String colorHex = colorHexes.get(i);
 			String closestColorHex = null;
-			for(String colorHex2 : histgram.keySet()) {
+			for(int j = i; j < colorHexes.size(); j++) {
+				String colorHex2 = colorHexes.get(j);
 				int distance = new RGB(colorHex).calcRGBDist(new RGB(colorHex2));
 				if(distance < minDistance && 
 						(histgram.get(colorHex) < histgram.get(colorHex2))
@@ -105,14 +112,25 @@ public class ImageService {
 					closestColorHex = colorHex2;
 				}
 			}
-			if(closestColorHex != null && minDistance < 80) {
+			if(closestColorHex != null && minDistance < 20) {
 				Long newValue = histgram.get(closestColorHex) 
 						+ histgram.get(colorHex);
 				histgram.put(closestColorHex, newValue);
-				histgram.remove(colorHex);
+				removingColorHexes.add(colorHex);
 			}
 		}
-		List<Map.Entry> entries = new ArrayList<Map.Entry>(histgram.entrySet());
+		Iterator<String> iterator2 = colorHexes.iterator();
+		while(iterator2.hasNext()){
+			String colorHex = iterator2.next();
+			if(removingColorHexes.contains(colorHex)) {
+				iterator2.remove();
+			}
+		}
+		Map<String,Long> tmpMap = new HashMap<String,Long>();
+		for(String colorHex : colorHexes) {
+			tmpMap.put(colorHex, histgram.get(colorHex));
+		}
+		List<Map.Entry> entries = new ArrayList<Map.Entry>(tmpMap.entrySet());
 		Collections.sort(entries, new DescComparator());
 		Map<String,String> result = new LinkedHashMap<String,String>();
 		for (Map.Entry entry : entries) {
@@ -121,6 +139,7 @@ public class ImageService {
 				result.put((String) entry.getKey(), String.format("%.1f", percent));
 			}
 		}
+		result.put("その他", String.format("%.1f", removedPixelsPercentage));
 		return result;
 	}
 }

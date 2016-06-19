@@ -24,8 +24,13 @@
       var colors = [];
       for(var i in colorsData) {
     	  var arr = colorsData[i].split(":");
-    	  chartData.push(["#" + arr[0],Number(arr[1])]);
-    	  colors.push("#" + arr[0]);
+    	  if(arr[0] == "その他") {
+    		  chartData.push([arr[0],Number(arr[1])]);
+        	  colors.push("transparent");  
+    	  }	else	{
+    		  chartData.push(["#" + arr[0],Number(arr[1])]);
+        	  colors.push("#" + arr[0]);  
+    	  }
       }
       google.charts.setOnLoadCallback(drawChart);
       function drawChart() {
