@@ -17,6 +17,14 @@ public class AdminService {
 		template.save();
 	}
 
+	public void updateTemplate(Template template){
+		template.update();
+	}
+
+	public Template findTemplateById(Long id){
+		return Template.findById(id);
+	}
+
 	/**
 	 *
 	 * @param memberId
