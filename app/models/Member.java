@@ -21,6 +21,7 @@ public class Member extends BaseModel {
 	public Long memberId;
 
 	@Required
+	@Pattern(value = "^[a-zA-Z0-9]*$")
 	public String memberName;
 
 	public String nickName;
