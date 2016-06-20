@@ -44,6 +44,10 @@ public class AdminController extends BaseController {
 	*  ログイン画面へ
 	*/
 	public static Result login() {
+		Member member = isLoggedIn();
+		if(member != null) {
+			return redirect(routes.AdminController.editProfile());
+		}
 		Form<Member> form = Form.form(Member.class);
 		return ok(login.render(null, "ログイン", form));
 	}
@@ -54,6 +58,10 @@ public class AdminController extends BaseController {
 	*  一致していなければlogin画面に戻る,一致していたらログイン処理(1時間の間ログイン情報を保持)をしてindex画面へ
 	*/
 	public static Result loginEntry() {
+		Member member = isLoggedIn();
+		if(member != null) {
+			return redirect(routes.AdminController.editProfile());
+		}
 		Form<Member> form = Form.form(Member.class).bindFromRequest();
 		if(!form.hasErrors()) {
 			// 名前を取得しデータベース検索
@@ -91,6 +99,10 @@ public class AdminController extends BaseController {
 	*  新規アカウント登録画面
 	*/
 	public static Result createAccount() {
+		Member member = isLoggedIn();
+		if(member != null) {
+			return redirect(routes.AdminController.editProfile());
+		}
 		Form<Member> form = Form.form(Member.class);
 		return ok(createAccount.render(null, "新規登録", form));
 	}
@@ -101,6 +113,10 @@ public class AdminController extends BaseController {
 	*  ログイン処理をしてindex画面へ
 	*/
 	public static Result saveAccount() {
+		Member member = isLoggedIn();
+		if(member != null) {
+			return redirect(routes.AdminController.editProfile());
+		}
 		Form<Member> form = Form.form(Member.class).bindFromRequest();
 		if(!form.hasErrors()) {
 			if(adminS.memberExists(form.get().memberName)) {
