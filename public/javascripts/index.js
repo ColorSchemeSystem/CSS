@@ -171,7 +171,7 @@ function toggleHide(obj) {
 */
 function allScribing(obj, assignmentName, number, targetPass, viewName, color) {
 	var tagName = $(obj).prop("tagName");
-	if(tagName == "SCRIPT" || tagName == "BR" || tagName == "IMG") return;
+	if(tagName == "SCRIPT" || tagName == "BR" || tagName == "IMG" || tagName=="STYLE" || tagName=="HEADER") return;
 	var childName = assignmentName + "-" + number+"-"+tagName.toLowerCase() + "-child";
 
 	// タブの追加
@@ -184,6 +184,8 @@ function allScribing(obj, assignmentName, number, targetPass, viewName, color) {
 
 	assignmentName = childName;
 	$('iframe').contents().find(obj).children().each(function() {
+		if($(this).prop("tagName") == "HEADER") return;
+
 		var colorCopy = new RGBColor(color.toRGB());
 		var copy = assignmentName;
 		viewName = $(this).attr("class");
