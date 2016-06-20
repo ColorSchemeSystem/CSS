@@ -6,38 +6,46 @@
 
 @main("myPage", member) {
 		<div class="mypageContainer">
-			<div class='editTemps'>
-				<div class='clearfix'>
-					@for((t, index) <- dto.data.zipWithIndex) {
-						<div class="col-xs-4">
-							@if(t.member != null){
-								@if(t.member.nickName == null){
-									<a onClick="showEditTemp('@t.templateId', '@snapShotsUrl');" class="@t.templateId" data-name="@t.templateName" data-message="@t.templateMessage" data-user="@t.member.memberName" href="#modal">
-								}else{
-									<a onClick="showEditTemp('@t.templateId', '@snapShotsUrl');" class="@t.templateId" data-name="@t.templateName" data-message="@t.templateMessage" data-user="@t.member.nickName" href="#modal">
-								}
-							}else{
-								<a onClick="showEditTemp('@t.templateId', '@snapShotsUrl');" class="@t.templateId" data-name="@t.templateName" data-message="@t.templateMessage" data-user="anonymous" href="#modal">
+			<div class="editTemps">
+				<div class="clearfix">
+					<div class="editTempList">
+						@if(dto.data.zipWithIndex.isEmpty()){
+							<div class="noneTemp">
+								<h2>テンプレートの投稿がありません</h2>
+							</div>
+						}else{
+							@for((t, index) <- dto.data.zipWithIndex) {
+								<div class="col-xs-4">
+									@if(t.member != null){
+										@if(t.member.nickName == null){
+											<a onClick="showEditTemp('@t.templateId', '@snapShotsUrl');" class="@t.templateId" data-name="@t.templateName" data-message="@t.templateMessage" data-user="@t.member.memberName" href="#modal">
+										}else{
+											<a onClick="showEditTemp('@t.templateId', '@snapShotsUrl');" class="@t.templateId" data-name="@t.templateName" data-message="@t.templateMessage" data-user="@t.member.nickName" href="#modal">
+										}
+									}else{
+										<a onClick="showEditTemp('@t.templateId', '@snapShotsUrl');" class="@t.templateId" data-name="@t.templateName" data-message="@t.templateMessage" data-user="anonymous" href="#modal">
+									}
+									<div>
+										<img width="260" height="200" src='@(snapShotsUrl)/@(t.templateId).png'/>
+									</div>
+									<div class="tempName">
+										@t.templateName
+									</div>
+										</a>	
+								</div>
 							}
-							<div>
-								<img width='260' height='200' src='@(snapShotsUrl)/@(t.templateId).png'/>
-							</div>
-							<div class="tempName">
-								@t.templateName
-							</div>
-								</a>	
-						</div>
-					}
+						}
+					</div>
 				</div>
 				<ul class="pager pager-margin">
-					@dto.currentPage match {
-				    	case i if i <= 1 => { <li class="previous disabled"><a href="#">&larr; 前へ</a></li> }
-				    	case _ => { <li class="previous"><a href="@routes.AdminController.editTempList()?page=@(dto.currentPage - 1)">&larr; 前へ</a></li> }
-					}
-					@dto.currentPage match {
-				    	case i if i >= dto.totalPage => { <li class="next disabled"><a href="#">次へ &rarr;</a></li> }
-				    	case _ => { <li class="next"><a href="@routes.AdminController.editTempList()?page=@(dto.currentPage + 1)">次へ &rarr;</a></li> }
-					}
+						@dto.currentPage match {
+					    	case i if i <= 1 => {}
+					    	case _ => { <li class="previous"><a href="@routes.Application.templates()?page=@(dto.currentPage - 1)">&larr; 前へ</a></li> }
+						}
+						@dto.currentPage match {
+					    	case i if i >= dto.totalPage => {}
+					    	case _ => { <li class="next"><a href="@routes.Application.templates()?page=@(dto.currentPage + 1)">次へ &rarr;</a></li> }
+						}
 				</ul>
 			</div>
 

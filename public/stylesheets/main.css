@@ -197,6 +197,11 @@
 				margin-bottom: 30px;
 			}
 
+			.noneTemp h2{
+				margin-top: 200px;
+				color: #808080;
+			}
+
 
 
 
@@ -356,11 +361,6 @@
 				text-align: center;
 			}
 
-			.wrapper .listContainer h2{
-				margin-bottom: 40px;
-				font-weight: bold;
-			}
-
 			.wrapper .listContainer .tempFilter{
 				float: left;
 			}
@@ -386,6 +386,10 @@
 				text-align: center;
 			}
 
+			#template_list .noneTemp{
+				text-align: center;
+			}		
+
 			.pager{
 				margin-left: 10px;
 				margin-right: 10px;
@@ -398,11 +402,6 @@
 			.wrapper .imgContainer{
 				margin: 40px 30px 40px 30px;
 				text-align: center;
-			}
-
-			.wrapper .imgContainer h2{
-				margin-bottom:  40px;
-				font-weight: bold;
 			}
 
 			#img_list{
@@ -475,6 +474,11 @@
 				margin-right: 60px;
 				padding: 30px 0px 30px 0px;
 				margin-bottom: 30px;
+			}
+
+			.wrapper .mypageContainer .editTemps .editTempList{
+				min-height: 300px;
+				text-align: center;
 			}
 
 			.wrapper .mypageContainer .editTemps .col-xs-4{
@@ -573,6 +577,28 @@
 				text-align: center;
 				padding-top: 30px;
 			}
+
+
+
+
+			/*aboutのCSS*/
+			.wrapper .aboutContainer{
+				width: 1100px;
+				padding: 50px 40px 40px 40px;
+				margin: 30px auto 30px auto;
+				background-color: #FFF;
+				min-height: 600px;
+			}
+
+			.wrapper .aboutContainer .aboutThis{
+				text-align: center;
+				margin-bottom: 180px;
+			}
+
+			.wrapper .aboutContainer .attention h2{
+				border-bottom: 1px solid #808080;
+			}
+
 
 
 

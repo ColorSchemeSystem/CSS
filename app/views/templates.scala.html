@@ -21,21 +21,21 @@
 			@for((t, index) <- dto.data.zipWithIndex) {
 				<div class="listImage">
 					<div class="col-xs-3">
-						@if(t.member != null){
-							@if(t.member.nickName == null){
-								<a onClick="showTempDetail('@t.templateId', '@snapShotsUrl');" id="@t.templateId" data-name="@t.templateName" data-message="@t.templateMessage" data-user="@t.member.memberName" href="#modal">
-							}else{
-								<a onClick="showTempDetail('@t.templateId', '@snapShotsUrl');" id="@t.templateId" data-name="@t.templateName" data-message="@t.templateMessage" data-user="@t.member.nickName" href="#modal">
-							}
+					@if(t.member != null){
+						@if(t.member.nickName == null){
+							<a onClick="showTempDetail('@t.templateId', '@snapShotsUrl');" id="@t.templateId" data-name="@t.templateName" data-message="@t.templateMessage" data-user="@t.member.memberName" href="#modal">
 						}else{
-							<a onClick="showTempDetail('@t.templateId', '@snapShotsUrl');" id="@t.templateId" data-name="@t.templateName" data-message="@t.templateMessage" data-user="anonymous" href="#modal">
+							<a onClick="showTempDetail('@t.templateId', '@snapShotsUrl');" id="@t.templateId" data-name="@t.templateName" data-message="@t.templateMessage" data-user="@t.member.nickName" href="#modal">
 						}
-						<div>
-							<img width='260' height='200' src='@(snapShotsUrl)/@(t.templateId).png'/>
-						</div>
-						<div class="tempName">
-							@t.templateName
-						</div>
+					}else{
+						<a onClick="showTempDetail('@t.templateId', '@snapShotsUrl');" id="@t.templateId" data-name="@t.templateName" data-message="@t.templateMessage" data-user="anonymous" href="#modal">
+					}
+					<div>
+						<img width='260' height='200' src='@(snapShotsUrl)/@(t.templateId).png'/>
+					</div>
+					<div class="tempName">
+						@t.templateName
+					</div>
 							</a>	
 					</div>
 				</div>
