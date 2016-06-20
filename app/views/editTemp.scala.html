@@ -17,7 +17,7 @@
 							@for((t, index) <- dto.data.zipWithIndex) {
 								<div class="col-xs-4">
 									@if(t.member != null){
-										@if(t.member.nickName == null){
+										@if(t.member.nickName.isEmpty()){
 											<a onClick="showEditTemp('@t.templateId', '@snapShotsUrl');" class="@t.templateId" data-name="@t.templateName" data-message="@t.templateMessage" data-user="@t.member.memberName" href="#modal">
 										}else{
 											<a onClick="showEditTemp('@t.templateId', '@snapShotsUrl');" class="@t.templateId" data-name="@t.templateName" data-message="@t.templateMessage" data-user="@t.member.nickName" href="#modal">
