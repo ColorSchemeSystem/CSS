@@ -109,9 +109,7 @@ public class Application extends BaseController{
 				asMultipartFormData();
 		FilePart picture = body.getFile("file");
 	    if(picture != null && picture.getFile() != null) {
-	    	System.out.println("okですー");
 	    	if(picture != null && picture.getFile() != null && picture.getContentType().equals("text/html")) {
-	    		System.out.println("okですー2");
 	    		saveHtml(picture);
 	    		return ok();
 	    	} else {
@@ -267,14 +265,7 @@ public class Application extends BaseController{
 			} else {
 				temp.member = null;
 			}
-			if(!tempS.tempName.trim().equals("")){
-				temp.templateName = tempS.tempName;
-				appS.saveTemplate(temp);
-			}else{
-				appS.saveTemplate(temp);
-				temp.templateName = "template" + temp.templateId;
-				appS.updateTemplate(temp);
-			}
+			appS.saveTemplate(temp);
 			String tempName = temp.templateId + ".html";
 			Long newTempId = temp.templateId;
 			File file = new File(tempName);
@@ -282,6 +273,14 @@ public class Application extends BaseController{
 				FileWriter fileWriter = new FileWriter(file);
 				fileWriter.write(tempS.tempHtml);
 				fileWriter.close();
+				temp.html = compS.compress(FileUtils.readFileToString(file, "UTF-8"));
+				if(!tempS.tempName.trim().equals("")){
+					temp.templateName = tempS.tempName;
+					appS.updateTemplate(temp);
+				}else{
+					temp.templateName = "template" + temp.templateId;
+					appS.updateTemplate(temp);
+				}
 				String tempPath = appS.getPublicFolderPath() + "/iframes/";
 				String iframeUrl = appS.getIframesUrl();
 				String target = "";
@@ -356,6 +355,12 @@ public class Application extends BaseController{
 			try {
 				String base64ImageData = httpS.request(ImageService.webShotUrl
 						+ "?target=" + URLEncoder.encode(form.get().targetUrl, "UTF-8"));
+				if(base64ImageData == null || base64ImageData.equals("URLを指定してください。")) {
+					List<ValidationError> errors = new ArrayList<ValidationError>();
+					errors.add(new ValidationError("targetUrl", "無効なURLです。"));
+					form.errors().put("targetUrl", errors);
+					return ok(analyze.render(form,""));
+				}
 				BufferedImage image = imageS.convertBase64ImageDataToBufferedImage(base64ImageData, "png");
 				result = imageS.analyze(image);
 			} catch (UnsupportedEncodingException e) {

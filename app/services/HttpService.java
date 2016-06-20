@@ -25,8 +25,8 @@ public class HttpService {
 		 * HttpClientはミリ秒単位の指定なので、タイムアウトの設定を
 		 */
 		  RequestConfig requestConfig = RequestConfig.custom()
-		      .setConnectTimeout(1000 * 30)
-		      .setSocketTimeout(1000 * 30)
+		      .setConnectTimeout(1000 * 10)
+		      .setSocketTimeout(1000 * 10)
 		      .build();
 		  List<Header> headers = new ArrayList<Header>();
 		  headers.add(new BasicHeader("Accept-Charset","UTF-8"));

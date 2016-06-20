@@ -52,7 +52,7 @@ function fixFrameSize() {
 	}
 };
 
-function sendHTML(formId, id, content){
+function sendHTML(formId, id){
 	var ele = $("<input>", {
 					"type" : "hidden",
 					"name" : "tempHtml",
