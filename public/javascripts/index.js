@@ -20,6 +20,10 @@ $(window).load(function(){
 	timeout = setTimeout("loadTimeOut()", 10000);
 });
 
+function isLoggedIn() {
+	return Boolean($("body").data("login"));
+}
+
 function fixSideBar(){
 	var navi = $('.fixnav');
 	var main  = $('.main');
