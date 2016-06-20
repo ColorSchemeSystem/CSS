@@ -1,10 +1,10 @@
-@(myform: Form[forms.Analyze] , colorsData : String)
+@(myform: Form[forms.Analyze] , colorsData : String, user : Member)
 
 @import helper._
 
 @implicitField = @{ FieldConstructor(fieldConstructor.fieldC.f) }
 
-@main("analyze", null) {
+@main("analyze", user) {
 	<div class='analyzeContainer'>
 	@helper.form(action = routes.Application.doAnalyze()) {
 		@helper.inputText(myform("targetUrl"),'_label -> "分析したいサイトのURL", 'size -> 45, 'placeholder -> "分析したいサイトのURLを入力してください")

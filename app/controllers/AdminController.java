@@ -27,6 +27,7 @@ import org.mindrot.jbcrypt.BCrypt;
 
 import com.avaje.ebean.Query;
 
+import dtos.PagingDto;
 import forms.MyPage;
 import forms.ModifyPassword;
 import forms.TemplateUpload;
@@ -34,12 +35,11 @@ import models.*;
 
 import play.mvc.Http.MultipartFormData;
 import play.mvc.Http.MultipartFormData.FilePart;
-import services.AdminService;
-import services.ImageService;
+import services.*;
 
 public class AdminController extends BaseController {
 	private static AdminService adminS = new AdminService();
-
+	private static AppService appS = new AppService();
 	/**
 	*  ログイン画面へ
 	*/
@@ -253,5 +253,33 @@ public class AdminController extends BaseController {
 			form = Form.form(ModifyPassword.class);
 			return ok(editPass.render(form,member,""));
 		}
+	}
+
+	public static Result editTempList(){
+		Member member = isLoggedIn();
+		String type = request().getQueryString("type");
+		Integer page = 1;
+		try {
+			page = Integer.parseInt(request().getQueryString("page"));
+		} catch(Exception e) {}
+		PagingDto<Template> pagingDto;
+		pagingDto = appS.findTemplatesWithPages(page, 12 , member.memberId);
+		return ok(editTemp.render(pagingDto,member,appS.getSnapShotsUrl()));
+	}
+
+	public static Result updateTemp(){
+		Form<TemplateUpload> form = Form.form(TemplateUpload.class).bindFromRequest();
+		Member member = isLoggedIn();
+		TemplateUpload editTmp = form.get();
+		if(editTmp.templateName.trim().isEmpty()){
+			editTmp.templateName = "template" + editTmp.templateId;
+		}
+		Template temp = adminS.findTemplateById(editTmp.templateId);
+		temp.templateName = editTmp.templateName;
+		temp.templateMessage = editTmp.templateMessage;
+		adminS.updateTemplate(temp);
+		PagingDto<Template> pagingDto;
+		pagingDto = appS.findTemplatesWithPages(1, 12 , member.memberId);
+		return ok(editTemp.render(pagingDto,member,appS.getSnapShotsUrl()));
 	}
 }

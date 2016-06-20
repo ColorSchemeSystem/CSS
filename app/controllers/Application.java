@@ -340,8 +340,9 @@ public class Application extends BaseController{
 	 * 外部のサイトで使われている色を分析する。
 	 */
 	public static Result analyze() {
+		Member mem = isLoggedIn();
 		Form<Analyze> form = Form.form(Analyze.class);
-		return ok(analyze.render(form,""));
+		return ok(analyze.render(form,"", mem));
 	}
 
 	/**
@@ -350,6 +351,7 @@ public class Application extends BaseController{
 	 */
 	public static Result doAnalyze() {
 		Form<Analyze> form = Form.form(Analyze.class).bindFromRequest();
+		Member mem = isLoggedIn();
 		if(!form.hasErrors()) {
 			Map<String,String> result = new LinkedHashMap<String,String>();
 			try {
@@ -359,7 +361,7 @@ public class Application extends BaseController{
 					List<ValidationError> errors = new ArrayList<ValidationError>();
 					errors.add(new ValidationError("targetUrl", "無効なURLです。"));
 					form.errors().put("targetUrl", errors);
-					return ok(analyze.render(form,""));
+					return ok(analyze.render(form,"", mem));
 				}
 				BufferedImage image = imageS.convertBase64ImageDataToBufferedImage(base64ImageData, "png");
 				result = imageS.analyze(image);
@@ -371,9 +373,9 @@ public class Application extends BaseController{
 				data += key + ":" + result.get(key) + ",";
 			}
 			data = data.substring(0, data.length()-1);
-			return ok(analyze.render(form,data));
+			return ok(analyze.render(form,data, mem));
 		}	else	{
-			return ok(analyze.render(form,""));
+			return ok(analyze.render(form,"", mem));
 		}
 	}
 
@@ -382,6 +384,7 @@ public class Application extends BaseController{
 	 */
 	public static Result colors() {
 		String type = "primary";
+		Member mem = isLoggedIn();
 		try {
 			type = request().queryString().get("type")[0];
 		} catch(Exception e) {
@@ -395,6 +398,6 @@ public class Application extends BaseController{
 		}	else {
 			colorsList = colorS.getPrimaryColors();
 		}
-		return ok(colors.render(colorsList, type));
+		return ok(colors.render(colorsList, type, mem));
 	}
 }

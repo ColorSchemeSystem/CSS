@@ -468,6 +468,28 @@
 				padding: 30px 0px 30px 175px;
 			}
 
+			.wrapper .mypageContainer .editTemps{
+				float: right;
+				width: 850px;
+				background-color: #FFF;
+				margin-right: 60px;
+				padding: 30px 0px 30px 0px;
+				margin-bottom: 30px;
+			}
+
+			.wrapper .mypageContainer .editTemps .col-xs-4{
+				margin-top: 10px;
+			}
+
+			.wrapper .mypageContainer .editTemps .tempName{
+				width: 270px;
+				white-space: nowrap;
+				overflow: hidden;
+				text-overflow: ellipsis;
+				margin-top: 10px;
+				text-align: center;
+			}
+
 			.wrapper .mypageContainer .sideMenu{
 				float: left;
 				width: 200px;
