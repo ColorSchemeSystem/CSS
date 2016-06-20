@@ -176,9 +176,13 @@ function allScribing(obj, assignmentName, number, targetPass, viewName, color) {
 
 	// タブの追加
 	var nextTargetPass;
-	if(viewName == "li") targetPass = targetPass+":eq("+number+")";
+
+	// eqしてあげる対象
+	targetPass = gentlenessEq(targetPass, viewName, number);
+	//if(viewName == "li" || viewName == "tr" || viewName == "th" || viewName == "tr") targetPass = targetPass+":eq("+number+")";
 	nextTargetPass = targetPass;
 	addTr(obj, assignmentName, childName, targetPass, viewName, color);
+
 	// 設定項目の追加
 	addSetting(childName, targetPass, obj);
 
@@ -320,8 +324,9 @@ function textCheck(obj) {
 /*
 *  タグ別などの優しさ
 */
-function gentleness() {
-
+function gentlenessEq(targetPass, viewName, number) {
+	if(viewName == "li" || viewName == "tr" || viewName == "th" || viewName == "tr") targetPass = targetPass+":eq("+number+")";
+	return targetPass;
 };
 
 /*
@@ -330,7 +335,7 @@ function gentleness() {
 function changedColor(color, targetPass) {
 	var c = color;
 	if(color == undefined) color = new RGBColor("#777");
-	color = new RGBColor(color);
+	else color = new RGBColor(color);
 	if(color.ok == false) {
 		while(color.ok == false) {
 			var parent = undefined;
