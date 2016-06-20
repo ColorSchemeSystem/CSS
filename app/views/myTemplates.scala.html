@@ -27,7 +27,7 @@
 					<div class="listImage">
 						<div class="col-xs-3">
 							@if(t.member != null){
-								@if(t.member.nickName == null){
+								@if(t.member.nickName.isEmpty()){
 									<a onClick="showTempDetail('@t.templateId', '@snapShotsUrl');" id="@t.templateId" data-name="@t.templateName" data-message="@t.templateMessage" data-user="@t.member.memberName" href="#modal">
 								}else{
 									<a onClick="showTempDetail('@t.templateId', '@snapShotsUrl');" id="@t.templateId" data-name="@t.templateName" data-message="@t.templateMessage" data-user="@t.member.nickName" href="#modal">
@@ -51,11 +51,11 @@
 	<ul class="pager pager-margin">
 		@dto.currentPage match {
 	    	case i if i <= 1 => {}
-	    	case _ => { <li class="previous"><a href="@routes.Application.templates()?page=@(dto.currentPage - 1)">&larr; 前へ</a></li> }
+	    	case _ => { <li class="previous"><a href="@routes.Application.templates()?page=@(dto.currentPage - 1)&type=member">&larr; 前へ</a></li> }
 		}
 		@dto.currentPage match {
 	    	case i if i >= dto.totalPage => {}
-	    	case _ => { <li class="next"><a href="@routes.Application.templates()?page=@(dto.currentPage + 1)">次へ &rarr;</a></li> }
+	    	case _ => { <li class="next"><a href="@routes.Application.templates()?page=@(dto.currentPage + 1)&type=member">次へ &rarr;</a></li> }
 		}
 	</ul>
 	<div id="popUp">
