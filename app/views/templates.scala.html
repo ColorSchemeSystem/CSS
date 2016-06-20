@@ -22,7 +22,7 @@
 				<div class="listImage">
 					<div class="col-xs-3">
 					@if(t.member != null){
-						@if(t.member.nickName == null){
+						@if(t.member.nickName.isEmpty()){
 							<a onClick="showTempDetail('@t.templateId', '@snapShotsUrl');" id="@t.templateId" data-name="@t.templateName" data-message="@t.templateMessage" data-user="@t.member.memberName" href="#modal">
 						}else{
 							<a onClick="showTempDetail('@t.templateId', '@snapShotsUrl');" id="@t.templateId" data-name="@t.templateName" data-message="@t.templateMessage" data-user="@t.member.nickName" href="#modal">
