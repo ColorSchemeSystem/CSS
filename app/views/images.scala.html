@@ -8,33 +8,40 @@
 		});
 	</script>->
 	<h2>
-	<!--@(member.memberName)さんが保存した画像一覧-->
+	@(member.memberName)さんが保存した画像一覧-->
 	</h2>
 	<div id='img_list'>
 		<div class='clearfix'>
-			@for((image, index) <- dto.data.zipWithIndex) {
-				<div class="listImage">
-					<div class="col-xs-3">
-						<div class="imgThumb">
-							<img width='260' height='200' src='/assets/member-images/@(image.imageId).png'/>
-						</div>
-						<div class="imgName">
-							@image.imageName
-						</div>	
-					</div>
+			@if(dto.data.zipWithIndex.isEmpty()){
+				<div class="noneTemp">
+					<h2>画像の投稿がありません</h2>
 				</div>
+			}else{
+				@for((image, index) <- dto.data.zipWithIndex) {
+					<div class="listImage">
+						<div class="col-xs-3">
+							<div class="imgThumb">
+								<img width='260' height='200' src='/assets/member-images/@(image.imageId).png'/>
+							</div>
+							<div class="imgName">
+								@image.imageName
+							</div>	
+						</div>
+					</div>
+				}
 			}
+
 		</div>
 	</div>
 	<ul class="pager pager-margin">
-		@dto.currentPage match {
-	    	case i if i <= 1 => { <li class="previous disabled"><a href="#">&larr; 前へ</a></li> }
-	    	case _ => { <li class="previous"><a href="@routes.Application.images()?page=@(dto.currentPage - 1)">&larr; 前へ</a></li> }
-		}
-		@dto.currentPage match {
-	    	case i if i >= dto.totalPage => { <li class="next disabled"><a href="#">次へ &rarr;</a></li> }
-	    	case _ => { <li class="next"><a href="@routes.Application.images()?page=@(dto.currentPage + 1)">次へ &rarr;</a></li> }
-		}
+			@dto.currentPage match {
+		    	case i if i <= 1 => {}
+		    	case _ => { <li class="previous"><a href="@routes.Application.templates()?page=@(dto.currentPage - 1)">&larr; 前へ</a></li> }
+			}
+			@dto.currentPage match {
+		    	case i if i >= dto.totalPage => {}
+		    	case _ => { <li class="next"><a href="@routes.Application.templates()?page=@(dto.currentPage + 1)">次へ &rarr;</a></li> }
+			}
 	</ul>
 </div>
 }				

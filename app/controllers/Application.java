@@ -400,4 +400,9 @@ public class Application extends BaseController{
 		}
 		return ok(colors.render(colorsList, type, mem));
 	}
+
+	public static Result about(){
+		Member mem = isLoggedIn();
+		return ok(about.render(mem));
+	}
 }

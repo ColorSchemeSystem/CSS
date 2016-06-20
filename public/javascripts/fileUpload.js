@@ -25,10 +25,10 @@ function sendFileToServer(formData,status){
         cache: false,
         data: formData,
         success: function(data){
-            status.setProgress(100);     
+            status.setProgress(100);
+            $('.uploadContainer h4').css("display", "block");     
         }
     });
-    $('.uploadContainer h4').css("display", "block");
     //status.setAbort(jqXHR);
 }
 
