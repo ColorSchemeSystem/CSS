@@ -1,7 +1,9 @@
 package services;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import entity.Color;
 import entity.RGB;
@@ -40,16 +42,35 @@ public class ColorService {
 	public List<Color> getWebSafeColors() {
 		final int[] nums = {0,51,102,153,204,255};
 		List<Color> webSafeColors = new ArrayList<Color>();
+		Map<String,String> colorNamesMap = this.getColorNamesMap();
 		for(int r : nums) {
 			for(int g : nums) {
 				for(int b : nums) {
 					RGB rgb = new RGB(r,g,b);
-					Color color = new Color("#" + rgb.toHexString());
+					String hex = "#" + rgb.toHexString();
+					Color color = null;
+					if(colorNamesMap.containsKey(hex)) {
+						color = new Color(hex,colorNamesMap.get(hex));
+					}	else	{
+						color = new Color(hex);
+					}
 					webSafeColors.add(color);
 				}
 			}
 		}
 		return webSafeColors;
+	}
+	
+	/**s
+	 * @return
+	 */
+	private Map<String,String> getColorNamesMap() {
+		List<Color> primaryColors = this.getPrimaryColors();
+		Map<String,String> result = new HashMap<String,String>();
+		for(Color color : primaryColors) {
+			result.put(color.colorHex, color.colorName);
+		}
+		return result;
 	}
 	
 	/**
