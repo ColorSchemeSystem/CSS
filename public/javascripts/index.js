@@ -188,7 +188,7 @@ function allScribing(obj, assignmentName, number, targetPass, viewName, color) {
 	addTr(obj, assignmentName, childName, targetPass, viewName, color);
 
 	// 設定項目の追加
-	addSetting(childName, targetPass, obj, classname);
+	addSetting(childName, targetPass, obj);
 
 	assignmentName = childName;
 	$('iframe').contents().find(obj).children().each(function() {
@@ -288,7 +288,7 @@ function addTr(obj, classname, childName, targetPass, viewName, color) {
 /*
 *  設定項目追加
 */
-function addSetting(classname, targetPass, obj, classname) {
+function addSetting(classname, targetPass, obj) {
 	addBackground(classname, targetPass);
 	addBorder(classname, targetPass, obj, classname);
 	if(textCheck(obj)) {
@@ -388,12 +388,46 @@ function addBackground(name, targetPass) {
 *  ボーダー線の配色を追加
 */
 function addBorder(name, targetPass, obj, classname) {
-	var childName = name + "-border";
-	classname = "iframe"+classname;
-	addTr(obj, classname, childName, targetPass, "border", "#555");
+	// ボーダー用のタブ作成
+	var childName = name + "border";
+	var td = $("<td></td>",{
+		text : "border"
+	});
+	var td2 = $("<td>border</td>");
+	var tr = $("<tr></tr>",{
+		"class" : "iframe"+name,
+		on : {
+			click : function(event) {
+				var targetClass = null;
+				$(".iframe"+childName).each(function() {
+					display($(this));
+					targetClass = $(this);
+				});
+				toggleHide(targetClass);
+			}
+		}
+	});
+	td.css("color", "white");
+	td2.css("color", "white");
+	tr.append(td);
+	tr.append(td2);
+	tr.css("background-color", new RGBColor("#555").toRGB());
+	tr.css("display", "none");
+	$('#classTable').append(tr);
+
+	addBorderTop(childName, targetPass);
+	addBorderBottom(childName, targetPass);
+	addBorderRight(childName, targetPass);
+	addBorderLeft(childName, targetPass);
+};
+
+/*
+*  ボーダートップ追加
+*/
+function addBorderTop(name, targetPass) {
 	var tr = $("<tr class='iframe"+name+"'></tr>");
-	var td = $("<td>border</td>");
-	var td2 = $("<input type='text' class='form-control' id='"+name+"-bor' value='#A6FF00' data-color-format='hex'>");
+	var td = $("<td>top</td>");
+	var td2 = $("<input type='text' class='form-control' id='"+name+"-bor-top' value='#A6FF00' data-color-format='hex'>");
 
 	tr.append(td);
 	tr.append(td2);
@@ -403,21 +437,138 @@ function addBorder(name, targetPass, obj, classname) {
 
 	var color = $('iframe').contents().find(classname).css('border-color');
 	color = changedColor(color);
-	$("#"+name+"-bor").val(color);
+	$("#"+name+"-bor-top").val(color);
 
 	// ボーダーサイズ変更できる様に
 	var tr2 = $("<tr class='iframe"+name+"'></tr>");
-	var td3 = $("<td>border-size</td>");
+	var td3 = $("<td>top-size</td>");
 	var size = 0;
-	if($(targetPass).css("border") != undefined && $(targetPass).css("border") != "") size = $(targetPass).css('border-width').substr(0,1);
-	var td4 = $("<input type='text' class='"+name+"-bor-size' id='border-size' value='"+size+"' data-classname='"+classname+"' data-name='"+name+"' >");
+	if($(targetPass).css("border") != undefined && $(targetPass).css("border") != "") size = $(targetPass).css('border-top-width').substr(0,1);
+	var td4 = $("<input type='text' class='"+name+"-bor-top-size' id='border-size' value='"+size+"' data-classname='"+classname+"' data-name='"+name+"' data-position='top' >");
 	tr2.append(td3);
 	tr2.append(td4);
 	tr2.css("display", "none");
 	$('#classTable').append(tr2);
 
-	var dataBorder = {contentName:classname, targetName:"border", borderSize:"."+name+"-bor-size"};
-	$("input#"+name+"-bor").ColorPickerSliders({
+	var dataBorder = {contentName:classname, targetName:"border", borderSize:"."+name+"-bor-top-size", borderPosition:"top"};
+	$("input#"+name+"-bor-top").ColorPickerSliders({
+		placement: $('#chooser').data('placement'),
+		hsvpanel: $('#chooser').data('hsvpanel'),
+		sliders: $('#chooser').data('sliders'),
+		swatches: $('#chooser').data('swatches'),
+		previewformat: 'hex'
+	},dataBorder);
+};
+
+/*
+*  ボーダーボトム追加
+*/
+function addBorderBottom(name, targetPass) {
+	var tr = $("<tr class='iframe"+name+"'></tr>");
+	var td = $("<td>bottom</td>");
+	var td2 = $("<input type='text' class='form-control' id='"+name+"-bor-bottom' value='#A6FF00' data-color-format='hex'>");
+
+	tr.append(td);
+	tr.append(td2);
+	tr.css("display", "none");
+	$('#classTable').append(tr);
+	var classname = targetPass;
+
+	var color = $('iframe').contents().find(classname).css('border-color');
+	color = changedColor(color);
+	$("#"+name+"-bor-bottom").val(color);
+
+	// ボーダーサイズ変更できる様に
+	var tr2 = $("<tr class='iframe"+name+"'></tr>");
+	var td3 = $("<td>bottom-size</td>");
+	var size = 0;
+	if($(targetPass).css("border") != undefined && $(targetPass).css("border") != "") size = $(targetPass).css('border-bottom-width').substr(0,1);
+	var td4 = $("<input type='text' class='"+name+"-bor-bottom-size' id='border-size' value='"+size+"' data-classname='"+classname+"' data-name='"+name+"' data-position='bottom' >");
+	tr2.append(td3);
+	tr2.append(td4);
+	tr2.css("display", "none");
+	$('#classTable').append(tr2);
+
+	var dataBorder = {contentName:classname, targetName:"border", borderSize:"."+name+"-bor-bottom-size", borderPosition:"bottom"};
+	$("input#"+name+"-bor-bottom").ColorPickerSliders({
+		placement: $('#chooser').data('placement'),
+		hsvpanel: $('#chooser').data('hsvpanel'),
+		sliders: $('#chooser').data('sliders'),
+		swatches: $('#chooser').data('swatches'),
+		previewformat: 'hex'
+	},dataBorder);
+};
+
+/*
+*  ボーダーライト追加
+*/
+function addBorderRight(name, targetPass) {
+	var tr = $("<tr class='iframe"+name+"'></tr>");
+	var td = $("<td>right</td>");
+	var td2 = $("<input type='text' class='form-control' id='"+name+"-bor-right' value='#A6FF00' data-color-format='hex'>");
+
+	tr.append(td);
+	tr.append(td2);
+	tr.css("display", "none");
+	$('#classTable').append(tr);
+	var classname = targetPass;
+
+	var color = $('iframe').contents().find(classname).css('border-color');
+	color = changedColor(color);
+	$("#"+name+"-bor-right").val(color);
+
+	// ボーダーサイズ変更できる様に
+	var tr2 = $("<tr class='iframe"+name+"'></tr>");
+	var td3 = $("<td>right-size</td>");
+	var size = 0;
+	if($(targetPass).css("border") != undefined && $(targetPass).css("border") != "") size = $(targetPass).css('border-right-width').substr(0,1);
+	var td4 = $("<input type='text' class='"+name+"-bor-right-size' id='border-size' value='"+size+"' data-classname='"+classname+"' data-name='"+name+"' data-position='right' >");
+	tr2.append(td3);
+	tr2.append(td4);
+	tr2.css("display", "none");
+	$('#classTable').append(tr2);
+
+	var dataBorder = {contentName:classname, targetName:"border", borderSize:"."+name+"-bor-right-size", borderPosition:"right"};
+	$("input#"+name+"-bor-right").ColorPickerSliders({
+		placement: $('#chooser').data('placement'),
+		hsvpanel: $('#chooser').data('hsvpanel'),
+		sliders: $('#chooser').data('sliders'),
+		swatches: $('#chooser').data('swatches'),
+		previewformat: 'hex'
+	},dataBorder);
+};
+
+/*
+*  ボーダーレフト追加
+*/
+function addBorderLeft(name, targetPass) {
+	var tr = $("<tr class='iframe"+name+"'></tr>");
+	var td = $("<td>left</td>");
+	var td2 = $("<input type='text' class='form-control' id='"+name+"-bor-left' value='#A6FF00' data-color-format='hex'>");
+
+	tr.append(td);
+	tr.append(td2);
+	tr.css("display", "none");
+	$('#classTable').append(tr);
+	var classname = targetPass;
+
+	var color = $('iframe').contents().find(classname).css('border-color');
+	color = changedColor(color);
+	$("#"+name+"-bor-left").val(color);
+
+	// ボーダーサイズ変更できる様に
+	var tr2 = $("<tr class='iframe"+name+"'></tr>");
+	var td3 = $("<td>left-size</td>");
+	var size = 0;
+	if($(targetPass).css("border") != undefined && $(targetPass).css("border") != "") size = $(targetPass).css('border-left-width').substr(0,1);
+	var td4 = $("<input type='text' class='"+name+"-bor-left-size' id='border-size' value='"+size+"' data-classname='"+classname+"' data-name='"+name+"' data-position='left' >");
+	tr2.append(td3);
+	tr2.append(td4);
+	tr2.css("display", "none");
+	$('#classTable').append(tr2);
+
+	var dataBorder = {contentName:classname, targetName:"border", borderSize:"."+name+"-bor-left-size", borderPosition:"left"};
+	$("input#"+name+"-bor-left").ColorPickerSliders({
 		placement: $('#chooser').data('placement'),
 		hsvpanel: $('#chooser').data('hsvpanel'),
 		sliders: $('#chooser').data('sliders'),
@@ -434,13 +585,30 @@ function setBorderSize(element) {
 	return function() {
 		if(old != (v = element.value)) {
 			old = v;
-
-			var targetData = {contentName:$("."+$(this).attr("class")).data('classname'),
+			var obj = $("."+$(this).attr("class"));
+			var targetData = {contentName:obj.data('classname'),
 								targetName:"border",
 								borderSize:"."+$(this).attr("class")};
-			var color = $("#"+$("."+$(this).attr("class")).data('name')+"-bor").val();
+			var color = "#777";
 			var borderSize = $(targetData.borderSize).val();
-			$('iframe').contents().find(targetData.contentName).css('border', borderSize+"px solid "+color);
+			var pos = obj.data("position");
+			if (pos == "top") {
+				color = $("#"+obj.data('name')+"-bor-top").val();
+				$('iframe').contents().find(targetData.contentName).css('border-top', borderSize+"px solid "+color);
+			}
+			else if (pos == "bottom") {
+				color = $("#"+obj.data('name')+"-bor-bottom").val();
+				$('iframe').contents().find(targetData.contentName).css('border-bottom', borderSize+"px solid "+color);
+			}
+			else if (pos == "right") {
+				color = $("#"+obj.data('name')+"-bor-right").val();
+				$('iframe').contents().find(targetData.contentName).css('border-right', borderSize+"px solid "+color);
+			}
+			else if (pos == "left") {
+				color = $("#"+obj.data('name')+"-bor-left").val();
+				$('iframe').contents().find(targetData.contentName).css('border-left', borderSize+"px solid "+color);
+			}
+			else $('iframe').contents().find(targetData.contentName).css('border', borderSize+"px solid "+color);
 		}
 	}
 };

@@ -1391,11 +1391,14 @@
       function setTargetColor(targetData,color) {
         if(targetData.targetName == "background") {
           $('iframe').contents().find(targetData.contentName).css('backgroundColor',color);
-          //console.log(targetData.contentName);
         }
         else if (targetData.targetName == "border") {
           var borderSize = $(targetData.borderSize).val();
-          $('iframe').contents().find(targetData.contentName).css('border', borderSize+"px solid "+color);
+          if (targetData.borderPosition == "top") $('iframe').contents().find(targetData.contentName).css('border-top', borderSize+"px solid "+color);
+          else if (targetData.borderPosition == "bottom") $('iframe').contents().find(targetData.contentName).css('border-bottom', borderSize+"px solid "+color);
+          else if (targetData.borderPosition == "right") $('iframe').contents().find(targetData.contentName).css('border-right', borderSize+"px solid "+color);
+          else if (targetData.borderPosition == "left") $('iframe').contents().find(targetData.contentName).css('border-left', borderSize+"px solid "+color);
+          else $('iframe').contents().find(targetData.contentName).css('border', borderSize+"px solid "+color);
         } else if (targetData.targetName == "font") $('iframe').contents().find(targetData.contentName).css('color',color);
       }
 
