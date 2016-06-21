@@ -10,4 +10,6 @@ public class TemplateUpload {
 	public String templateMessage;
 
 	public Long templateId;
+
+	public Integer templateFlg;
 }

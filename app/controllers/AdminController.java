@@ -173,9 +173,9 @@ public class AdminController extends BaseController {
 		setting.memberName = mem.memberName;
 		setting.nickName = mem.nickName;
 		setting.mail = mem.mail;
-		setting.hsvpanel	= chooser.hsvpanel;
-		setting.slider		= chooser.slider;
-		setting.swatche		= chooser.swatche;
+		setting.hsvpanel = chooser.hsvpanel;
+		setting.slider = chooser.slider;
+		setting.swatche	= chooser.swatche;
 		form = form.fill(setting);
 		return ok(editColor.render(mem, form, ""));
 	}
@@ -190,11 +190,19 @@ public class AdminController extends BaseController {
 			return redirect(routes.AdminController.login());
 		}
 		if(!form.hasErrors()) {
-			Chooser chooser = adminS.findChooserByChooserId(mem.chooser.chooserId);
-			chooser.hsvpanel	= form.get().hsvpanel;
-			chooser.slider		= form.get().slider;
-			chooser.swatche		= form.get().swatche;
-			chooser.update();
+			if(form.get().hsvpanel == null && form.get().slider == null && form.get().swatche == null){
+				return badRequest(editColor.render(mem, form, "最低1つは選択してください"));
+			}else{
+				Chooser chooser = adminS.findChooserByChooserId(mem.chooser.chooserId);
+				chooser.hsvpanel	= form.get().hsvpanel;
+				chooser.slider		= form.get().slider;
+				chooser.swatche		= form.get().swatche;
+				chooser.update();
+				/*
+				 * 確認用ログ
+				 */
+				System.out.println("カラーパレット更新");
+			}
 		} else {
 			return badRequest(editColor.render(mem, form, "保存に失敗しました"));
 		}
@@ -209,14 +217,24 @@ public class AdminController extends BaseController {
 		}
 		if(!form.hasErrors()) {
 			if(!mem.memberName.equals(form.get().memberName) || !mem.mail.equals(form.get().mail) || !mem.nickName.equals(form.get().nickName)) {
-				mem.memberName = form.get().memberName;
-				mem.mail = form.get().mail;
-				mem.nickName = form.get().nickName;
+				mem.memberName = form.get().memberName.replaceAll("　", " ").trim();
+				mem.mail = form.get().mail.replaceAll("　", " ").trim();
+				mem.nickName = form.get().nickName.replaceAll("　", " ").trim();
 				adminS.updateMember(mem);
+				/*
+				 * 確認用ログ
+				 */
+				System.out.println("ユーザー更新");
 			}
 		} else {
 			return badRequest(editProfile.render(mem, form, "保存に失敗しました"));
 		}
+		MyPage setting = new MyPage();
+		setting.memberId = mem.memberId;
+		setting.memberName = mem.memberName;
+		setting.nickName = mem.nickName;
+		setting.mail = mem.mail;
+		form = Form.form(MyPage.class).fill(setting);
 		return ok(editProfile.render(mem, form, "保存しました"));
 	}
 
@@ -257,16 +275,18 @@ public class AdminController extends BaseController {
 				member = adminS.findMemberById(member.memberId);
 				member.password = adminS.passwordHash(form.get().newPassword);
 				adminS.updateMember(member);
+				/*
+				 * 確認用ログ
+				 */
+				System.out.println("パスワード更新");
 				removeObjectSession("Member");
 				writeObjectOnSession("Member", member);
 				form = Form.form(ModifyPassword.class);
 				return ok(editPass.render(form,member,"パスワードを変更しました"));
 			}	else	{
-				form = Form.form(ModifyPassword.class);
 				return ok(editPass.render(form,member,""));
 			}
 		}	else	{
-			form = Form.form(ModifyPassword.class);
 			return ok(editPass.render(form,member,""));
 		}
 	}
@@ -287,13 +307,18 @@ public class AdminController extends BaseController {
 		Form<TemplateUpload> form = Form.form(TemplateUpload.class).bindFromRequest();
 		Member member = isLoggedIn();
 		TemplateUpload editTmp = form.get();
-		if(editTmp.templateName.trim().isEmpty()){
+		if(editTmp.templateName.replaceAll("　", " ").trim().isEmpty()){
 			editTmp.templateName = "template" + editTmp.templateId;
 		}
 		Template temp = adminS.findTemplateById(editTmp.templateId);
-		temp.templateName = editTmp.templateName;
-		temp.templateMessage = editTmp.templateMessage;
+		temp.templateName = editTmp.templateName.replaceAll("　", " ").trim();
+		temp.templateMessage = editTmp.templateMessage.replaceAll("　", " ").trim();
+		temp.accessFlag = editTmp.templateFlg;
 		adminS.updateTemplate(temp);
+		/*
+		 * 確認用ログ
+		 */
+		System.out.println("テンプレート更新");
 		PagingDto<Template> pagingDto;
 		pagingDto = appS.findTemplatesWithPages(1, 12 , member.memberId);
 		return ok(editTemp.render(pagingDto,member,appS.getSnapShotsUrl()));

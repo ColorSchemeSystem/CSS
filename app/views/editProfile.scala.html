@@ -17,7 +17,7 @@
 		</script>-->
 		<!--<h1 style='margin-top : 20px;'>マイページ</h1>-->
 			<div class='profile'>
-				@helper.inputText(setting("memberName"),'_label -> "アカウント名",'_showConstraints -> false, 'size -> 70, 'readonly -> true)
+				@helper.inputText(setting("memberName"),'_label -> "ユーザーID",'_showConstraints -> false, 'size -> 70, 'readonly -> true)
 				@helper.inputText(setting("mail"),'_label -> "メールアドレス",'_showConstraints -> false, 'size -> 70)
 				@helper.inputText(setting("nickName"), '_label -> "ニックネーム", '_showConstraints -> false, 'size -> 70)
 				<input type="submit" value="設定を保存" id="profileSubmit" class="btn btn-primary">
