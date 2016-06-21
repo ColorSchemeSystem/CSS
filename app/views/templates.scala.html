@@ -1,6 +1,18 @@
 @(dto : dtos.PagingDto[Template], member : Member, snapShotsUrl : String)
 
 @main("Color Scheme",member){ 
+<script>
+var timerID = setInterval(function() {
+	$(".listImage img").each(function(index, elem) {
+		var src = $(elem).attr("src");
+		$(elem).attr("src",src + "?" + new Date().getTime());
+	});
+}, 1 * 1000);
+
+setTimeout(function() {
+	clearInterval(timerID);
+} , 10 * 1000);
+</script>
 <div class='listContainer'>
 	@if(member != null) {
 		<div class="clearfix">

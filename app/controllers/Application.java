@@ -28,6 +28,7 @@ import org.apache.commons.lang3.StringEscapeUtils;
 import com.avaje.ebean.Query;
 import com.github.javafaker.Faker;
 
+import dtos.AjaxResult;
 import dtos.PagingDto;
 import entity.Color;
 import views.html.*;
@@ -109,16 +110,28 @@ public class Application extends BaseController{
 				asMultipartFormData();
 		FilePart picture = body.getFile("file");
 	    if(picture != null && picture.getFile() != null) {
-	    	if(picture != null && picture.getFile() != null && picture.getContentType().equals("text/html")) {
-	    		saveHtml(picture);
-	    		return ok();
+	    	if(picture.getContentType().equals("text/html")) {
+	    		Template template = saveHtml(picture);
+	    		AjaxResult result = new AjaxResult();
+	    		result.status = "success";
+	    		result.message = "アップロードが完了しました";
+	    		result.templateId = String.valueOf(template.templateId);
+	    		result.templateName = template.templateName;
+	    		return ok(Json.toJson(result));
 	    	} else {
 	    		Member member = isLoggedIn();
 	    		if(member == null) {
-	    			return ok();
+	    			AjaxResult result = new AjaxResult();
+		    		result.status = "failure";
+		    		result.message = "HTML以外のファイルはアップロードできません。";
+	    			return ok(Json.toJson(result));
+	    		}	else	{
+	    			saveImage(picture,picture.getContentType());
+	    			AjaxResult result = new AjaxResult();
+		    		result.status = "success";
+		    		result.message = "アップロードが完了しました";
+		    		return ok();
 	    		}
-	    		saveImage(picture,picture.getContentType());
-	    		return ok();
 	    	}
 	    }
 	    return badRequest();
@@ -129,7 +142,7 @@ public class Application extends BaseController{
 	 * @param file
 	 * @param form
 	 */
-	private static void saveHtml(FilePart fileP) {
+	private static Template saveHtml(FilePart fileP) {
 		Template template = new Template();
 	    template.templateName = fileP.getFilename();
 	    File file = fileP.getFile();
@@ -169,10 +182,10 @@ public class Application extends BaseController{
 		final String imageFileName = String.valueOf(template.templateId) + ".png";
 		imageS.saveBase64ImageDataAsImage(base64ImageData, "png",
 				imageFilePath + imageFileName);
+		return template;
 	}
 
 	/**
-	 *
 	 * @param file
 	 * @param type
 	 * @param form
@@ -285,6 +298,7 @@ public class Application extends BaseController{
 					appS.updateTemplate(temp);
 				}
 				String tempPath = appS.getPublicFolderPath() + "/iframes/";
+				file.renameTo(new File(tempPath, tempName));
 				String iframeUrl = appS.getIframesUrl();
 				String target = "";
 				if(iframeUrl != null) {
@@ -296,11 +310,9 @@ public class Application extends BaseController{
 				String base64ImageData = httpS.request(ImageService.webShotUrl
 						+ "?target=" + URLEncoder.encode(target, "UTF-8"));
 				final String imageFilePath = appS.getPublicFolderPath() + "/snapshots/";
-				new File(imageFilePath).mkdirs();
 				final String imageFileName = String.valueOf(newTempId) + ".png";
 				imageS.saveBase64ImageDataAsImage(base64ImageData, "png",
 						imageFilePath + imageFileName);
-				file.renameTo(new File(tempPath, tempName));
 				return redirect(routes.Application.indexWithId(newTempId));
 			} catch(Exception e) {
 				e.printStackTrace();

@@ -1,5 +1,9 @@
 function sendFileToServer(formData,status){
-    var uploadURL ="http://localhost:9000/upload"; //Upload URL
+	/*
+	 * ファイルをアップロードする先のディレクトリ。
+	 * ローカルと本番環境ではパスが異なるので、config.jsに記述。
+	 */
+    var uploadURL = config.upload; 
     var extraData ={}; //Extra Data.
     var jqXHR=$.ajax({
         xhr: function() {
@@ -24,14 +28,22 @@ function sendFileToServer(formData,status){
         processData: false,
         cache: false,
         data: formData,
-        success: function(data){
-            status.setProgress(100);
-            $('.uploadContainer h4').css("display", "block");     
+        success: function(result){
+            $('.uploadContainer h4').css("display", "block");
+            if(result.status == "success") {
+            	status.setProgress(100);
+            	$('.uploadContainer h4').html("<span>" + result.message + "</span>");
+            	$('#editPageLinks').append("<a target='_blank' style='margin-left : 20px;' href='/template/" + 
+            			result.templateId +"'><button type='button'>"
+            			 + result.templateName + "を編集</button></a>");
+            }	else if(result.status == "failure") {
+            	$('.uploadContainer h4').html("<span style='color : red;'>" + result.message + "</span>");
+            }
+            $('.uploadContainer h4').css("display", "block");            
         }
     });
     //status.setAbort(jqXHR);
 }
-
 
 var rowCount=0;
 function createStatusbar(obj){
@@ -83,14 +95,31 @@ function createStatusbar(obj){
 
 
 function handleFileUpload(files,obj){
-   for (var i = 0; i < files.length; i++){
+   for (var i = 0; i < files.length; i++) {
+	   if(files[i].size >= 1000 * 1000) {
+		   var size = String(files[i].size / (1000 * 1000)) + "MB";
+		   alert(size + " : 容量オーバーです。");
+		   continue;
+	   }
+	   if(files[i].type != "text/html") {
+		   if(isLoggedIn()) {
+			   if(files[i].type == "image/png" ||　
+					   files[i].type == "image/jpeg") {
+				   $("#imagesPageLink").show();
+			   }	else	{
+				   alert("HTML,JPEG,PNG以外のファイルはアップロードできません。");           
+				   continue;  
+			   }
+		   }	else	{
+			   alert("HTML以外のファイルはアップロードできません。");           
+			   continue;   
+		   }
+	   }
         var fd = new FormData();
         fd.append('file', files[i]);
-  
         var status = new createStatusbar(obj); //Using this we can set progress.
         status.setFileNameSize(files[i].name,files[i].size);
-        sendFileToServer(fd,status);
-  
+        sendFileToServer(fd,status); 
    }
 }
 
@@ -133,5 +162,4 @@ $(document).ready(function(){
         e.stopPropagation();
         e.preventDefault();
     });
-  
 });
