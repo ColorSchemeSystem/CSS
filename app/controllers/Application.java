@@ -154,6 +154,9 @@ public class Application extends BaseController{
 	    Member member = isLoggedIn();
 	    if(member != null) {
 	    	template.member = member;
+	    	template.accessFlag = 1;
+	    }else{
+	    	template.accessFlag = 0;
 	    }
 	    appS.saveTemplate(template);
 	    final String path = appS.getPublicFolderPath() + "/iframes/";
