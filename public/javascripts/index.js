@@ -2,7 +2,7 @@
 * index.scala.htmlで主に使われるjs
 * 作成日	       2016/06/09
 * 最終更新者     Momoi Yuji
-* 更新日        2016/06/15
+* 更新日        2016/06/21
 */
 
 /*******************************************************************************
@@ -188,7 +188,7 @@ function allScribing(obj, assignmentName, number, targetPass, viewName, color) {
 	addTr(obj, assignmentName, childName, targetPass, viewName, color);
 
 	// 設定項目の追加
-	addSetting(childName, targetPass, obj);
+	addSetting(childName, targetPass, obj, classname);
 
 	assignmentName = childName;
 	$('iframe').contents().find(obj).children().each(function() {
@@ -288,9 +288,9 @@ function addTr(obj, classname, childName, targetPass, viewName, color) {
 /*
 *  設定項目追加
 */
-function addSetting(classname, targetPass, obj) {
+function addSetting(classname, targetPass, obj, classname) {
 	addBackground(classname, targetPass);
-	addBorder(classname, targetPass);
+	addBorder(classname, targetPass, obj, classname);
 	if(textCheck(obj)) {
 		addFont(classname, targetPass, obj);
 		addEditText(classname, targetPass, obj);
@@ -387,7 +387,10 @@ function addBackground(name, targetPass) {
 /*
 *  ボーダー線の配色を追加
 */
-function addBorder(name, targetPass) {
+function addBorder(name, targetPass, obj, classname) {
+	var childName = name + "-border";
+	classname = "iframe"+classname;
+	addTr(obj, classname, childName, targetPass, "border", "#555");
 	var tr = $("<tr class='iframe"+name+"'></tr>");
 	var td = $("<td>border</td>");
 	var td2 = $("<input type='text' class='form-control' id='"+name+"-bor' value='#A6FF00' data-color-format='hex'>");
