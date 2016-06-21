@@ -36,7 +36,6 @@ public class ImageService {
 	 * @param fileName
 	 */
 	public void saveBase64ImageDataAsImage(String base64ImageData,String type,String fileName) {
-		Logger.info("base64 : " + base64ImageData);
 		Logger.info("type : " + type);
 		Logger.info("fileName : " + fileName);
 		BufferedImage image = this.convertBase64ImageDataToBufferedImage(base64ImageData, type);

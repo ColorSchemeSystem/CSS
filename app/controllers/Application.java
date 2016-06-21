@@ -295,6 +295,7 @@ public class Application extends BaseController{
 					appS.updateTemplate(temp);
 				}
 				String tempPath = appS.getPublicFolderPath() + "/iframes/";
+				file.renameTo(new File(tempPath, tempName));
 				String iframeUrl = appS.getIframesUrl();
 				String target = "";
 				if(iframeUrl != null) {
@@ -306,11 +307,9 @@ public class Application extends BaseController{
 				String base64ImageData = httpS.request(ImageService.webShotUrl
 						+ "?target=" + URLEncoder.encode(target, "UTF-8"));
 				final String imageFilePath = appS.getPublicFolderPath() + "/snapshots/";
-				new File(imageFilePath).mkdirs();
 				final String imageFileName = String.valueOf(newTempId) + ".png";
 				imageS.saveBase64ImageDataAsImage(base64ImageData, "png",
 						imageFilePath + imageFileName);
-				file.renameTo(new File(tempPath, tempName));
 				return redirect(routes.Application.indexWithId(newTempId));
 			} catch(Exception e) {
 				e.printStackTrace();

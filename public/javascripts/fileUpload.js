@@ -1,5 +1,9 @@
 function sendFileToServer(formData,status){
-    var uploadURL ="http://localhost:9000/upload"; //Upload URL
+	/*
+	 * ファイルをアップロードする先のディレクトリ。
+	 * ローカルと本番環境ではパスが異なるので、config.jsに記述。
+	 */
+    var uploadURL = config.upload; 
     var extraData ={}; //Extra Data.
     var jqXHR=$.ajax({
         xhr: function() {
@@ -91,10 +95,16 @@ function createStatusbar(obj){
 
 
 function handleFileUpload(files,obj){
-   for (var i = 0; i < files.length; i++){
+   for (var i = 0; i < files.length; i++) {
+	   if(files[i].size >= 1000 * 1000) {
+		   var size = String(files[i].size / (1000 * 1000)) + "MB";
+		   alert(size + " : 容量オーバーです。");
+		   continue;
+	   }
 	   if(files[i].type != "text/html") {
 		   if(isLoggedIn()) {
-			   if(files[i].type == "image/png" ||　files[i].type == "image/jpeg") {
+			   if(files[i].type == "image/png" ||　
+					   files[i].type == "image/jpeg") {
 				   $("#imagesPageLink").show();
 			   }	else	{
 				   alert("HTML,JPEG,PNG以外のファイルはアップロードできません。");           
@@ -152,5 +162,4 @@ $(document).ready(function(){
         e.stopPropagation();
         e.preventDefault();
     });
-  
 });
