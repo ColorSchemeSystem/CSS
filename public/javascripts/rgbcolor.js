@@ -8,6 +8,8 @@ function RGBColor(color_string)
 {
     this.ok = false;
 
+    if(color_string == undefined) return;
+
     // strip any leading #
     if (color_string.charAt(0) == '#') { // remove # if any
         color_string = color_string.substr(1,6);
