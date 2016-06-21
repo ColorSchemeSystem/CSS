@@ -1,5 +1,9 @@
 function sendFileToServer(formData,status){
-    var uploadURL ="http://localhost:9000/upload"; //Upload URL
+	/*
+	 * ファイルをアップロードする先のディレクトリ。
+	 * ローカルと本番環境ではパスが異なるので、config.jsに記述。
+	 */
+    var uploadURL = config.upload; 
     var extraData ={}; //Extra Data.
     var jqXHR=$.ajax({
         xhr: function() {
