@@ -42,7 +42,7 @@
     <script src='@routes.Assets.at("javascripts/underscore-min.js")'></script>
 	</head>
 
-	<body>
+	<body data-login="@if(user != null) {true} else {false}">
 		<div class="header">
 			<div class="menuBar">
 			@if(user == null) {
