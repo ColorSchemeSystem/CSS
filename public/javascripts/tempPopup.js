@@ -17,8 +17,15 @@ function showEditTemp(id, imgUrl){
 	var findClass = "." + id;
 	var name = $(findClass).data("name");
 	var message = $(findClass).data("message");
+	var flg = $(findClass).data("flg");
+	console.log("flg = " + flg);
 	$('#eTempN').attr("value", name);
 	$('#eTempM').text(message);
 	$('#eTempId').attr("value", id);
+	if(flg == 0){
+		$('#flgPublic').attr("checked", true);
+	}else{
+		$('#flgPrivate').attr("checked", true);
+	}
 	$('#eShumbPopup').attr("src", imgUrl + "/" + id + ".png");
 }
