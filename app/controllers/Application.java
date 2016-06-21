@@ -250,17 +250,25 @@ public class Application extends BaseController{
 		Logger.info("html : " + html.tempHtml);
 		StyleParser styleParser = new StyleParser();
 		StyleCleaner styleCleaner = new StyleCleaner();
-		fileS.saveFile("style.css", styleParser.parse(html.tempHtml).toString());
-		fileS.saveFile("index.html", styleCleaner.removeStyleTagAndStyleAttrs(html.tempHtml));
-		String[] files = {"index.html","style.css"};
+		final String token = String.valueOf(System.currentTimeMillis());
+		new File(token).mkdirs();
+		final String htmlFile = "style.css";
+		final String cssFile = "index.html";
+		fileS.saveFile(token + "/" + htmlFile, styleParser.parse(html.tempHtml).toString());
+		fileS.saveFile(token + "/" + cssFile, styleCleaner.removeStyleTagAndStyleAttrs(html.tempHtml));
+		String[] files = {token + "/" + htmlFile , token + "/" + cssFile};
 		try {
 			String zipFileName = "template_" + new Faker().name().firstName() + ".zip";
 			fileS.zip(zipFileName,files);
 			response().setContentType("application/x-download");
 			response().setHeader("Content-disposition","attachment; filename=" + zipFileName);
+			fileS.deleteFile(htmlFile);
+			fileS.deleteFile(cssFile);
 			return ok(new File(zipFileName));
 		} catch (IOException e) {
 			e.printStackTrace();
+			fileS.deleteFile(htmlFile);
+			fileS.deleteFile(cssFile);
 			return redirect(routes.Application.indexWithId(Long.parseLong(html.temp_id)));
 		}
 	}
