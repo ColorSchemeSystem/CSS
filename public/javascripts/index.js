@@ -183,7 +183,6 @@ function allScribing(obj, assignmentName, number, targetPass, viewName, color) {
 
 	// eqしてあげる対象
 	targetPass = gentlenessEq(targetPass, viewName, number);
-	//if(viewName == "li" || viewName == "tr" || viewName == "th" || viewName == "tr") targetPass = targetPass+":eq("+number+")";
 	nextTargetPass = targetPass;
 	addTr(obj, assignmentName, childName, targetPass, viewName, color);
 
@@ -411,7 +410,7 @@ function addBorder(name, targetPass, obj, classname) {
 	td2.css("color", "white");
 	tr.append(td);
 	tr.append(td2);
-	tr.css("background-color", new RGBColor("#555").toRGB());
+	tr.css("background-color", new RGBColor("#234567").toRGB());
 	tr.css("display", "none");
 	$('#classTable').append(tr);
 

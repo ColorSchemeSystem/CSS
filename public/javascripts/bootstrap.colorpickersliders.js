@@ -1389,9 +1389,7 @@
 
       // targetに色設定
       function setTargetColor(targetData,color) {
-        if(targetData.targetName == "background") {
-          $('iframe').contents().find(targetData.contentName).css('backgroundColor',color);
-        }
+        if(targetData.targetName == "background") $('iframe').contents().find(targetData.contentName).css('backgroundColor',color);
         else if (targetData.targetName == "border") {
           var borderSize = $(targetData.borderSize).val();
           if (targetData.borderPosition == "top") $('iframe').contents().find(targetData.contentName).css('border-top', borderSize+"px solid "+color);
