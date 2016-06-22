@@ -536,6 +536,17 @@
 				width: 255px;
 			}
 
+			#saveTmpButton{
+				width: 300px;
+				margin-top: 20px;
+				margin-bottom: 30px;
+			}
+
+			#deleteTmpButton{
+				width: 300px;
+				background-color: #e57373;
+			}
+
 
 
 
