@@ -246,7 +246,10 @@ public class Application extends BaseController{
 	public static Result download(){
 		Form<TemplateDownload> form = Form.form(TemplateDownload.class).bindFromRequest();
 		TemplateDownload html = form.get();
-		html.tempHtml = "<html>" + html.tempHtml + "</html>";
+		System.out.println(html.tempHtml);
+		if(!html.tempHtml.matches(".*<html.*>.*")){
+			html.tempHtml = "<html lang=\"ja\">" + html.tempHtml + "</html>";
+		}
 		Logger.info("html : " + html.tempHtml);
 		StyleParser styleParser = new StyleParser();
 		StyleCleaner styleCleaner = new StyleCleaner();

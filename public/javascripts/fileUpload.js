@@ -34,9 +34,6 @@ function sendFileToServer(formData,status){
             	status.setProgress(100);
                 status.setLink(result);
             	$('.uploadContainer h4').html("<span>" + result.message + "</span>");
-            	/*$('#editPageLinks').append("<a target='_blank' style='margin-left : 20px;' href='/template/" + 
-            			result.templateId +"'><button class='btn btn-primary' type='button'>"
-            			 + result.templateName + "を編集</button></a>");*/
             }	else if(result.status == "failure") {
             	$('.uploadContainer h4').html("<span style='color : red;'>" + result.message + "</span>");
             }

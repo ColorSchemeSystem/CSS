@@ -390,6 +390,7 @@
 				overflow: hidden;
 				text-overflow: ellipsis;
 				margin-top: 10px;
+				margin-bottom: 5px;
 				text-align: center;
 			}
 
@@ -626,6 +627,7 @@
 			.wrapper .aboutContainer .attention h2{
 				border-bottom: 1px solid #808080;
 			}
+
 
 
 
