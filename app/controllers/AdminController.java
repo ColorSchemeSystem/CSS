@@ -323,4 +323,21 @@ public class AdminController extends BaseController {
 		pagingDto = appS.findTemplatesWithPages(1, 12 , member.memberId);
 		return ok(editTemp.render(pagingDto,member,appS.getSnapShotsUrl()));
 	}
+
+	public static Result deleteTmp(Long id){
+		Template tmp = appS.getTemp(id);
+		Member mem = isLoggedIn();
+		System.out.println("tempmember = " + tmp.member.memberId + " memId = " + mem.memberId);
+		if(tmp != null && tmp.member != null && tmp.member.memberId.equals(mem.memberId)){
+			adminS.deleteTemplate(tmp);
+			/*
+			 * 確認用ログ
+			 */
+			System.out.println("テンプレート削除");
+			PagingDto<Template> pagingDto;
+			pagingDto = appS.findTemplatesWithPages(1, 12 , mem.memberId);
+			return ok(editTemp.render(pagingDto, mem, appS.getSnapShotsUrl()));
+		}
+		return redirect("/");
+	}
 }
