@@ -485,7 +485,7 @@ function addBorderTop(name, targetPass) {
 	$('#classTable').append(tr);
 	var classname = targetPass;
 
-	var color = $('iframe').contents().find(classname).css('border-color');
+	var color = $('iframe').contents().find(classname).css('border-top-color');
 	color = changedColor(color);
 	$("#"+name+"-bor-top").val(color);
 
@@ -493,7 +493,13 @@ function addBorderTop(name, targetPass) {
 	var tr2 = $("<tr class='iframe"+name+"'></tr>");
 	var td3 = $("<td>top-size</td>");
 	var size = 0;
-	if($(targetPass).css("border") != undefined && $(targetPass).css("border") != "") size = $(targetPass).css('border-top-width').substr(0,1);
+	var obj = $('iframe').contents().find(targetPass);
+	if($(obj).css("border-top-width") != undefined && $(obj).css("border-top-width") != "") {
+		size = $(obj).css('border-top-width');
+		size = size.replace(/\s|　/g,"");
+		size = size.replace("px", "");
+		size = size.substr(0, size.length);
+	}
 	var td4 = $("<input type='text' class='"+name+"-bor-top-size' id='border-size' value='"+size+"' data-classname='"+classname+"' data-name='"+name+"' data-position='top' >");
 	tr2.append(td3);
 	tr2.append(td4);
@@ -524,7 +530,7 @@ function addBorderBottom(name, targetPass) {
 	$('#classTable').append(tr);
 	var classname = targetPass;
 
-	var color = $('iframe').contents().find(classname).css('border-color');
+	var color = $('iframe').contents().find(classname).css('border-bottom-color');
 	color = changedColor(color);
 	$("#"+name+"-bor-bottom").val(color);
 
@@ -532,7 +538,13 @@ function addBorderBottom(name, targetPass) {
 	var tr2 = $("<tr class='iframe"+name+"'></tr>");
 	var td3 = $("<td>bottom-size</td>");
 	var size = 0;
-	if($(targetPass).css("border") != undefined && $(targetPass).css("border") != "") size = $(targetPass).css('border-bottom-width').substr(0,1);
+	var obj = $('iframe').contents().find(targetPass);
+	if($(obj).css("border-bottom-width") != undefined && $(obj).css("border-bottom-width") != "") {
+		size = $(obj).css('border-bottom-width');
+		size = size.replace(/\s|　/g,"");
+		size = size.replace("px", "");
+		size = size.substr(0, size.length);
+	}
 	var td4 = $("<input type='text' class='"+name+"-bor-bottom-size' id='border-size' value='"+size+"' data-classname='"+classname+"' data-name='"+name+"' data-position='bottom' >");
 	tr2.append(td3);
 	tr2.append(td4);
@@ -563,7 +575,7 @@ function addBorderRight(name, targetPass) {
 	$('#classTable').append(tr);
 	var classname = targetPass;
 
-	var color = $('iframe').contents().find(classname).css('border-color');
+	var color = $('iframe').contents().find(classname).css('border-right-color');
 	color = changedColor(color);
 	$("#"+name+"-bor-right").val(color);
 
@@ -571,7 +583,13 @@ function addBorderRight(name, targetPass) {
 	var tr2 = $("<tr class='iframe"+name+"'></tr>");
 	var td3 = $("<td>right-size</td>");
 	var size = 0;
-	if($(targetPass).css("border") != undefined && $(targetPass).css("border") != "") size = $(targetPass).css('border-right-width').substr(0,1);
+	var obj = $('iframe').contents().find(targetPass);
+	if($(obj).css("border-right-width") != undefined && $(obj).css("border-right-width") != "") {
+		size = $(obj).css('border-right-width');
+		size = size.replace(/\s|　/g,"");
+		size = size.replace("px", "");
+		size = size.substr(0, size.length);
+	}
 	var td4 = $("<input type='text' class='"+name+"-bor-right-size' id='border-size' value='"+size+"' data-classname='"+classname+"' data-name='"+name+"' data-position='right' >");
 	tr2.append(td3);
 	tr2.append(td4);
@@ -602,7 +620,7 @@ function addBorderLeft(name, targetPass) {
 	$('#classTable').append(tr);
 	var classname = targetPass;
 
-	var color = $('iframe').contents().find(classname).css('border-color');
+	var color = $('iframe').contents().find(classname).css('border-left-color');
 	color = changedColor(color);
 	$("#"+name+"-bor-left").val(color);
 
@@ -610,7 +628,56 @@ function addBorderLeft(name, targetPass) {
 	var tr2 = $("<tr class='iframe"+name+"'></tr>");
 	var td3 = $("<td>left-size</td>");
 	var size = 0;
-	if($(targetPass).css("border") != undefined && $(targetPass).css("border") != "") size = $(targetPass).css('border-left-width').substr(0,1);
+	var obj = $('iframe').contents().find(targetPass);
+	if($(obj).css("border-left-width") != undefined && $(obj).css("border-left-width") != "") {
+		size = $(obj).css('border-left-width');
+		size = size.replace(/\s|　/g,"");
+		size = size.replace("px", "");
+		size = size.substr(0, size.length);
+	}
+	var td4 = $("<input type='text' class='"+name+"-bor-left-size' id='border-size' value='"+size+"' data-classname='"+classname+"' data-name='"+name+"' data-position='left' >");
+	tr2.append(td3);
+	tr2.append(td4);
+	tr2.css("display", "none");
+	$('#classTable').append(tr2);
+
+	var dataBorder = {contentName:classname, targetName:"border", borderSize:"."+name+"-bor-left-size", borderPosition:"left"};
+	$("input#"+name+"-bor-left").ColorPickerSliders({
+		placement: $('#chooser').data('placement'),
+		hsvpanel: $('#chooser').data('hsvpanel'),
+		sliders: $('#chooser').data('sliders'),
+		swatches: $('#chooser').data('swatches'),
+		previewformat: 'hex'
+	},dataBorder);
+};
+
+/*
+*  ボーダー(角丸)追加
+*/
+function addBorderRadius(name, targetPass) {
+	var tr = $("<tr class='iframe"+name+"'></tr>");
+	var td = $("<td>radius</td>");
+	var td2 = $("<input type='text' class='form-control' id='"+name+"-bor-radius' value='#A6FF00' data-color-format='hex'>");
+
+	tr.append(td);
+	tr.append(td2);
+	tr.css("display", "none");
+	$('#classTable').append(tr);
+	var classname = targetPass;
+
+	var color = $('iframe').contents().find(classname).css('border-color');
+	color = changedColor(color);
+	$("#"+name+"-bor-radius").val(color);
+
+	// ボーダーサイズ変更できる様に
+	var tr2 = $("<tr class='iframe"+name+"'></tr>");
+	var td3 = $("<td>radius-size</td>");
+	var size = 0;
+	if($(targetPass).css("border") != undefined && $(targetPass).css("border") != "") {
+		size = $(targetPass).css('border-radius');
+		size = size.replace("px", "　");
+		size = size.substr(size.match(/　/), size.match(/　/)+1);
+	}
 	var td4 = $("<input type='text' class='"+name+"-bor-left-size' id='border-size' value='"+size+"' data-classname='"+classname+"' data-name='"+name+"' data-position='left' >");
 	tr2.append(td3);
 	tr2.append(td4);
