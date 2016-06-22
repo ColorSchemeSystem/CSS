@@ -18,12 +18,12 @@
 								<div class="col-xs-4">
 									@if(t.member != null){
 										@if(t.member.nickName.isEmpty()){
-											<a onClick="showEditTemp('@t.templateId', '@snapShotsUrl');" class="@t.templateId" data-name="@t.templateName" data-message="@t.templateMessage" data-user="@t.member.memberName" href="#modal">
+											<a onClick="showEditTemp('@t.templateId', '@snapShotsUrl');" class="@t.templateId" data-name="@t.templateName" data-message="@t.templateMessage" data-user="@t.member.memberName" data-flg="@t.accessFlag" href="#modal">
 										}else{
-											<a onClick="showEditTemp('@t.templateId', '@snapShotsUrl');" class="@t.templateId" data-name="@t.templateName" data-message="@t.templateMessage" data-user="@t.member.nickName" href="#modal">
+											<a onClick="showEditTemp('@t.templateId', '@snapShotsUrl');" class="@t.templateId" data-name="@t.templateName" data-message="@t.templateMessage" data-user="@t.member.nickName" data-flg="@t.accessFlag" href="#modal">
 										}
 									}else{
-										<a onClick="showEditTemp('@t.templateId', '@snapShotsUrl');" class="@t.templateId" data-name="@t.templateName" data-message="@t.templateMessage" data-user="anonymous" href="#modal">
+										<a onClick="showEditTemp('@t.templateId', '@snapShotsUrl');" class="@t.templateId" data-name="@t.templateName" data-message="@t.templateMessage" data-user="anonymous" data-flg="@t.accessFlag" href="#modal">
 									}
 									<div>
 										<img width="260" height="200" src='@(snapShotsUrl)/@(t.templateId).png'/>
@@ -64,11 +64,18 @@
 				  <div class="remodal-content">
 				  	<form action="/template/update" method="post">
 					  	<img src='#' width="260" height="200" id="eShumbPopup"/><br><br>
-					  	テンプレート名<br><input type="text" id="eTempN" size="40" name="templateName"></input><br><br>
-					  	コメント<br><textarea id="eTempM" rows="4" cols="40" name="templateMessage"></textarea><br><br>
-					  	<input type="hidden" id="eTempId" name="templateId">
-						<button data-remodal-action="cancel" class="remodal-cancel">キャンセル</button>
-					  	<input type="submit" class="remodal-confirm" value="更新">
+					  	<input type="hidden" class="editTempId" >
+						  	テンプレート名<br><input type="text" id="eTempN" size="40" name="templateName"></input><br><br>
+						  	コメント<br><textarea id="eTempM" rows="4" cols="40" name="templateMessage"></textarea><br><br>
+						  	<p>
+						  		<input type="radio" name="templateFlg" value="0" id="flgPublic">公開</input>&nbsp
+						  		<input type="radio" name="templateFlg" value="1" id="flgPrivate">非公開</input>
+						  	</p>
+					  	<input type="submit" class="remodal-confirm" value="更新" id="saveTmpButton">
+					</form>
+
+					<form action="#" method="post" id="deleteTmp">
+						<input id="deleteTmpButton" type="submit" class="remodal-confirm" value="削除" onclick="return confirm('このテンプレートを削除します。本当によろしいですか')"></input>
 				  	</form>
 				  </div>
 				</div>

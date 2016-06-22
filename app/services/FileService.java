@@ -27,6 +27,15 @@ public class FileService {
 	}
 	
 	/**
+	 * 
+	 * @param fileName
+	 */
+	public void deleteFile(String fileName) {
+		File file = new File(fileName);
+		file.delete();
+	}
+	
+	/**
 	 * @param fileName
 	 * @param targetFileNames
 	 * @throws IOException

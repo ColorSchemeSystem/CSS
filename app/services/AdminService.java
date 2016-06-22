@@ -21,6 +21,10 @@ public class AdminService {
 		template.update();
 	}
 
+	public void deleteTemplate(Template template){
+		template.delete();
+	}
+
 	public Template findTemplateById(Long id){
 		return Template.findById(id);
 	}
