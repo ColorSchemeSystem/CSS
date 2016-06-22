@@ -246,7 +246,6 @@ public class Application extends BaseController{
 	public static Result download(){
 		Form<TemplateDownload> form = Form.form(TemplateDownload.class).bindFromRequest();
 		TemplateDownload html = form.get();
-		System.out.println(html.tempHtml);
 		if(!html.tempHtml.matches(".*<html.*>.*")){
 			html.tempHtml = "<html lang=\"ja\">" + html.tempHtml + "</html>";
 		}
@@ -436,5 +435,40 @@ public class Application extends BaseController{
 	public static Result about(){
 		Member mem = isLoggedIn();
 		return ok(about.render(mem));
+	}
+	
+	/**
+	 * @return
+	 */
+	public static Result downloadTemplate() {
+		Long templateId = null;
+		try {
+			templateId = Long.valueOf(request().getQueryString("tid"));	
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		String fileName = appS.getPublicFolderPath() + "/iframes/" 
+		+ String.valueOf(templateId) + ".html";
+		String html = fileS.fileGetContents(fileName);
+		String css  = new StyleParser().parse(html).toString();
+		html = new StyleCleaner().removeStyleTagAndStyleAttrs(html);
+		final String token = String.valueOf(System.currentTimeMillis());
+		fileS.mkdir(token);
+		String indexHtml = token + "/index.html";
+		String styleCss = token + "/style.css";
+		fileS.saveFile(indexHtml, html);
+		fileS.saveFile(styleCss, css);
+		String[] files = {indexHtml , styleCss};
+		try {
+			String zipFileName = "template_" + new Faker().name().firstName() + ".zip";
+			fileS.zip(zipFileName,files);
+			response().setContentType("application/x-download");
+			response().setHeader("Content-disposition","attachment; filename=" + zipFileName);
+			fileS.deleteFile(indexHtml);
+			fileS.deleteFile(styleCss);
+			return ok(new File(zipFileName));
+		} catch (IOException e) {
+			return ok();
+		}
 	}
 }
