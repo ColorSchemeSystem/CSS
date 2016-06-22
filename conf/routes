@@ -13,7 +13,7 @@ POST    /template/:id               controllers.Application.backToIndex(id: Long
 GET     /about                      controllers.Application.about()
 GET     /login                      controllers.AdminController.login()
 GET     /logout                     controllers.AdminController.logout()
-GET     /loginEntry                 controllers.AdminController.loginEntry()
+POST    /login                      controllers.AdminController.loginEntry()
 GET     /createAccount              controllers.AdminController.createAccount()
 POST    /createAccount              controllers.AdminController.saveAccount()
 GET     /editProfile         		controllers.AdminController.editProfile()
