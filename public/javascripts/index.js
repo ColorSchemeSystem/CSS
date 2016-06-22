@@ -134,14 +134,21 @@ function reloadIframe(html){
 					// border-sizeリアルタイム処理
 					$(function() {
 						$('input#border-size').each(function() {
-							$(this).bind('keyup', setBorderSize(this));
+							$(this).on('keyup', setBorderSize(this));
 						});
 					});
 
 					// textのリアルタイム処理
 					$(function() {
 						$('input.editText').each(function() {
-							$(this).bind('keyup', editText(this));
+							$(this).on('keyup', editText(this));
+						});
+					});
+
+					// imgのリアルタイム処理
+					$(function() {
+						$('input.imageText').each(function() {
+							$(this).on('keyup blur focus click', imageChange(this));
 						});
 					});
 				}
@@ -176,7 +183,7 @@ function toggleHide(obj) {
 */
 function allScribing(obj, assignmentName, number, targetPass, viewName, color) {
 	var tagName = $(obj).prop("tagName");
-	if(tagName == "IMG") renamedImagePass(obj);
+	if(tagName == "IMG") renamedImagePass(obj, assignmentName, targetPass);
 	if(tagName == "SCRIPT" || tagName == "BR" || tagName == "IMG" || tagName=="STYLE" || tagName=="HEADER") return;
 	var childName = assignmentName + "-" + number+"-"+tagName.toLowerCase() + "-child";
 
@@ -225,15 +232,43 @@ function allScribing(obj, assignmentName, number, targetPass, viewName, color) {
 /*
 *  imgタグのパスを変更してtextureの名前を保存する
 */
-function renamedImagePass(obj) {
+function renamedImagePass(obj, classname, targetPass) {
 	var imgName = $(obj).attr("src");
 	var fileURL = $('#fileURL').data('url');
 	while(imgName.indexOf("/") != -1) {
 		imgName = imgName.substr(imgName.indexOf("/")+1,imgName.length);
 	}
 	TextureName.push(imgName);
+
+	//TODO 本番活況ではURL変えてね
 	var url = "/assets/member-images/" + imgName;
 	$(obj).attr("src", url);
+
+	var childName = "image"+TextureName.length;
+	$(obj).addClass(classname);
+	addTr(obj, classname, childName, "."+classname, "img", new RGBColor("#3AC"));
+
+	var tr = $("<tr class='iframe"+childName+"'></tr>");
+	var td = $("<td>textuerName</td>");
+	var td2 = $("<input style='height:100%;' type='text' class='imageText' id='"+childName+"-texture' value='"+imgName+"' data-path='"+childName+"' data-target='"+targetPass+"' >");
+
+	tr.append(td);
+	tr.append(td2);
+	tr.css("display", "none");
+	$('#classTable').append(tr);
+};
+
+/*
+*  imgのリアルタイム変更(keyup)
+*/
+function imageChange(element) {
+	var v, old = element.value;
+	return function() {
+		if(old != (v = element.value)) {
+			old = v;
+			$('iframe').contents().find($(this).data('target')).attr('src', "/assets/member-images/"+element.value);
+		}
+	}
 };
 
 /*
@@ -426,7 +461,7 @@ function addBorder(name, targetPass, obj, classname) {
 	td2.css("color", "white");
 	tr.append(td);
 	tr.append(td2);
-	tr.css("background-color", new RGBColor("#555").toRGB());
+	tr.css("background-color", new RGBColor("#234567").toRGB());
 	tr.css("display", "none");
 	$('#classTable').append(tr);
 
@@ -682,6 +717,7 @@ function editText(element) {
 	var v, old = element.value;
 	return function() {
 		if(old != (v = element.value)) {
+			old = v;
 			var text = $("#"+$(this).attr("id")).val();
 			$('iframe').contents().find($("#"+$(this).attr("id")).data('classname')).text(text);
 		}
