@@ -10,6 +10,7 @@
 *******************************************************************************/
 var iframeMethod;
 var NamedClassName = [];
+var TextureName = [];
 
 $(window).load(function(){
 	$('#loading').css("display", "block");
@@ -175,6 +176,7 @@ function toggleHide(obj) {
 */
 function allScribing(obj, assignmentName, number, targetPass, viewName, color) {
 	var tagName = $(obj).prop("tagName");
+	if(tagName == "IMG") renamedImagePass(obj);
 	if(tagName == "SCRIPT" || tagName == "BR" || tagName == "IMG" || tagName=="STYLE" || tagName=="HEADER") return;
 	var childName = assignmentName + "-" + number+"-"+tagName.toLowerCase() + "-child";
 
@@ -183,7 +185,6 @@ function allScribing(obj, assignmentName, number, targetPass, viewName, color) {
 
 	// eqしてあげる対象
 	targetPass = gentlenessEq(targetPass, viewName, number);
-	//if(viewName == "li" || viewName == "tr" || viewName == "th" || viewName == "tr") targetPass = targetPass+":eq("+number+")";
 	nextTargetPass = targetPass;
 	addTr(obj, assignmentName, childName, targetPass, viewName, color);
 
@@ -219,6 +220,21 @@ function allScribing(obj, assignmentName, number, targetPass, viewName, color) {
 		}
 		allScribing($(this), copy, $(this).index(), pass, viewName, colorCopy);
 	});
+};
+
+/*
+*  imgタグのパスを変更してtextureの名前を保存する
+*/
+function renamedImagePass(obj) {
+	var url = $(obj).attr("src");
+	//var hoge = new Packages.services.AppService();
+	while(url.indexOf("/") != -1) {
+		url = url.substr(url.indexOf("/")+1,url.length);
+	}
+	console.log(url);
+	TextureName.push(url);
+	url = "@routes.Assets.at('images/"+url+"')";
+	$(obj).attr("src", "@routes.Assets.at('images/logo000.png')");
 };
 
 /*
