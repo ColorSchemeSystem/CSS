@@ -460,6 +460,10 @@
 				margin-right: 60px;
 			}
 
+			.wrapper .mypageContainer .profile a{
+				margin-left: 180px;
+			}
+
 			.wrapper .mypageContainer .row{
 				float: right;
 				width: 850px;
@@ -520,8 +524,7 @@
 			}
 
 			#profileSubmit{
-				margin-top: 40px;
-				margin-left: 110px;
+				margin: 40px 0px 15px 110px;
 				width: 255px;
 			}
 
@@ -618,6 +621,115 @@
 			.wrapper .aboutContainer .attention h2{
 				border-bottom: 1px solid #808080;
 			}
+
+
+
+
+			/*パスワード再入力のCSS*/
+			.wrapper .confirmLoginContainer{
+				margin: 40px auto 0px auto;
+				width: 430px;
+				background-color: #FFF;
+				border: 1px solid #c0c0c0;
+				padding-left: 50px;
+				padding-bottom: 40px;
+			}
+
+			.wrapper .confirmLoginContainer h3{
+				margin-bottom: 40px;
+				font-weight: bold;
+			}
+
+			.wrapper .confirmLoginContainer input{
+				margin-bottom: 10px;
+			}
+
+			.wrapper .confirmLoginContainer input.btn{
+				width: 325px;
+				margin-bottom: 30px;
+			}
+
+			.wrapper .confirmLoginContainer a button{
+				width: 325px;
+			}
+
+
+
+
+			/*アカウント削除のCSS*/
+			.wrapper .checkDeleteContainer{
+				width: 650px;
+				margin: 30px auto 30px auto;
+				min-height: 500px;
+				background-color: #FFF;
+				padding: 30px;
+			}
+
+			.wrapper .checkDeleteContainer h3{
+				margin-bottom: 30px;
+			}
+
+			
+			.wrapper .checkDeleteContainer p{
+				color: #808080;
+				padding-bottom: 40px;
+				margin-bottom: 0px;
+				border-bottom: 1px solid #808080;
+			}
+
+			.wrapper .checkDeleteContainer .checkArea{
+				float: left;
+				margin-left: 20px;
+				padding-top: 40px;
+				padding-bottom: 30px;
+			}
+
+			.wrapper .checkDeleteContainer .allPrivateT{
+				float: right;
+				margin-right: 20px;
+				padding-top: 30px;
+				padding-bottom: 30px;
+			}
+
+			.wrapper .checkDeleteContainer .allPrivateT p{
+				color: #808080;
+				padding-bottom: 0px;
+				border-bottom: none;
+			}
+
+			.wrapper .checkDeleteContainer .allPublicT{
+				float: right;
+				margin-right: 40px;
+				padding-top: 30px;
+				padding-bottom: 30px;
+			}
+
+			.wrapper .checkDeleteContainer .allImage{
+				float: right;
+				margin-right: 165px;
+				padding-top: 30px;
+				padding-bottom: 30px;
+			}
+
+			.wrapper .checkDeleteContainer .floatclear:after {
+				content: "";
+				display: block;
+				clear: both;
+				border-bottom: 1px solid #808080;
+			}
+
+			.wrapper .checkDeleteContainer .deleteAccountButton{
+				margin-top: 60px;
+				padding-bottom: 10px;
+				padding-left: 160px;
+				border-bottom: none;
+			}
+
+			.wrapper .checkDeleteContainer .deleteAccountButton a{
+				font-size: 16px;
+				margin-left: 25px;
+			}
+
 
 
 

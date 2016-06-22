@@ -3,9 +3,14 @@ package services;
 import org.mindrot.jbcrypt.BCrypt;
 
 import models.*;
+import play.Logger;
 import play.data.Form;
 import play.data.validation.ValidationError;
 import forms.*;
+
+import java.io.File;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.*;
 
 public class AdminService {
@@ -27,6 +32,53 @@ public class AdminService {
 
 	public Template findTemplateById(Long id){
 		return Template.findById(id);
+	}
+
+	public List<Template> findTemplateByUser(Long id){
+		return Template.find.where().eq("Member_Member_Id", id).findList();
+	}
+
+	public List<Template> findTemplateByUser(Long id, int flg){
+		if(flg == 0){
+			return Template.find.where().eq("Member_Member_Id", id).eq("accessFlag", "0").findList();
+		}else{
+			return Template.find.where().eq("Member_Member_Id", id).eq("accessFlag", "1").findList();
+		}
+	}
+
+	public void deleteMemberWithTemplate(Long id, int flg){
+		List<Template> list = findTemplateByUser(id, flg);
+		for(Template temp : list){
+			if(temp != null){
+				temp.member = null;
+				temp.accessFlag = 0;
+				temp.update();
+			}
+		}
+		List<Template> restList = findTemplateByUser(id);
+		for(Template temp : restList){
+			if(temp != null){
+				temp.delete();
+			}
+		}
+	}
+
+	public List<Image> findImageByUser(Long id){
+		return Image.find.where().eq("Member_Member_id", id).findList();
+	}
+
+	public void deleteMemberWithImage(Long id){
+		List<Image> list = findImageByUser(id);
+		for(Image img : list){
+			if(img != null){
+				img.member = null;
+				img.update();
+			}
+		}
+	}
+
+	public void deleteImg(Image img){
+		img.delete();
 	}
 
 	/**
@@ -72,6 +124,10 @@ public class AdminService {
 
 	public void updateMember(Member member){
 		member.update();
+	}
+
+	public void deleteMember(Member member){
+		member.delete();
 	}
 
 	/**

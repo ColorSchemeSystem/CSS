@@ -20,7 +20,8 @@
 				@helper.inputText(setting("memberName"),'_label -> "ユーザーID",'_showConstraints -> false, 'size -> 70, 'readonly -> true)
 				@helper.inputText(setting("mail"),'_label -> "メールアドレス",'_showConstraints -> false, 'size -> 70)
 				@helper.inputText(setting("nickName"), '_label -> "ニックネーム", '_showConstraints -> false, 'size -> 70)
-				<input type="submit" value="設定を保存" id="profileSubmit" class="btn btn-primary">
+				<input type="submit" value="設定を保存" id="profileSubmit" class="btn btn-primary"><br>
+				<a href="/confirmPassword">アカウントの削除</a>
 			</div>
 			<div class="sideMenu">
 				<ul class="nav nav-pills nav-stacked">

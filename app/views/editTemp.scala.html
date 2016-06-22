@@ -62,9 +62,8 @@
 				<div class="remodal" data-remodal-id="modal" role="dialog" aria-labelledby="modal1Title" aria-describedby="modal1Desc">
 				  <button data-remodal-action="close" class="remodal-close" aria-label="Close"></button>
 				  <div class="remodal-content">
-				  	<form action="/template/update" method="post">
+				  	<form action="#" method="post" id="updateTmp">
 					  	<img src='#' width="260" height="200" id="eShumbPopup"/><br><br>
-					  	<input type="hidden" class="editTempId" >
 						  	テンプレート名<br><input type="text" id="eTempN" size="40" name="templateName"></input><br><br>
 						  	コメント<br><textarea id="eTempM" rows="4" cols="40" name="templateMessage"></textarea><br><br>
 						  	<p>
@@ -73,7 +72,6 @@
 						  	</p>
 					  	<input type="submit" class="remodal-confirm" value="更新" id="saveTmpButton">
 					</form>
-
 					<form action="#" method="post" id="deleteTmp">
 						<input id="deleteTmpButton" type="submit" class="remodal-confirm" value="削除" onclick="return confirm('このテンプレートを削除します。本当によろしいですか')"></input>
 				  	</form>
