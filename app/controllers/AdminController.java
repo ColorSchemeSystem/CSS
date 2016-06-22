@@ -31,6 +31,7 @@ import dtos.PagingDto;
 import forms.MyPage;
 import forms.ModifyPassword;
 import forms.TemplateUpload;
+import forms.checkDelete;
 import models.*;
 
 import play.mvc.Http.MultipartFormData;
@@ -87,6 +88,31 @@ public class AdminController extends BaseController {
 		return redirect("/");
 	}
 
+	public static Result checkPassword(){
+		Member loginMem = isLoggedIn();
+		Form<Member> form = Form.form(Member.class).bindFromRequest();
+		if(loginMem != null){
+			if(!form.hasErrors()){
+				Member formMem = form.get();
+				Member inputMem = adminS.findMemberByMemberName(formMem.memberName);
+				if(inputMem == null) {
+					adminS.addMemberErrors(form, "ユーザIDが誤っています", "memberName");
+					return badRequest(confirmPassword.render(null, "パスワードを再入力してください", form));
+				}
+				// パスワード確認
+				if(!adminS.checkpw(formMem.password, inputMem.password)) {
+					// 一致していなかったらログイン画面へ
+					adminS.addMemberErrors(form, "パスワードが誤っています", "password");
+					return badRequest(confirmPassword.render(null, "パスワードを再入力してください", form));
+				}
+				return ok(deleteAccount.render(loginMem, Form.form(checkDelete.class)));
+			}else{
+
+			}
+		}
+		return redirect("/login");
+	}
+
 	/**
 	*  ログアウト処理
 	*/
@@ -137,6 +163,51 @@ public class AdminController extends BaseController {
 			// 新規アカウント登録画面へ
 			return badRequest(createAccount.render(null, "新規登録", form));
 		}
+	}
+
+	public static Result confirmPassword(){
+		Member mem = isLoggedIn();
+		if(mem == null) {
+			return redirect("/login");
+		}
+		mem.password = null;
+		Form<Member> form = Form.form(Member.class).fill(mem);
+		return ok(confirmPassword.render(mem, "パスワードを再入力してください", form));
+	}
+
+	public static Result deleteAccount(Long id){
+		Form<checkDelete> form = Form.form(checkDelete.class).bindFromRequest();
+		Member mem = isLoggedIn();
+		if(mem == null) {
+			return redirect("/login");
+		}
+		checkDelete result = form.get();
+		if(result.deletePrivateTmp == 0){
+			adminS.deleteMemberWithTemplate(id, 1);
+		}
+		if(result.deletePublicTmp == 0){
+			adminS.deleteMemberWithTemplate(id, 0);
+		}
+		if(result.deleteImage == 0){
+			adminS.deleteMemberWithImage(id);
+		}
+
+		List<Template> tempList = adminS.findTemplateByUser(id);
+		for(Template temp : tempList){
+			adminS.deleteTemplate(temp);
+		}
+		List<Image> imgList = adminS.findImageByUser(id);
+		for(Image img : imgList){
+			adminS.deleteImg(img);
+		}
+
+		Member member = adminS.findMemberById(id);
+		adminS.deleteMember(member);
+		/*
+		 * 確認用ログ
+		 */
+		System.out.println("アカウントを削除");
+		return redirect("/");
 	}
 
 	/**
@@ -293,6 +364,9 @@ public class AdminController extends BaseController {
 
 	public static Result editTempList(){
 		Member member = isLoggedIn();
+		if(member == null) {
+			return redirect("/login");
+		}
 		String type = request().getQueryString("type");
 		Integer page = 1;
 		try {
@@ -303,14 +377,14 @@ public class AdminController extends BaseController {
 		return ok(editTemp.render(pagingDto,member,appS.getSnapShotsUrl()));
 	}
 
-	public static Result updateTemp(){
+	public static Result updateTemp(Long id){
 		Form<TemplateUpload> form = Form.form(TemplateUpload.class).bindFromRequest();
 		Member member = isLoggedIn();
 		TemplateUpload editTmp = form.get();
 		if(editTmp.templateName.replaceAll("　", " ").trim().isEmpty()){
-			editTmp.templateName = "template" + editTmp.templateId;
+			editTmp.templateName = "template" + id;
 		}
-		Template temp = adminS.findTemplateById(editTmp.templateId);
+		Template temp = adminS.findTemplateById(id);
 		temp.templateName = editTmp.templateName.replaceAll("　", " ").trim();
 		temp.templateMessage = editTmp.templateMessage.replaceAll("　", " ").trim();
 		temp.accessFlag = editTmp.templateFlg;
