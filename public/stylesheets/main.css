@@ -1,7 +1,7 @@
 			
 
 
-			/*メイン/HOMEのCSS*/
+			/*繝｡繧､繝ｳ/HOME縺ｮCSS*/
 			* {
 				box-sizing: border-box;
 			}
@@ -10,7 +10,7 @@
 				margin: 0;
 				font-size: 13px;
 				background-color: #FFF;
-				font-family: "ヒラギノ角ゴ ProN W3", "Hiragino Kaku Gothic ProN", "メイリオ", Meiryo, sans-serif;
+				font-family: "繝偵Λ繧ｮ繝手ｧ偵ざ ProN W3", "Hiragino Kaku Gothic ProN", "繝｡繧､繝ｪ繧ｪ", Meiryo, sans-serif;
 				height: 100%;
 			}
 
@@ -205,7 +205,7 @@
 
 
 
-			/*ログインのCSS*/
+			/*繝ｭ繧ｰ繧､繝ｳ縺ｮCSS*/
 
 			.wrapper .loginContainer{
 				margin: 40px auto 0px auto;
@@ -237,7 +237,7 @@
 
 
 
-			/*新規作成のCSS*/
+			/*譁ｰ隕丈ｽ懈�舌�ｮCSS*/
 
 			.wrapper .accountContainer{
 				margin: 40px auto 40px auto;
@@ -265,7 +265,7 @@
 
 
 
-			/*アップロードのCSS*/
+			/*繧｢繝�繝励Ο繝ｼ繝峨�ｮCSS*/
 
 			.wrapper .uploadContainer{
 				margin: 40px auto 40px auto;
@@ -361,7 +361,7 @@
 
 
 
-			/*テンプレート一覧のCSS*/
+			/*繝�繝ｳ繝励Ξ繝ｼ繝井ｸ�隕ｧ縺ｮCSS*/
 
 			.wrapper .listContainer{
 				margin: 20px;
@@ -406,7 +406,7 @@
 
 
 
-			/*画像一覧のCSS*/
+			/*逕ｻ蜒丈ｸ�隕ｧ縺ｮCSS*/
 
 			.wrapper .imgContainer{
 				margin: 40px 30px 40px 30px;
@@ -445,7 +445,7 @@
 
 
 
-			/*マイページのCSS*/
+			/*繝槭う繝壹�ｼ繧ｸ縺ｮCSS*/
 
 			.wrapper .mypageContainer{
 				margin: 20px auto 30px auto;
@@ -554,7 +554,7 @@
 
 
 
-			/*カラー分析ページのCSS*/
+			/*繧ｫ繝ｩ繝ｼ蛻�譫舌�壹�ｼ繧ｸ縺ｮCSS*/
 			.wrapper .analyzeContainer{
 				padding-top: 20px;
 				padding-left: 30px;
@@ -574,7 +574,7 @@
 
 
 
-			/*カラーページのCSS*/
+			/*繧ｫ繝ｩ繝ｼ繝壹�ｼ繧ｸ縺ｮCSS*/
 			.wrapper .colorContainer{
 				padding: 20px;
 			}
@@ -592,6 +592,15 @@
 				color: #808080;
 				margin-top: 30px;
 			}
+			
+			.wrapper .analyzeContainer .desc {
+				margin-top: 10px;
+			}
+			
+			.wrapper .analyzeContainer > p{
+				color: #808080;
+				margin-top: 30px;
+			}
 
 			.wrapper .colorContainer .colorContent .colorName{
 				width: 190px;
@@ -604,7 +613,7 @@
 
 
 
-			/*aboutのCSS*/
+			/*about縺ｮCSS*/
 			.wrapper .aboutContainer{
 				width: 1100px;
 				padding: 50px 40px 40px 40px;

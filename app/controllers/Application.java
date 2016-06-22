@@ -71,9 +71,9 @@ public class Application extends BaseController{
 				mem.chooser = new Chooser();
 				chooser = new Chooser();
 			}
-			return ok(index.render(mem, chooser, form, "0",""));
+			return ok(index.render(mem, chooser, form, "0", "", appS.getPublicFolderPath()));
 		}
-		return ok(index.render(null, chooser, form, "0",""));
+		return ok(index.render(null, chooser, form, "0", "", appS.getPublicFolderPath()));
 	}
 
 	public static Result indexWithId(Long id){
@@ -86,9 +86,9 @@ public class Application extends BaseController{
 		if(mem != null) {
 			Query<Chooser> query = Chooser.find.where("chooserId = '"+mem.chooser.chooserId+"'");
 			chooser = query.findUnique();
-			return ok(index.render(mem, chooser, form, id.toString(), appS.escapeHtml(compS.decompress(temp.html))));
+			return ok(index.render(mem, chooser, form, id.toString(), appS.escapeHtml(compS.decompress(temp.html)), appS.getPublicFolderPath()));
 		}
-		return ok(index.render(null, chooser, form, id.toString(),appS.escapeHtml(compS.decompress(temp.html))));
+		return ok(index.render(null, chooser, form, id.toString(),appS.escapeHtml(compS.decompress(temp.html)), appS.getPublicFolderPath()));
 	}
 
 	/**
@@ -201,7 +201,7 @@ public class Application extends BaseController{
 	    }
 	    appS.saveImage(image);
 	    final String imageFilePath = appS.getPublicFolderPath() + "/member-images/";
-		final String imageFileName = String.valueOf(image.imageId) + ".png";
+		final String imageFileName = image.imageName;
 		file.renameTo(new File(imageFilePath + imageFileName));
 	}
 
@@ -246,7 +246,6 @@ public class Application extends BaseController{
 	public static Result download(){
 		Form<TemplateDownload> form = Form.form(TemplateDownload.class).bindFromRequest();
 		TemplateDownload html = form.get();
-		System.out.println(html.tempHtml);
 		if(!html.tempHtml.matches(".*<html.*>.*")){
 			html.tempHtml = "<html lang=\"ja\">" + html.tempHtml + "</html>";
 		}
@@ -356,9 +355,9 @@ public class Application extends BaseController{
 		if(mem != null) {
 			Query<Chooser> query = Chooser.find.where("chooserId = '"+mem.chooser.chooserId+"'");
 			chooser = query.findUnique();
-			return ok(index.render(mem, chooser, form, id.toString(), html.tempHtml));
+			return ok(index.render(mem, chooser, form, id.toString(), html.tempHtml, appS.getPublicFolderPath()));
 		}
-		return ok(index.render(null, chooser, form, id.toString(), html.tempHtml));
+		return ok(index.render(null, chooser, form, id.toString(), html.tempHtml, appS.getPublicFolderPath()));
 	}
 
 	/**
@@ -378,6 +377,12 @@ public class Application extends BaseController{
 	public static Result doAnalyze() {
 		Form<Analyze> form = Form.form(Analyze.class).bindFromRequest();
 		Member mem = isLoggedIn();
+		if(!form.get().targetUrl.matches("https?://[\\w/:%#\\$&\\?\\(\\)~\\.=\\+\\-]+")) {
+			List<ValidationError> errors = new ArrayList<ValidationError>();
+			errors.add(new ValidationError("targetUrl", "URL形式ではありません。"));
+			form.errors().put("targetUrl", errors);
+			return ok(analyze.render(form,"", mem));
+		}
 		if(!form.hasErrors()) {
 			Map<String,String> result = new LinkedHashMap<String,String>();
 			try {
@@ -430,5 +435,40 @@ public class Application extends BaseController{
 	public static Result about(){
 		Member mem = isLoggedIn();
 		return ok(about.render(mem));
+	}
+	
+	/**
+	 * @return
+	 */
+	public static Result downloadTemplate() {
+		Long templateId = null;
+		try {
+			templateId = Long.valueOf(request().getQueryString("tid"));	
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		String fileName = appS.getPublicFolderPath() + "/iframes/" 
+		+ String.valueOf(templateId) + ".html";
+		String html = fileS.fileGetContents(fileName);
+		String css  = new StyleParser().parse(html).toString();
+		html = new StyleCleaner().removeStyleTagAndStyleAttrs(html);
+		final String token = String.valueOf(System.currentTimeMillis());
+		fileS.mkdir(token);
+		String indexHtml = token + "/index.html";
+		String styleCss = token + "/style.css";
+		fileS.saveFile(indexHtml, html);
+		fileS.saveFile(styleCss, css);
+		String[] files = {indexHtml , styleCss};
+		try {
+			String zipFileName = "template_" + new Faker().name().firstName() + ".zip";
+			fileS.zip(zipFileName,files);
+			response().setContentType("application/x-download");
+			response().setHeader("Content-disposition","attachment; filename=" + zipFileName);
+			fileS.deleteFile(indexHtml);
+			fileS.deleteFile(styleCss);
+			return ok(new File(zipFileName));
+		} catch (IOException e) {
+			return ok();
+		}
 	}
 }

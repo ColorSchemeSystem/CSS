@@ -10,6 +10,7 @@
 *******************************************************************************/
 var iframeMethod;
 var NamedClassName = [];
+var TextureName = [];
 
 $(window).load(function(){
 	$('#loading').css("display", "block");
@@ -133,14 +134,21 @@ function reloadIframe(html){
 					// border-sizeリアルタイム処理
 					$(function() {
 						$('input#border-size').each(function() {
-							$(this).bind('keyup', setBorderSize(this));
+							$(this).on('keyup', setBorderSize(this));
 						});
 					});
 
 					// textのリアルタイム処理
 					$(function() {
 						$('input.editText').each(function() {
-							$(this).bind('keyup', editText(this));
+							$(this).on('keyup', editText(this));
+						});
+					});
+
+					// imgのリアルタイム処理
+					$(function() {
+						$('input.imageText').each(function() {
+							$(this).on('keyup blur focus click', imageChange(this));
 						});
 					});
 				}
@@ -175,6 +183,7 @@ function toggleHide(obj) {
 */
 function allScribing(obj, assignmentName, number, targetPass, viewName, color) {
 	var tagName = $(obj).prop("tagName");
+	if(tagName == "IMG") renamedImagePass(obj, assignmentName, targetPass);
 	if(tagName == "SCRIPT" || tagName == "BR" || tagName == "IMG" || tagName=="STYLE" || tagName=="HEADER") return;
 	var childName = assignmentName + "-" + number+"-"+tagName.toLowerCase() + "-child";
 
@@ -183,7 +192,6 @@ function allScribing(obj, assignmentName, number, targetPass, viewName, color) {
 
 	// eqしてあげる対象
 	targetPass = gentlenessEq(targetPass, viewName, number);
-	//if(viewName == "li" || viewName == "tr" || viewName == "th" || viewName == "tr") targetPass = targetPass+":eq("+number+")";
 	nextTargetPass = targetPass;
 	addTr(obj, assignmentName, childName, targetPass, viewName, color);
 
@@ -219,6 +227,48 @@ function allScribing(obj, assignmentName, number, targetPass, viewName, color) {
 		}
 		allScribing($(this), copy, $(this).index(), pass, viewName, colorCopy);
 	});
+};
+
+/*
+*  imgタグのパスを変更してtextureの名前を保存する
+*/
+function renamedImagePass(obj, classname, targetPass) {
+	var imgName = $(obj).attr("src");
+	var fileURL = $('#fileURL').data('url');
+	while(imgName.indexOf("/") != -1) {
+		imgName = imgName.substr(imgName.indexOf("/")+1,imgName.length);
+	}
+	TextureName.push(imgName);
+
+	//TODO 本番活況ではURL変えてね
+	var url = "/assets/member-images/" + imgName;
+	$(obj).attr("src", url);
+
+	var childName = "image"+TextureName.length;
+	$(obj).addClass(classname);
+	addTr(obj, classname, childName, "."+classname, "img", new RGBColor("#3AC"));
+
+	var tr = $("<tr class='iframe"+childName+"'></tr>");
+	var td = $("<td>textuerName</td>");
+	var td2 = $("<input style='height:100%;' type='text' class='imageText' id='"+childName+"-texture' value='"+imgName+"' data-path='"+childName+"' data-target='"+targetPass+"' >");
+
+	tr.append(td);
+	tr.append(td2);
+	tr.css("display", "none");
+	$('#classTable').append(tr);
+};
+
+/*
+*  imgのリアルタイム変更(keyup)
+*/
+function imageChange(element) {
+	var v, old = element.value;
+	return function() {
+		if(old != (v = element.value)) {
+			old = v;
+			$('iframe').contents().find($(this).data('target')).attr('src', "/assets/member-images/"+element.value);
+		}
+	}
 };
 
 /*
@@ -411,7 +461,7 @@ function addBorder(name, targetPass, obj, classname) {
 	td2.css("color", "white");
 	tr.append(td);
 	tr.append(td2);
-	tr.css("background-color", new RGBColor("#555").toRGB());
+	tr.css("background-color", new RGBColor("#234567").toRGB());
 	tr.css("display", "none");
 	$('#classTable').append(tr);
 
@@ -435,7 +485,7 @@ function addBorderTop(name, targetPass) {
 	$('#classTable').append(tr);
 	var classname = targetPass;
 
-	var color = $('iframe').contents().find(classname).css('border-color');
+	var color = $('iframe').contents().find(classname).css('border-top-color');
 	color = changedColor(color);
 	$("#"+name+"-bor-top").val(color);
 
@@ -443,7 +493,13 @@ function addBorderTop(name, targetPass) {
 	var tr2 = $("<tr class='iframe"+name+"'></tr>");
 	var td3 = $("<td>top-size</td>");
 	var size = 0;
-	if($(targetPass).css("border") != undefined && $(targetPass).css("border") != "") size = $(targetPass).css('border-top-width').substr(0,1);
+	var obj = $('iframe').contents().find(targetPass);
+	if($(obj).css("border-top-width") != undefined && $(obj).css("border-top-width") != "") {
+		size = $(obj).css('border-top-width');
+		size = size.replace(/\s|　/g,"");
+		size = size.replace("px", "");
+		size = size.substr(0, size.length);
+	}
 	var td4 = $("<input type='text' class='"+name+"-bor-top-size' id='border-size' value='"+size+"' data-classname='"+classname+"' data-name='"+name+"' data-position='top' >");
 	tr2.append(td3);
 	tr2.append(td4);
@@ -474,7 +530,7 @@ function addBorderBottom(name, targetPass) {
 	$('#classTable').append(tr);
 	var classname = targetPass;
 
-	var color = $('iframe').contents().find(classname).css('border-color');
+	var color = $('iframe').contents().find(classname).css('border-bottom-color');
 	color = changedColor(color);
 	$("#"+name+"-bor-bottom").val(color);
 
@@ -482,7 +538,13 @@ function addBorderBottom(name, targetPass) {
 	var tr2 = $("<tr class='iframe"+name+"'></tr>");
 	var td3 = $("<td>bottom-size</td>");
 	var size = 0;
-	if($(targetPass).css("border") != undefined && $(targetPass).css("border") != "") size = $(targetPass).css('border-bottom-width').substr(0,1);
+	var obj = $('iframe').contents().find(targetPass);
+	if($(obj).css("border-bottom-width") != undefined && $(obj).css("border-bottom-width") != "") {
+		size = $(obj).css('border-bottom-width');
+		size = size.replace(/\s|　/g,"");
+		size = size.replace("px", "");
+		size = size.substr(0, size.length);
+	}
 	var td4 = $("<input type='text' class='"+name+"-bor-bottom-size' id='border-size' value='"+size+"' data-classname='"+classname+"' data-name='"+name+"' data-position='bottom' >");
 	tr2.append(td3);
 	tr2.append(td4);
@@ -513,7 +575,7 @@ function addBorderRight(name, targetPass) {
 	$('#classTable').append(tr);
 	var classname = targetPass;
 
-	var color = $('iframe').contents().find(classname).css('border-color');
+	var color = $('iframe').contents().find(classname).css('border-right-color');
 	color = changedColor(color);
 	$("#"+name+"-bor-right").val(color);
 
@@ -521,7 +583,13 @@ function addBorderRight(name, targetPass) {
 	var tr2 = $("<tr class='iframe"+name+"'></tr>");
 	var td3 = $("<td>right-size</td>");
 	var size = 0;
-	if($(targetPass).css("border") != undefined && $(targetPass).css("border") != "") size = $(targetPass).css('border-right-width').substr(0,1);
+	var obj = $('iframe').contents().find(targetPass);
+	if($(obj).css("border-right-width") != undefined && $(obj).css("border-right-width") != "") {
+		size = $(obj).css('border-right-width');
+		size = size.replace(/\s|　/g,"");
+		size = size.replace("px", "");
+		size = size.substr(0, size.length);
+	}
 	var td4 = $("<input type='text' class='"+name+"-bor-right-size' id='border-size' value='"+size+"' data-classname='"+classname+"' data-name='"+name+"' data-position='right' >");
 	tr2.append(td3);
 	tr2.append(td4);
@@ -552,7 +620,7 @@ function addBorderLeft(name, targetPass) {
 	$('#classTable').append(tr);
 	var classname = targetPass;
 
-	var color = $('iframe').contents().find(classname).css('border-color');
+	var color = $('iframe').contents().find(classname).css('border-left-color');
 	color = changedColor(color);
 	$("#"+name+"-bor-left").val(color);
 
@@ -560,7 +628,56 @@ function addBorderLeft(name, targetPass) {
 	var tr2 = $("<tr class='iframe"+name+"'></tr>");
 	var td3 = $("<td>left-size</td>");
 	var size = 0;
-	if($(targetPass).css("border") != undefined && $(targetPass).css("border") != "") size = $(targetPass).css('border-left-width').substr(0,1);
+	var obj = $('iframe').contents().find(targetPass);
+	if($(obj).css("border-left-width") != undefined && $(obj).css("border-left-width") != "") {
+		size = $(obj).css('border-left-width');
+		size = size.replace(/\s|　/g,"");
+		size = size.replace("px", "");
+		size = size.substr(0, size.length);
+	}
+	var td4 = $("<input type='text' class='"+name+"-bor-left-size' id='border-size' value='"+size+"' data-classname='"+classname+"' data-name='"+name+"' data-position='left' >");
+	tr2.append(td3);
+	tr2.append(td4);
+	tr2.css("display", "none");
+	$('#classTable').append(tr2);
+
+	var dataBorder = {contentName:classname, targetName:"border", borderSize:"."+name+"-bor-left-size", borderPosition:"left"};
+	$("input#"+name+"-bor-left").ColorPickerSliders({
+		placement: $('#chooser').data('placement'),
+		hsvpanel: $('#chooser').data('hsvpanel'),
+		sliders: $('#chooser').data('sliders'),
+		swatches: $('#chooser').data('swatches'),
+		previewformat: 'hex'
+	},dataBorder);
+};
+
+/*
+*  ボーダー(角丸)追加
+*/
+function addBorderRadius(name, targetPass) {
+	var tr = $("<tr class='iframe"+name+"'></tr>");
+	var td = $("<td>radius</td>");
+	var td2 = $("<input type='text' class='form-control' id='"+name+"-bor-radius' value='#A6FF00' data-color-format='hex'>");
+
+	tr.append(td);
+	tr.append(td2);
+	tr.css("display", "none");
+	$('#classTable').append(tr);
+	var classname = targetPass;
+
+	var color = $('iframe').contents().find(classname).css('border-color');
+	color = changedColor(color);
+	$("#"+name+"-bor-radius").val(color);
+
+	// ボーダーサイズ変更できる様に
+	var tr2 = $("<tr class='iframe"+name+"'></tr>");
+	var td3 = $("<td>radius-size</td>");
+	var size = 0;
+	if($(targetPass).css("border") != undefined && $(targetPass).css("border") != "") {
+		size = $(targetPass).css('border-radius');
+		size = size.replace("px", "　");
+		size = size.substr(size.match(/　/), size.match(/　/)+1);
+	}
 	var td4 = $("<input type='text' class='"+name+"-bor-left-size' id='border-size' value='"+size+"' data-classname='"+classname+"' data-name='"+name+"' data-position='left' >");
 	tr2.append(td3);
 	tr2.append(td4);
@@ -667,6 +784,7 @@ function editText(element) {
 	var v, old = element.value;
 	return function() {
 		if(old != (v = element.value)) {
+			old = v;
 			var text = $("#"+$(this).attr("id")).val();
 			$('iframe').contents().find($("#"+$(this).attr("id")).data('classname')).text(text);
 		}
