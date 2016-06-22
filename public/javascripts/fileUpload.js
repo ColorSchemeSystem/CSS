@@ -108,24 +108,31 @@ function createStatusbar(obj, flg){
 function handleFileUpload(files,obj){
     var flg = 0;
     for (var i = 0; i < files.length; i++) {
-	    if(files[i].size >= 1000 * 1000) {
-		   var size = String(files[i].size / (1000 * 1000)) + "MB";
-		   alert(size + " : 容量オーバーです。");
-		   continue;
-	    }
-	    if(files[i].type != "text/html") {
-		   if(isLoggedIn()) {
-			   if(files[i].type == "image/png" ||　
-					files[i].type == "image/jpeg") {
-				    flg = 1;
-			    } else {
-				   alert("HTML,JPEG,PNG以外のファイルはアップロードできません。");           
-				   continue;  
+	    if(files[i].type == "text/html") {
+	    	if(files[i].size >= 1000 * 1000) {
+				   var size = String(files[i].size / (1000 * 1000)) + "MB";
+				   alert(size + " : 容量オーバーです。");
+				   continue;
 			    }
-		    }	else	{
-			   alert("HTML以外のファイルはアップロードできません。");           
-			   continue;   
-		    }
+	    }	else	{
+	    	if(isLoggedIn()) {
+				   if(files[i].type == "image/png" ||　
+						files[i].type == "image/jpeg") {
+					   if(files[i].size >= 1000 * 1000) {
+						   var size = String(files[i].size / (1000 * 1000)) + "MB";
+						   alert(size + " : 容量オーバーです。");
+						   continue;
+					    }	else	{
+					    	flg = 1;
+					    }
+				    } else {
+					   alert("HTML,JPEG,PNG以外のファイルはアップロードできません。");           
+					   continue;  
+				    }
+			    }	else	{
+				   alert("HTML以外のファイルはアップロードできません。");           
+				   continue;   
+			    }
 	    }
         var fd = new FormData();
         fd.append('file', files[i]);
