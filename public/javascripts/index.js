@@ -228,11 +228,9 @@ function allScribing(obj, assignmentName, number, targetPass, viewName, color) {
 function renamedImagePass(obj) {
 	var imgName = $(obj).attr("src");
 	var fileURL = $('#fileURL').data('url');
-	console.log(fileURL);
 	while(imgName.indexOf("/") != -1) {
 		imgName = imgName.substr(imgName.indexOf("/")+1,imgName.length);
 	}
-	console.log(imgName);
 	TextureName.push(imgName);
 	var url = "/assets/member-images/" + imgName;
 	$(obj).attr("src", url);
