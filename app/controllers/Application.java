@@ -246,7 +246,10 @@ public class Application extends BaseController{
 	public static Result download(){
 		Form<TemplateDownload> form = Form.form(TemplateDownload.class).bindFromRequest();
 		TemplateDownload html = form.get();
-		html.tempHtml = "<html>" + html.tempHtml + "</html>";
+		System.out.println(html.tempHtml);
+		if(!html.tempHtml.matches(".*<html.*>.*")){
+			html.tempHtml = "<html lang=\"ja\">" + html.tempHtml + "</html>";
+		}
 		Logger.info("html : " + html.tempHtml);
 		StyleParser styleParser = new StyleParser();
 		StyleCleaner styleCleaner = new StyleCleaner();
@@ -375,6 +378,12 @@ public class Application extends BaseController{
 	public static Result doAnalyze() {
 		Form<Analyze> form = Form.form(Analyze.class).bindFromRequest();
 		Member mem = isLoggedIn();
+		if(!form.get().targetUrl.matches("https?://[\\w/:%#\\$&\\?\\(\\)~\\.=\\+\\-]+")) {
+			List<ValidationError> errors = new ArrayList<ValidationError>();
+			errors.add(new ValidationError("targetUrl", "URL形式ではありません。"));
+			form.errors().put("targetUrl", errors);
+			return ok(analyze.render(form,"", mem));
+		}
 		if(!form.hasErrors()) {
 			Map<String,String> result = new LinkedHashMap<String,String>();
 			try {
