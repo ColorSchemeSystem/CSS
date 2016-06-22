@@ -1,0 +1,43 @@
+@(user: Member, myform: Form[forms.checkDelete])
+
+@main("Color Scheme", user){ 
+	<div class="checkDeleteContainer">
+		<h3>アカウント削除</h3>
+		<br><br>
+		<p>
+			アカウントが削除されてもいままで投稿したテンプレートや画像は削除されません。<br>
+			削除したい場合は下記のフォームの削除したい項目にチェックを入れてください。
+		</p>
+		<form action="/deleteAccount/@user.memberId" method="post">
+			<div class="floatclear">
+				<div class="checkArea">
+					<input type="checkbox" name="deletePriveteTmp" value="1">
+				</div>
+				<div class="allPrivateT">
+					<h4>投稿したすべての非公開のテンプレートを削除しますか</h4>
+					<p> ※非公開のテンプレートはアカウントが削除されると公開状態になります</p>
+				</div>
+			</div>
+			<div class="floatclear">
+				<div class="checkArea">
+					<input type="checkbox" name="deletePublicTmp" value="1">
+				</div>
+				<div class="allPublicT">
+					<h4>投稿したすべての公開のテンプレートを削除しますか</h4>
+				</div>
+			</div>
+			<div class="floatclear">
+				<div class="checkArea">
+					<input type="checkbox" name="deleteImage" value="1">
+				</div>
+				<div class="allImage">
+					<h4>投稿したすべての画像を削除しますか</h4>
+				</div>
+			</div>
+			<p class="deleteAccountButton">
+				<input type="submit" value="アカウントの削除" class="btn btn-primary"/>
+				<a href="/editProfile">キャンセル</a>
+			</p>
+		</form>
+	</div>
+}

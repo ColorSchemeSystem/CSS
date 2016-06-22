@@ -21,8 +21,8 @@ function showEditTemp(id, imgUrl){
 	console.log("flg = " + flg);
 	$('#eTempN').attr("value", name);
 	$('#eTempM').text(message);
-	$('#eTempId').attr("value", id);
-	$('#deleteTmp').attr("action", "/delete/" + id);
+	$('#updateTmp').attr("action", "/template/update/" + id)
+	$('#deleteTmp').attr("action", "/template/delete/" + id);
 	if(flg == 0){
 		$('#flgPublic').attr("checked", true);
 	}else{
