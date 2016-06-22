@@ -71,9 +71,9 @@ public class Application extends BaseController{
 				mem.chooser = new Chooser();
 				chooser = new Chooser();
 			}
-			return ok(index.render(mem, chooser, form, "0",""));
+			return ok(index.render(mem, chooser, form, "0", "", appS.getPublicFolderPath()));
 		}
-		return ok(index.render(null, chooser, form, "0",""));
+		return ok(index.render(null, chooser, form, "0", "", appS.getPublicFolderPath()));
 	}
 
 	public static Result indexWithId(Long id){
@@ -86,9 +86,9 @@ public class Application extends BaseController{
 		if(mem != null) {
 			Query<Chooser> query = Chooser.find.where("chooserId = '"+mem.chooser.chooserId+"'");
 			chooser = query.findUnique();
-			return ok(index.render(mem, chooser, form, id.toString(), appS.escapeHtml(compS.decompress(temp.html))));
+			return ok(index.render(mem, chooser, form, id.toString(), appS.escapeHtml(compS.decompress(temp.html)), appS.getPublicFolderPath()));
 		}
-		return ok(index.render(null, chooser, form, id.toString(),appS.escapeHtml(compS.decompress(temp.html))));
+		return ok(index.render(null, chooser, form, id.toString(),appS.escapeHtml(compS.decompress(temp.html)), appS.getPublicFolderPath()));
 	}
 
 	/**
@@ -353,9 +353,9 @@ public class Application extends BaseController{
 		if(mem != null) {
 			Query<Chooser> query = Chooser.find.where("chooserId = '"+mem.chooser.chooserId+"'");
 			chooser = query.findUnique();
-			return ok(index.render(mem, chooser, form, id.toString(), html.tempHtml));
+			return ok(index.render(mem, chooser, form, id.toString(), html.tempHtml, appS.getPublicFolderPath()));
 		}
-		return ok(index.render(null, chooser, form, id.toString(), html.tempHtml));
+		return ok(index.render(null, chooser, form, id.toString(), html.tempHtml, appS.getPublicFolderPath()));
 	}
 
 	/**

@@ -226,15 +226,16 @@ function allScribing(obj, assignmentName, number, targetPass, viewName, color) {
 *  imgタグのパスを変更してtextureの名前を保存する
 */
 function renamedImagePass(obj) {
-	var url = $(obj).attr("src");
-	//var hoge = new Packages.services.AppService();
-	while(url.indexOf("/") != -1) {
-		url = url.substr(url.indexOf("/")+1,url.length);
+	var imgName = $(obj).attr("src");
+	var fileURL = $('#fileURL').data('url');
+	console.log(fileURL);
+	while(imgName.indexOf("/") != -1) {
+		imgName = imgName.substr(imgName.indexOf("/")+1,imgName.length);
 	}
-	console.log(url);
-	TextureName.push(url);
-	url = "@routes.Assets.at('images/"+url+"')";
-	$(obj).attr("src", "@routes.Assets.at('images/logo000.png')");
+	console.log(imgName);
+	TextureName.push(imgName);
+	var url = "/assets/member-images/" + imgName;
+	$(obj).attr("src", url);
 };
 
 /*

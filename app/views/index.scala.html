@@ -1,4 +1,4 @@
-@(user: Member, chooser: Chooser, myForm: Form[forms.TemplateSave], id: String, content : String)
+@(user: Member, chooser: Chooser, myForm: Form[forms.TemplateSave], id: String, content : String, fileURL: String)
 
 @import helper._
 
@@ -37,7 +37,9 @@
 </div>
 
 
+<!-- datas -->
 <div id="chooser" data-placement="'@chooser.placement'" data-hsvpanel="@chooser.hsvpanel" data-sliders="@chooser.slider" data-swatches="@chooser.swatche"></div>
+<div id="fileURL" data-url="@fileURL"></div>
 	<div class="main">
 		@if(id == "0"){
 			<div class="default">
