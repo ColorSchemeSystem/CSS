@@ -21,7 +21,9 @@
 					<div class="listImage">
 						<div class="col-xs-3">
 							<div class="imgThumb">
-								<img width='260' height='200' src='/assets/member-images/@(image.imageId).png'/>
+								<img width='260' height='200' 
+								src='/assets/member-images/@(image.imageId).@(image.imageType)'
+								/>
 							</div>
 							<div class="imgName">
 								@image.imageName

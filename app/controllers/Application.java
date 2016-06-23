@@ -193,7 +193,7 @@ public class Application extends BaseController{
 	private static void saveImage(FilePart fileP, String type) {
 		Image image = new Image();
 		image.imageName = fileP.getFilename();
-		image.imageType = "png";
+		image.imageType = type.replace("image/", "");
 		File file = fileP.getFile();
 		Member member = isLoggedIn();
 	    if(member != null) {
@@ -201,7 +201,7 @@ public class Application extends BaseController{
 	    }
 	    appS.saveImage(image);
 	    final String imageFilePath = appS.getPublicFolderPath() + "/member-images/";
-		final String imageFileName = image.imageName;
+		final String imageFileName = image.imageId + "." + image.imageType;
 		file.renameTo(new File(imageFilePath + imageFileName));
 	}
 
