@@ -30,8 +30,8 @@
 		<p>クリックすると16進数がコピーされます</p>
 		<div class="colorContent">
 			@for((color, index) <- colors.zipWithIndex) {
-				<div class="col-xs-2" data-clipboard-text="@color.colorHex">
-					<div class="colorName" style="cursor : pointer; background-color: @color.colorHex;">
+				<div class="col-xs-2">
+					<div data-clipboard-text="@color.colorHex" class="colorName clip" style="cursor : pointer; background-color: @color.colorHex;">
 						@if(color.colorName != null) {
 							@color.colorName<br>
 						}
