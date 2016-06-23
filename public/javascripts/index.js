@@ -72,9 +72,6 @@ function sendHTML(formId, id){
 	$(formId).append(ele2);
 };
 
-function submitUpdate(){
-	$('#tempUpdate').submit();
-}
 
 function showPopup(member_id, id){
 	var inst = $('[data-remodal-id=modal]').remodal();

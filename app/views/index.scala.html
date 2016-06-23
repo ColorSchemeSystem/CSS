@@ -67,16 +67,10 @@
 					<input class="btn btn-default" type="button" value="HTMLを保存" onClick="showPopup(null, @id);">
 				}else{
 					<input class="btn btn-default" type="button" value="HTMLを保存" onClick="showPopup(@user.memberId, @id);">
-					<input class="btn btn-default" type="button" value="HTMLを更新" onClick="submitUpdate()">
 				}
 					<input class="btn btn-default" type="submit" value="HTMLをダウンロード" onClick="sendHTML('#sendForm', @id);">
 
 				</div>
-			</form>
-
-			<form method="post" id="tempUpdate" action="#">
-				<input type="hidden" value="@id" name="temp_id">
-				<input type="hidden" value="@content" name="tempHtml">
 			</form>
 		}
 	</div>
