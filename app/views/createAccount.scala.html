@@ -7,12 +7,12 @@
 @main("createAccount Page", user) {
 <div class='accountContainer'>
 	<h2>@message</h2>
-	@helper.form(action = routes.AdminController.saveAccount()) {
+	@helper.form(action = routes.AdminController.saveAccount(), 'id -> "createAccountForm") {
 		@inputText(myform("memberName"),'_label -> "ユーザーID", 'size -> 45)
 		@inputText(myform("nickName"),'_label -> "ニックネーム", 'size -> 45)
 		@inputText(myform("password"),'_label -> "パスワード", 'size -> 45, 'placeholder -> "6文字以上で入力してください", 'type -> "password")
 		@inputText(myform("mail"),'_label -> "メールアドレス (任意)", 'size -> 45)
-		<input class="btn btn-primary" type="submit" value="アカウント作成">
+		<input class="btn btn-primary" type="submit" value="アカウント作成" id="createAccountSubmit" onClick="disabledButton('#createAccountForm', '#createAccountSubmit');">
 	}
 </div>
 }

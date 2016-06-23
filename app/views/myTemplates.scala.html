@@ -43,7 +43,7 @@
 							</div>
 								</a>
 							<a href='@routes.Application.downloadTemplate()?tid=@(t.templateId)'>
-								<button type='button'>download</button>
+								<button type='button' onClick="this.disabled = true;" class="btn btn-default btn-xs">download</button>
 							</a>		
 						</div>
 					</div>
@@ -68,7 +68,7 @@
 		  	<h3 id="tempN"></h3>
 		  	<img src='#' width="260" height="200" id="shumbPopup"/><br><br>
 		  	作成者<br><input type="text" id="userN" readonly="true" size="40"></input><br><br>
-		  	コメント<br><textarea id="tempM" rows="4" cols="40" readonly="true"></textarea><br><br>
+		  	コメント<br><textarea id="tempM" rows="4" cols="40" readonly="true" disabled="true"></textarea><br><br>
 			<button data-remodal-action="cancel" class="remodal-cancel">キャンセル</button>
 		  	<a href="#" id="buttonToEdit"><button class="remodal-confirm">編集ページへ</button></a>
 		  </div>

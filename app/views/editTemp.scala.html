@@ -1,4 +1,4 @@
-@(dto : dtos.PagingDto[Template], member : Member, snapShotsUrl : String)
+@(dto : dtos.PagingDto[Template], member : Member, snapShotsUrl : String, message: String)
 
 @import helper._
 
@@ -6,6 +6,9 @@
 
 @main("myPage", member) {
 		<div class="mypageContainer">
+			@if(!message.isEmpty()) {
+					<h4>@message</h4>
+			}
 			<div class="editTemps">
 				<div class="clearfix">
 					<div class="editTempList">
@@ -70,10 +73,10 @@
 						  		<input type="radio" name="templateFlg" value="0" id="flgPublic">公開</input>&nbsp
 						  		<input type="radio" name="templateFlg" value="1" id="flgPrivate">非公開</input>
 						  	</p>
-					  	<input type="submit" class="remodal-confirm" value="更新" id="saveTmpButton">
+					  	<input type="submit" class="remodal-confirm" value="更新" id="saveTmpButton" onClick="disabledButton('#updateTmp', '#saveTmpButton');">
 					</form>
 					<form action="#" method="post" id="deleteTmp">
-						<input id="deleteTmpButton" type="submit" class="remodal-confirm" value="削除" onclick="return confirm('このテンプレートを削除します。本当によろしいですか')"></input>
+						<input id="deleteTmpButton" type="submit" class="remodal-confirm" value="削除" onClick="return confirm('このテンプレートを削除します。本当によろしいですか');this.disable = true;"></input>
 				  	</form>
 				  </div>
 				</div>
