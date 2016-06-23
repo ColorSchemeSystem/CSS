@@ -382,13 +382,13 @@ public class Application extends BaseController{
 	public static Result doAnalyze() {
 		Form<Analyze> form = Form.form(Analyze.class).bindFromRequest();
 		Member mem = isLoggedIn();
-		if(!form.get().targetUrl.matches("https?://[\\w/:%#\\$&\\?\\(\\)~\\.=\\+\\-]+")) {
-			List<ValidationError> errors = new ArrayList<ValidationError>();
-			errors.add(new ValidationError("targetUrl", "URL形式ではありません。"));
-			form.errors().put("targetUrl", errors);
-			return ok(analyze.render(form,"", mem));
-		}
 		if(!form.hasErrors()) {
+			if(!form.get().targetUrl.matches("https?://[\\w/:%#\\$&\\?\\(\\)~\\.=\\+\\-]+")) {
+				List<ValidationError> errors = new ArrayList<ValidationError>();
+				errors.add(new ValidationError("targetUrl", "URL形式ではありません。"));
+				form.errors().put("targetUrl", errors);
+				return ok(analyze.render(form,"", mem));
+			}
 			Map<String,String> result = new LinkedHashMap<String,String>();
 			try {
 				String base64ImageData = httpS.request(ImageService.webShotUrl
