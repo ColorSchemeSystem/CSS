@@ -191,7 +191,7 @@ function toggleHide(obj) {
 */
 function allScribing(obj, assignmentName, number, targetPass, viewName, color) {
 	var tagName = $(obj).prop("tagName");
-	if(tagName == "IMG") renamedImagePass(obj, assignmentName, targetPass);
+	gentlenessTags(tagName, obj, targetPass, assignmentName);
 	if(tagName == "SCRIPT" || tagName == "BR" || tagName == "IMG" || tagName== "STYLE" || tagName== "HEADER") return;
 
 	// liだったらclassを振る
@@ -244,6 +244,14 @@ function allScribing(obj, assignmentName, number, targetPass, viewName, color) {
 		}
 		allScribing($(this), copy, $(this).index(), pass, viewName, colorCopy);
 	});
+};
+
+/*
+*  タグ別やるなら
+*/
+function gentlenessTags(tagName, obj, targetPass, assignmentName) {
+	if(tagName == "IMG") renamedImagePass(obj, assignmentName, targetPass);
+	else if(tagName == "A") $('iframe').contents().find(targetPass).removeAttr("href");
 };
 
 /*
@@ -421,7 +429,7 @@ function textCheck(obj) {
 };
 
 /*
-*  タグ別などの優しさ
+*  eqしてあげる対象
 */
 function gentlenessEq(targetPass, viewName, number) {
 	if(viewName == "li" || viewName == "tr" || viewName == "th" || viewName == "tr") targetPass = targetPass+":eq("+number+")";
