@@ -28,6 +28,7 @@ import org.apache.commons.lang3.StringEscapeUtils;
 import com.avaje.ebean.Query;
 import com.github.javafaker.Faker;
 
+import dtos.AjaxImageResult;
 import dtos.AjaxResult;
 import dtos.PagingDto;
 import entity.Color;
@@ -46,6 +47,8 @@ import forms.*;
 public class Application extends BaseController{
 
 	private static AppService appS = new AppService();
+	
+	private static AdminService adminS = new AdminService();
 
 	private static ImageService imageS = new ImageService();
 
@@ -193,7 +196,7 @@ public class Application extends BaseController{
 	private static void saveImage(FilePart fileP, String type) {
 		Image image = new Image();
 		image.imageName = fileP.getFilename();
-		image.imageType = "png";
+		image.imageType = type.replace("image/", "");
 		File file = fileP.getFile();
 		Member member = isLoggedIn();
 	    if(member != null) {
@@ -201,7 +204,7 @@ public class Application extends BaseController{
 	    }
 	    appS.saveImage(image);
 	    final String imageFilePath = appS.getPublicFolderPath() + "/member-images/";
-		final String imageFileName = image.imageName;
+		final String imageFileName = image.imageId + "." + image.imageType;
 		file.renameTo(new File(imageFilePath + imageFileName));
 	}
 
@@ -474,5 +477,34 @@ public class Application extends BaseController{
 			return ok();
 		}
 	}
-
+	
+	/**
+	 * @return
+	 */
+	public static Result loadImage() {
+		String imageName = request().getQueryString("iname");
+		String path = request().getQueryString("path");
+		Member member = isLoggedIn();
+		Logger.info("iname : " + imageName);
+		Logger.info("path : " + path);
+		if(member != null 
+				&& StringUtils.isNotEmpty(imageName)
+				&& StringUtils.isNotEmpty(path)) {
+			Logger.info("memberId : " + member.memberId);
+			Image image = adminS
+					.findImageByImageNameAndMemberId(imageName,member.memberId);
+			if(image != null) {
+				AjaxImageResult result = new AjaxImageResult();
+				result.imageId = image.imageId;
+				result.imageName = image.imageName;
+				result.imageType = image.imageType;
+				result.path = path;
+				result.status = true;
+				return ok(Json.toJson(result));
+			}
+		}
+		AjaxImageResult result = new AjaxImageResult();
+		result.path = path;
+		return ok(Json.toJson(result));
+	}
 }

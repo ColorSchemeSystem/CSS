@@ -193,7 +193,16 @@ function toggleHide(obj) {
 function allScribing(obj, assignmentName, number, targetPass, viewName, color) {
 	var tagName = $(obj).prop("tagName");
 	if(tagName == "IMG") renamedImagePass(obj, assignmentName, targetPass);
-	if(tagName == "SCRIPT" || tagName == "BR" || tagName == "IMG" || tagName=="STYLE" || tagName=="HEADER") return;
+	if(tagName == "SCRIPT" || tagName == "BR" || tagName == "IMG" || tagName== "STYLE" || tagName== "HEADER") return;
+
+	// liだったらclassを振る
+	if(tagName == "LI") {
+		var name = tagName.toLowerCase()+NamedClassName.length;
+		$(obj).addClass(name);
+		NamedClassName.push(name);
+		targetPass = "."+name;
+		viewName = tagName.toLowerCase();
+	}
 	var childName = assignmentName + "-" + number+"-"+tagName.toLowerCase() + "-child";
 
 	// タブの追加
@@ -275,7 +284,24 @@ function imageChange(element) {
 	return function() {
 		if(old != (v = element.value)) {
 			old = v;
-			$('iframe').contents().find($(this).data('target')).attr('src', "/assets/member-images/"+element.value);
+			$.ajax({
+			    url: "/loadImage",
+			    data: {
+	                iname: element.value,
+	                path: $(this).data('target')
+	            },
+	            type: "GET"
+			}).done(function(result){
+				console.log(result);
+			    if(Boolean(result.status)) {
+			    	var src = "/assets/member-images/" + String(result.imageId) + "." + result.imageType;
+					$('iframe').contents().find(result.path).attr('src', src);
+			    }	else	{
+			    	$('iframe').contents().find(result.path).attr('src', '');
+			    }
+			}).fail(function(data){
+				
+			});
 		}
 	}
 };
