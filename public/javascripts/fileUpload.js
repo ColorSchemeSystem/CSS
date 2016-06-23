@@ -33,6 +33,7 @@ function sendFileToServer(formData,status){
             if(result.status == "success") {
             	status.setProgress(100);
                 status.setLink(result);
+                status.setCss();
             	$('.uploadContainer h4').html("<span>" + result.message + "</span>");
             }	else if(result.status == "failure") {
             	$('.uploadContainer h4').html("<span style='color : red;'>" + result.message + "</span>");
@@ -48,7 +49,7 @@ function createStatusbar(obj, flg){
     rowCount++;
     var row="odd";
     if(rowCount %2 ==0) row ="even";
-    this.statusbar = $("<div class='statusbar "+row+"'></div>");
+    this.statusbar = $("<div class='statusbar "+row+"' style='display : none'></div>");
     this.filename = $("<div class='filename'></div>").appendTo(this.statusbar);
     this.size = $("<div class='filesize'></div>").appendTo(this.statusbar);
     this.progressBar = $("<div class='progressBar'><div></div></div>").appendTo(this.statusbar);
@@ -89,6 +90,10 @@ function createStatusbar(obj, flg){
     this.setLink = function(result){
         var href = "/template/" + result.templateId;
         this.link.attr('href', href);
+    }
+
+    this.setCss = function(){
+        this.statusbar.css("display", "block");
     }
 
     /*this.setAbort = function(jqxhr){
