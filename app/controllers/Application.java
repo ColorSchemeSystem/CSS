@@ -201,7 +201,7 @@ public class Application extends BaseController{
 	    }
 	    appS.saveImage(image);
 	    final String imageFilePath = appS.getPublicFolderPath() + "/member-images/";
-		final String imageFileName = image.imageName;
+		final String imageFileName = image.imageId + ".png";
 		file.renameTo(new File(imageFilePath + imageFileName));
 	}
 

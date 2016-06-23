@@ -184,7 +184,16 @@ function toggleHide(obj) {
 function allScribing(obj, assignmentName, number, targetPass, viewName, color) {
 	var tagName = $(obj).prop("tagName");
 	if(tagName == "IMG") renamedImagePass(obj, assignmentName, targetPass);
-	if(tagName == "SCRIPT" || tagName == "BR" || tagName == "IMG" || tagName=="STYLE" || tagName=="HEADER") return;
+	if(tagName == "SCRIPT" || tagName == "BR" || tagName == "IMG" || tagName== "STYLE" || tagName== "HEADER") return;
+
+	// liだったらclassを振る
+	if(tagName == "LI") {
+		var name = tagName.toLowerCase()+NamedClassName.length;
+		$(obj).addClass(name);
+		NamedClassName.push(name);
+		targetPass = "."+name;
+		viewName = tagName.toLowerCase();
+	}
 	var childName = assignmentName + "-" + number+"-"+tagName.toLowerCase() + "-child";
 
 	// タブの追加
