@@ -88,8 +88,12 @@ function createStatusbar(obj, flg){
     }
 
     this.setLink = function(result){
-        var href = "/template/" + result.templateId;
-        this.link.attr('href', href);
+        if(flg){
+
+        }else{
+            var href = "/template/" + result.templateId;
+            this.link.attr('href', href);
+        }
     }
 
     this.setCss = function(){

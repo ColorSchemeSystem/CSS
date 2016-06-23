@@ -105,9 +105,13 @@ public class AdminController extends BaseController {
 					adminS.addMemberErrors(form, "パスワードが誤っています", "password");
 					return badRequest(confirmPassword.render(null, "パスワードを再入力してください", form));
 				}
+				/*
+				 * 確認用ログ
+				 */
+				System.out.println("パスワード確認");
 				return ok(deleteAccount.render(loginMem, Form.form(checkDelete.class)));
 			}else{
-
+				return badRequest(confirmPassword.render(null, "パスワードを再入力してください", form));
 			}
 		}
 		return redirect("/login");
