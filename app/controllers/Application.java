@@ -47,7 +47,7 @@ import forms.*;
 public class Application extends BaseController{
 
 	private static AppService appS = new AppService();
-	
+
 	private static AdminService adminS = new AdminService();
 
 	private static ImageService imageS = new ImageService();
@@ -83,15 +83,19 @@ public class Application extends BaseController{
 		Chooser chooser = new Chooser();
 		Member mem = isLoggedIn();
 		Template temp = appS.getTemp(id);
-		TemplateSave tempS = new TemplateSave();
-		tempS.flg = 0;
-		Form<TemplateSave> form = Form.form(TemplateSave.class).fill(tempS);
-		if(mem != null) {
-			Query<Chooser> query = Chooser.find.where("chooserId = '"+mem.chooser.chooserId+"'");
-			chooser = query.findUnique();
-			return ok(index.render(mem, chooser, form, id.toString(), appS.escapeHtml(compS.decompress(temp.html)), appS.getPublicFolderPath()));
+		if(temp == null || temp.accessFlag == 1 && mem == null || temp.accessFlag == 1 && temp.member != null && !temp.member.memberId.equals(mem.memberId)){
+			return ok(notfound.render());
+		}else{
+			TemplateSave tempS = new TemplateSave();
+			tempS.flg = 0;
+			Form<TemplateSave> form = Form.form(TemplateSave.class).fill(tempS);
+			if(mem != null) {
+				Query<Chooser> query = Chooser.find.where("chooserId = '"+mem.chooser.chooserId+"'");
+				chooser = query.findUnique();
+				return ok(index.render(mem, chooser, form, id.toString(), appS.escapeHtml(compS.decompress(temp.html)), appS.getPublicFolderPath()));
+			}
+			return ok(index.render(null, chooser, form, id.toString(),appS.escapeHtml(compS.decompress(temp.html)), appS.getPublicFolderPath()));
 		}
-		return ok(index.render(null, chooser, form, id.toString(),appS.escapeHtml(compS.decompress(temp.html)), appS.getPublicFolderPath()));
 	}
 
 	/**
@@ -133,7 +137,7 @@ public class Application extends BaseController{
 	    			AjaxResult result = new AjaxResult();
 		    		result.status = "success";
 		    		result.message = "アップロードが完了しました";
-		    		return ok();
+		    		return ok(Json.toJson(result));
 	    		}
 	    	}
 	    }
@@ -477,7 +481,7 @@ public class Application extends BaseController{
 			return ok();
 		}
 	}
-	
+
 	/**
 	 * @return
 	 */
@@ -487,7 +491,7 @@ public class Application extends BaseController{
 		Member member = isLoggedIn();
 		Logger.info("iname : " + imageName);
 		Logger.info("path : " + path);
-		if(member != null 
+		if(member != null
 				&& StringUtils.isNotEmpty(imageName)
 				&& StringUtils.isNotEmpty(path)) {
 			Logger.info("memberId : " + member.memberId);

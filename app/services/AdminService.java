@@ -50,15 +50,10 @@ public class AdminService {
 		List<Template> list = findTemplateByUser(id, flg);
 		for(Template temp : list){
 			if(temp != null){
+				System.out.println(temp.templateName);
 				temp.member = null;
 				temp.accessFlag = 0;
 				temp.update();
-			}
-		}
-		List<Template> restList = findTemplateByUser(id);
-		for(Template temp : restList){
-			if(temp != null){
-				temp.delete();
 			}
 		}
 	}
@@ -171,7 +166,7 @@ public class AdminService {
 		form.errors().put(errorColumn, errors);
 		return form;
 	}
-	
+
 	/**
 	 * @param imageName
 	 * @param memberId
