@@ -264,13 +264,15 @@ public class Application extends BaseController{
 			fileS.zip(zipFileName,files);
 			response().setContentType("application/x-download");
 			response().setHeader("Content-disposition","attachment; filename=" + zipFileName);
-			fileS.deleteFile(htmlFile);
-			fileS.deleteFile(cssFile);
+			fileS.deleteFile(token + "/" + htmlFile);
+			fileS.deleteFile(token + "/" + cssFile);
+			fileS.deleteFile(token);
 			return ok(new File(zipFileName));
 		} catch (IOException e) {
 			e.printStackTrace();
-			fileS.deleteFile(htmlFile);
-			fileS.deleteFile(cssFile);
+			fileS.deleteFile(token + "/" + htmlFile);
+			fileS.deleteFile(token + "/" + cssFile);
+			fileS.deleteFile(token);
 			return redirect(routes.Application.indexWithId(Long.parseLong(html.temp_id)));
 		}
 	}
@@ -466,6 +468,7 @@ public class Application extends BaseController{
 			response().setHeader("Content-disposition","attachment; filename=" + zipFileName);
 			fileS.deleteFile(indexHtml);
 			fileS.deleteFile(styleCss);
+			fileS.deleteFile(token);
 			return ok(new File(zipFileName));
 		} catch (IOException e) {
 			return ok();
