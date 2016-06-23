@@ -224,7 +224,7 @@ public class Application extends BaseController{
 				page = Integer.parseInt(request().getQueryString("page"));
 			} catch(Exception e) {}
 			PagingDto<Image> dto = appS.findImagesWithPages(page, 20, member.memberId);
-			return ok(images.render(dto,member,5));
+			return ok(images.render(dto,member,5,appS.getMemberimagesUrl()));
 		}	else	{
 			return redirect(routes.AdminController.login());
 		}
