@@ -25,6 +25,14 @@ function isLoggedIn() {
 	return Boolean($("body").data("login"));
 }
 
+function disabledButton(formId, buttonId){
+	console.log("無効化");
+	var form = $(formId);
+	var button = $(buttonId);
+	form.submit();
+	button.attr("disabled", true);
+}
+
 function fixSideBar(){
 	var navi = $('.fixnav');
 	var main  = $('.main');
@@ -72,9 +80,6 @@ function sendHTML(formId, id){
 	$(formId).append(ele2);
 };
 
-function submitUpdate(){
-	$('#tempUpdate').submit();
-}
 
 function showPopup(member_id, id){
 	var inst = $('[data-remodal-id=modal]').remodal();
@@ -279,7 +284,24 @@ function imageChange(element) {
 	return function() {
 		if(old != (v = element.value)) {
 			old = v;
-			$('iframe').contents().find($(this).data('target')).attr('src', "/assets/member-images/"+element.value);
+			$.ajax({
+			    url: "/loadImage",
+			    data: {
+	                iname: element.value,
+	                path: $(this).data('target')
+	            },
+	            type: "GET"
+			}).done(function(result){
+				console.log(result);
+			    if(Boolean(result.status)) {
+			    	var src = "/assets/member-images/" + String(result.imageId) + "." + result.imageType;
+					$('iframe').contents().find(result.path).attr('src', src);
+			    }	else	{
+			    	$('iframe').contents().find(result.path).attr('src', '');
+			    }
+			}).fail(function(data){
+				
+			});
 		}
 	}
 };

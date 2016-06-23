@@ -374,7 +374,7 @@ public class AdminController extends BaseController {
 		} catch(Exception e) {}
 		PagingDto<Template> pagingDto;
 		pagingDto = appS.findTemplatesWithPages(page, 12 , member.memberId);
-		return ok(editTemp.render(pagingDto,member,appS.getSnapShotsUrl()));
+		return ok(editTemp.render(pagingDto,member,appS.getSnapShotsUrl(), ""));
 	}
 
 	public static Result updateTemp(Long id){
@@ -395,7 +395,7 @@ public class AdminController extends BaseController {
 		System.out.println("テンプレート更新");
 		PagingDto<Template> pagingDto;
 		pagingDto = appS.findTemplatesWithPages(1, 12 , member.memberId);
-		return ok(editTemp.render(pagingDto,member,appS.getSnapShotsUrl()));
+		return ok(editTemp.render(pagingDto,member,appS.getSnapShotsUrl(), "保存しました"));
 	}
 
 	public static Result deleteTmp(Long id){
@@ -410,7 +410,7 @@ public class AdminController extends BaseController {
 			System.out.println("テンプレート削除");
 			PagingDto<Template> pagingDto;
 			pagingDto = appS.findTemplatesWithPages(1, 12 , mem.memberId);
-			return ok(editTemp.render(pagingDto, mem, appS.getSnapShotsUrl()));
+			return ok(editTemp.render(pagingDto, mem, appS.getSnapShotsUrl(), "削除しました"));
 		}
 		return redirect("/");
 	}
