@@ -15,22 +15,22 @@ public class ColorService {
 	 */
 	public List<Color> getStandardColors() {
 		List<Color> cssColors = new ArrayList<Color>();
-		cssColors.add(new Color("#ff0000","red"));
+		cssColors.add(new Color("#FF0000","red"));
 		cssColors.add(new Color("#800000","maroon"));
 		cssColors.add(new Color("#000000","black"));
-		cssColors.add(new Color("#ffff00","yellow"));
+		cssColors.add(new Color("#FFFF00","yellow"));
 		cssColors.add(new Color("#808000","olive"));
 		cssColors.add(new Color("#808080","gray"));
-		cssColors.add(new Color("#00ff00","lime"));
+		cssColors.add(new Color("#00FF00","lime"));
 		cssColors.add(new Color("#008000","green"));
-		cssColors.add(new Color("#c0c0c0","silver"));
-		cssColors.add(new Color("#00ffff","aqua"));
+		cssColors.add(new Color("#C0C0C0","silver"));
+		cssColors.add(new Color("#00FFFF","aqua"));
 		cssColors.add(new Color("#008080","teal"));
-		cssColors.add(new Color("#ffffff","white"));
-		cssColors.add(new Color("#0000ff","blue"));
+		cssColors.add(new Color("#FFFFFF","white"));
+		cssColors.add(new Color("#0000FF","blue"));
 		cssColors.add(new Color("#000080","navy"));
-		cssColors.add(new Color("#ffa500","orange"));
-		cssColors.add(new Color("#ff00ff","fuchsia"));
+		cssColors.add(new Color("#FFA500","orange"));
+		cssColors.add(new Color("#FF00FF","fuchsia"));
 		cssColors.add(new Color("#800080","purple"));
 		return cssColors;
 	}
