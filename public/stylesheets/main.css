@@ -10,7 +10,7 @@
 				margin: 0;
 				font-size: 13px;
 				background-color: #FFF;
-				font-family: "繝偵Λ繧ｮ繝手ｧ偵ざ ProN W3", "Hiragino Kaku Gothic ProN", "繝｡繧､繝ｪ繧ｪ", Meiryo, sans-serif;
+				font-family: "ヒラギノ角ゴ Pro W3", "Hiragino Kaku Gothic Pro", "メイリオ", Meiryo, sans-serif;
 				height: 100%;
 			}
 
@@ -105,7 +105,7 @@
 			}
 
 			#sendForm input{
-				width:  200px;
+				width:  170px;
 				margin: 20px 20px 20px 0px;
 				background-color: #6d7993;
 				color: #FFF;

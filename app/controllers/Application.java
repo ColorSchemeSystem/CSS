@@ -193,7 +193,7 @@ public class Application extends BaseController{
 	private static void saveImage(FilePart fileP, String type) {
 		Image image = new Image();
 		image.imageName = fileP.getFilename();
-		image.imageType = "png";
+		image.imageType = type.replace("image/", "");
 		File file = fileP.getFile();
 		Member member = isLoggedIn();
 	    if(member != null) {
@@ -201,7 +201,7 @@ public class Application extends BaseController{
 	    }
 	    appS.saveImage(image);
 	    final String imageFilePath = appS.getPublicFolderPath() + "/member-images/";
-		final String imageFileName = image.imageId + ".png";
+		final String imageFileName = image.imageId + "." + image.imageType;
 		file.renameTo(new File(imageFilePath + imageFileName));
 	}
 
@@ -438,18 +438,18 @@ public class Application extends BaseController{
 		Member mem = isLoggedIn();
 		return ok(about.render(mem));
 	}
-	
+
 	/**
 	 * @return
 	 */
 	public static Result downloadTemplate() {
 		Long templateId = null;
 		try {
-			templateId = Long.valueOf(request().getQueryString("tid"));	
+			templateId = Long.valueOf(request().getQueryString("tid"));
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		String fileName = appS.getPublicFolderPath() + "/iframes/" 
+		String fileName = appS.getPublicFolderPath() + "/iframes/"
 		+ String.valueOf(templateId) + ".html";
 		String html = fileS.fileGetContents(fileName);
 		String css  = new StyleParser().parse(html).toString();
@@ -474,4 +474,5 @@ public class Application extends BaseController{
 			return ok();
 		}
 	}
+
 }
