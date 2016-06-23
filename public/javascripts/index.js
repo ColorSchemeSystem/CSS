@@ -157,12 +157,11 @@ function reloadIframe(html){
 					// imgのリアルタイム処理
 					$(function() {
 						$('input.imageText').each(function() {
-							$(this).on('keyup blur focus click', imageChange(this));
+							$(this).on('keyup blur paste', imageChange(this));
 						});
 					});
 				}
 			}
-
 		});
 		$('#afterLoad').append(iframe);
 	}
@@ -258,10 +257,6 @@ function renamedImagePass(obj, classname, targetPass) {
 	}
 	TextureName.push(imgName);
 
-	//TODO 本番活況ではURL変えてね
-	var url = "/assets/member-images/" + imgName;
-	$(obj).attr("src", url);
-
 	var childName = "image"+TextureName.length;
 	$(obj).addClass(classname);
 	addTr(obj, classname, childName, "."+classname, "img", new RGBColor("#3AC"));
@@ -274,10 +269,27 @@ function renamedImagePass(obj, classname, targetPass) {
 	tr.append(td2);
 	tr.css("display", "none");
 	$('#classTable').append(tr);
+
+	$.ajax({
+		url: "/loadImage",
+		data: {
+			iname: imgName,
+			path: targetPass
+		},
+		type: "GET"
+	}).done(function(result){
+		if(Boolean(result.status)) {
+			var src = "/assets/member-images/" + String(result.imageId) + "." + result.imageType;
+			$('iframe').contents().find(result.path).attr('src', src);
+		}	else	{
+			$('iframe').contents().find(result.path).attr('src', '');
+		}
+	}).fail(function(data){
+	});
 };
 
 /*
-*  imgのリアルタイム変更(keyup)
+*  imgのリアルタイム変更(keyup blur paste)
 */
 function imageChange(element) {
 	var v, old = element.value;
@@ -285,22 +297,20 @@ function imageChange(element) {
 		if(old != (v = element.value)) {
 			old = v;
 			$.ajax({
-			    url: "/loadImage",
-			    data: {
-	                iname: element.value,
-	                path: $(this).data('target')
-	            },
-	            type: "GET"
+				url: "/loadImage",
+				data: {
+					iname: element.value,
+					path: $(this).data('target')
+				},
+				type: "GET"
 			}).done(function(result){
-				console.log(result);
-			    if(Boolean(result.status)) {
-			    	var src = "/assets/member-images/" + String(result.imageId) + "." + result.imageType;
+				if(Boolean(result.status)) {
+					var src = "/assets/member-images/" + String(result.imageId) + "." + result.imageType;
 					$('iframe').contents().find(result.path).attr('src', src);
-			    }	else	{
-			    	$('iframe').contents().find(result.path).attr('src', '');
-			    }
+				} else {
+					$('iframe').contents().find(result.path).attr('src', '');
+				}
 			}).fail(function(data){
-				
 			});
 		}
 	}
