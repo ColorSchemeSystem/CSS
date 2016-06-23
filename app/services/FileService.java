@@ -14,8 +14,11 @@ import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.List;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
+
+import play.Logger;
 
 public class FileService {
 	/**
@@ -44,6 +47,15 @@ public class FileService {
 	}
 	
 	/**
+	 * @param fileNames
+	 */
+	public void deleteFiles(List<String> fileNames) {
+		for(String fileName : fileNames) {
+			this.deleteFile(fileName);
+		}
+	}
+	
+	/**
 	 * @param dir
 	 */
 	public void mkdir(String dir) {
@@ -59,12 +71,26 @@ public class FileService {
 	    try(ZipOutputStream zos = new ZipOutputStream(new FileOutputStream(fileName)))
 	    {
 	        for(String path : targetFileNames){
-	            zos.putNextEntry(new ZipEntry(path));
+	        	String f = path.replaceAll(".*\\/", "");
+	            zos.putNextEntry(new ZipEntry(f));
 	            Path p = Paths.get(path);
 	            Files.copy(p, zos);
 	            zos.closeEntry();
 	        }
 	    }
+	}
+	
+	/**
+	 * @param fileName
+	 * @param targetFileNames
+	 * @throws IOException
+	 */
+	public void zip(String fileName,List<String> targetFileNames) throws IOException {
+		String[] arr = new String[targetFileNames.size()];
+		for(int i = 0; i < targetFileNames.size(); i++) {
+			arr[i] = targetFileNames.get(i);
+		}
+		this.zip(fileName, arr);
 	}
 	
 	/**

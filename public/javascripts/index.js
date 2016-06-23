@@ -78,7 +78,25 @@ function sendHTML(formId, id){
 				});
 	$(formId).append(ele);
 	$(formId).append(ele2);
-};
+	
+	/*
+	 * 画像ファイル名をhiddenでappendする。
+	 */
+	var imageFileNames = [];
+	$('iframe').contents().find('img').each(function() {
+		var imageFileName = $(this).attr("src").match(/^.*\/(.*?)$/)[1];
+		if(!_.isEmpty(imageFileName)) {
+			imageFileNames.push(imageFileName);
+		}
+	});
+	$(formId).append(
+			$('<input>').attr({
+				type: 'hidden',
+				name: 'imageFileNames',
+				value: imageFileNames.join(),
+			})
+	);
+}
 
 
 function showPopup(member_id, id){
