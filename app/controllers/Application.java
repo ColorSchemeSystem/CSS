@@ -436,18 +436,18 @@ public class Application extends BaseController{
 		Member mem = isLoggedIn();
 		return ok(about.render(mem));
 	}
-	
+
 	/**
 	 * @return
 	 */
 	public static Result downloadTemplate() {
 		Long templateId = null;
 		try {
-			templateId = Long.valueOf(request().getQueryString("tid"));	
+			templateId = Long.valueOf(request().getQueryString("tid"));
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		String fileName = appS.getPublicFolderPath() + "/iframes/" 
+		String fileName = appS.getPublicFolderPath() + "/iframes/"
 		+ String.valueOf(templateId) + ".html";
 		String html = fileS.fileGetContents(fileName);
 		String css  = new StyleParser().parse(html).toString();
