@@ -31,7 +31,7 @@
 	      	<br><br>
 	    }
 	    <button data-remodal-action="cancel" class="remodal-cancel">キャンセル</button>
-  		<input type="submit" class="remodal-confirm" value="保存">
+  		<input type="submit" class="remodal-confirm" value="保存" id="saveTemp" onClick="disabledButton('#saveHtmlForm', '#saveTemp');">
 	}
   </div>
 </div>
@@ -68,7 +68,7 @@
 				}else{
 					<input class="btn btn-default" type="button" value="HTMLを保存" onClick="showPopup(@user.memberId, @id);">
 				}
-					<input class="btn btn-default" type="submit" value="HTMLをダウンロード" onClick="sendHTML('#sendForm', @id);">
+					<input class="btn btn-default" type="submit" value="HTMLをダウンロード" id="downloadTemp" onClick="sendHTML('#sendForm', @id);disabledButton('#sendForm', '#downloadTemp');">
 
 				</div>
 			</form>

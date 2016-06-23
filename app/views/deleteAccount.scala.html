@@ -8,7 +8,7 @@
 			アカウントが削除されてもいままで投稿したテンプレートや画像は削除されません。<br>
 			削除したい場合は下記のフォームの削除したい項目にチェックを入れてください。
 		</p>
-		<form action="/deleteAccount/@user.memberId" method="post">
+		<form action="/deleteAccount/@user.memberId" method="post" id="deleteAccoutForm">
 			<div class="floatclear">
 				<div class="checkArea">
 					<input type="checkbox" name="deletePriveteTmp" value="1">
@@ -35,7 +35,7 @@
 				</div>
 			</div>
 			<p class="deleteAccountButton">
-				<input type="submit" value="アカウントの削除" class="btn btn-primary"/>
+				<input type="submit" value="アカウントの削除" class="btn btn-primary" id="deleteAccountSubmit" onClick="disabledButton('#deleteAccoutForm', '#deleteAccountSubmit');"/>
 				<a href="/editProfile">キャンセル</a>
 			</p>
 		</form>
