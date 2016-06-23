@@ -10,7 +10,7 @@ public class Global extends GlobalSettings {
 	@Override
 	public Promise<SimpleResult> onHandlerNotFound(RequestHeader request) {
         return Promise.<SimpleResult>pure(notFound(
-                views.html.notfound.render(request.host() + request.uri())
+                views.html.notfound.render()
         ));
     }
 }
