@@ -25,6 +25,14 @@ function isLoggedIn() {
 	return Boolean($("body").data("login"));
 }
 
+function disabledButton(formId, buttonId){
+	console.log("無効化");
+	var form = $(formId);
+	var button = $(buttonId);
+	form.submit();
+	button.attr("disabled", true);
+}
+
 function fixSideBar(){
 	var navi = $('.fixnav');
 	var main  = $('.main');
@@ -72,9 +80,6 @@ function sendHTML(formId, id){
 	$(formId).append(ele2);
 };
 
-function submitUpdate(){
-	$('#tempUpdate').submit();
-}
 
 function showPopup(member_id, id){
 	var inst = $('[data-remodal-id=modal]').remodal();

@@ -7,10 +7,10 @@
 @main("login Page", user) {
 <div class='loginContainer'>
 	<h2>@message</h2>
-	@helper.form(action = routes.AdminController.loginEntry()) {
+	@helper.form(action = routes.AdminController.loginEntry(), 'id -> "loginForm") {
 		@inputText(myform("memberName"),'_label -> "ユーザーID",'_showConstraints -> false, 'size -> 45)
 		@inputText(myform("password"),'_label -> "パスワード",'_showConstraints -> false, 'size -> 45, 'type -> "password")
-		<input class="btn btn-primary" type="submit" value="ログイン">
+		<input class="btn btn-primary" type="submit" value="ログイン" id="loginSubmit" onClick="disabledButton('#loginForm', '#loginSubmit');">
 	}
 		<a href="@routes.AdminController.createAccount()"><button class="btn btn-default">新規アカウント作成</button></a>
 </div>
