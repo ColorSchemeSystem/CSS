@@ -171,4 +171,20 @@ public class AdminService {
 		form.errors().put(errorColumn, errors);
 		return form;
 	}
+	
+	/**
+	 * @param imageName
+	 * @param memberId
+	 * @return
+	 */
+	public Image findImageByImageNameAndMemberId(String imageName, Long memberId) {
+		List<Image> images = Image.find.where()
+				.eq("imageName", imageName).eq("member.memberId", memberId)
+				.findList();
+		if(images.size() > 0) {
+			return images.get(0);
+		}	else	{
+			return null;
+		}
+	}
 }

@@ -279,7 +279,24 @@ function imageChange(element) {
 	return function() {
 		if(old != (v = element.value)) {
 			old = v;
-			$('iframe').contents().find($(this).data('target')).attr('src', "/assets/member-images/"+element.value);
+			$.ajax({
+			    url: "/loadImage",
+			    data: {
+	                iname: element.value,
+	                path: $(this).data('target')
+	            },
+	            type: "GET"
+			}).done(function(result){
+				console.log(result);
+			    if(Boolean(result.status)) {
+			    	var src = "/assets/member-images/" + String(result.imageId) + "." + result.imageType;
+					$('iframe').contents().find(result.path).attr('src', src);
+			    }	else	{
+			    	$('iframe').contents().find(result.path).attr('src', '');
+			    }
+			}).fail(function(data){
+				
+			});
 		}
 	}
 };
