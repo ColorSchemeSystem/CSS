@@ -84,6 +84,9 @@ function sendHTML(formId, id){
 	 */
 	var imageFileNames = [];
 	$('iframe').contents().find('img').each(function() {
+		if(_.isEmpty($(this).attr("src"))) {
+			return true;
+		}
 		var imageFileName = $(this).attr("src").match(/^.*\/(.*?)$/)[1];
 		if(!_.isEmpty(imageFileName)) {
 			imageFileNames.push(imageFileName);
@@ -209,7 +212,7 @@ function toggleHide(obj) {
 */
 function allScribing(obj, assignmentName, number, targetPass, viewName, color) {
 	var tagName = $(obj).prop("tagName");
-	if(tagName == "IMG") renamedImagePass(obj, assignmentName, targetPass);
+	gentlenessTags(tagName, obj, targetPass, assignmentName);
 	if(tagName == "SCRIPT" || tagName == "BR" || tagName == "IMG" || tagName== "STYLE" || tagName== "HEADER") return;
 
 	// liだったらclassを振る
@@ -265,6 +268,14 @@ function allScribing(obj, assignmentName, number, targetPass, viewName, color) {
 };
 
 /*
+*  タグ別やるなら
+*/
+function gentlenessTags(tagName, obj, targetPass, assignmentName) {
+	if(tagName == "IMG") renamedImagePass(obj, assignmentName, targetPass);
+	else if(tagName == "A") $('iframe').contents().find(targetPass).removeAttr("href");
+};
+
+/*
 *  imgタグのパスを変更してtextureの名前を保存する
 */
 function renamedImagePass(obj, classname, targetPass) {
@@ -297,7 +308,7 @@ function renamedImagePass(obj, classname, targetPass) {
 		type: "GET"
 	}).done(function(result){
 		if(Boolean(result.status)) {
-			var src = "/assets/member-images/" + String(result.imageId) + "." + result.imageType;
+			var src = config.images + String(result.imageId) + "." + result.imageType;
 			$('iframe').contents().find(result.path).attr('src', src);
 		}	else	{
 			$('iframe').contents().find(result.path).attr('src', '');
@@ -323,7 +334,7 @@ function imageChange(element) {
 				type: "GET"
 			}).done(function(result){
 				if(Boolean(result.status)) {
-					var src = "/assets/member-images/" + String(result.imageId) + "." + result.imageType;
+					var src = config.images + String(result.imageId) + "." + result.imageType;
 					$('iframe').contents().find(result.path).attr('src', src);
 				} else {
 					$('iframe').contents().find(result.path).attr('src', '');
@@ -439,7 +450,7 @@ function textCheck(obj) {
 };
 
 /*
-*  タグ別などの優しさ
+*  eqしてあげる対象
 */
 function gentlenessEq(targetPass, viewName, number) {
 	if(viewName == "li" || viewName == "tr" || viewName == "th" || viewName == "tr") targetPass = targetPass+":eq("+number+")";

@@ -160,11 +160,12 @@ public class AdminController extends BaseController {
 				return badRequest(createAccount.render(null, "新規登録", form));
 			}	else	{
 				Member mem = new Member();
+				mem.nickName = form.get().nickName.replace(" ", "")
+						.replace("　", "");
 				mem.memberName = form.get().memberName;
 				mem.password = adminS.passwordHash(form.get().password);
 				mem.mail = form.get().mail;
 				mem.chooser = new Chooser();
-				mem.nickName = form.get().nickName;
 				adminS.storeMember(mem);
 				writeObjectOnSession("Member", mem);
 				return redirect("/");

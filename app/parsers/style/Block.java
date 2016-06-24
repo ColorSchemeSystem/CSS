@@ -15,9 +15,6 @@ public class Block {
 	public String toString() {
 		String block = "";
 		for(Attr attr : attrs) {
-			if(attr.attrType.equals("class")) {
-				block += ".";
-			}
 			block += attr.attrName + " ";
 		}
 		block += "{" + System.getProperty("line.separator");
