@@ -14,11 +14,11 @@
   	<br><br>
   	@form(action = routes.Application.saveEditTemplate, 'id -> "saveHtmlForm"){
 	    @(inputText(
-	    	field = myForm("tempName"), args = 'class -> "nameForm", 'size -> 50, 'placeholder -> "HTMLの名前"
+	    	field = myForm("tempName"), args = 'class -> "nameForm", 'size -> 50, 'placeholder -> "HTMLの名前", 'id -> "saveHtmlName"
 	    ))
 	    <br><br>
 	    @(textarea(
-	    	field = myForm("tempMessage"), args = 'class -> "messageForm", 'rows -> 10, 'cols -> 50, 'placeholder -> "HTMLの説明"
+	    	field = myForm("tempMessage"), args = 'class -> "messageForm", 'rows -> 10, 'cols -> 50, 'placeholder -> "HTMLの説明", 'id -> "saveHtmlMessage"
 	    ))
 	    <br><br>
 	    @if(user == null){
@@ -30,8 +30,8 @@
 	      	))
 	      	<br><br>
 	    }
+	    <input type="button" class="remodal-confirm" value="保存" id="saveTemp" onClick="checkWordLength('#saveHtmlName', '#saveHtmlMessage', '#saveTemp', '#saveHtmlForm')">
 	    <button data-remodal-action="cancel" class="remodal-cancel">キャンセル</button>
-  		<input type="submit" class="remodal-confirm" value="保存" id="saveTemp" onClick="disabledButton('#saveHtmlForm', '#saveTemp');">
 	}
   </div>
 </div>
