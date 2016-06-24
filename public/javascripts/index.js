@@ -85,7 +85,7 @@ function sendHTML(formId, id){
 	var imageFileNames = [];
 	$('iframe').contents().find('img').each(function() {
 		if(_.isEmpty($(this).attr("src"))) {
-			continue;
+			return true;
 		}
 		var imageFileName = $(this).attr("src").match(/^.*\/(.*?)$/)[1];
 		if(!_.isEmpty(imageFileName)) {
