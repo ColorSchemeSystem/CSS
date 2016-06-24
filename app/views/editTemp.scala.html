@@ -73,7 +73,7 @@
 						  		<input type="radio" name="templateFlg" value="0" id="flgPublic">公開</input>&nbsp
 						  		<input type="radio" name="templateFlg" value="1" id="flgPrivate">非公開</input>
 						  	</p>
-					  	<input type="submit" class="remodal-confirm" value="更新" id="saveTmpButton" onClick="disabledButton('#updateTmp', '#saveTmpButton');">
+					  	<input type="button" class="remodal-confirm" value="更新" id="saveTmpButton" onClick="checkWordLength('#eTempN', '#eTempM', '#saveTmpButton', '#updateTmp')">
 					</form>
 					<form action="#" method="post" id="deleteTmp">
 						<input id="deleteTmpButton" type="submit" class="remodal-confirm" value="削除" onClick="return confirm('このテンプレートを削除します。本当によろしいですか');this.disable = true;"></input>
