@@ -153,7 +153,7 @@ function handleFileUpload(files,obj){
 	    var _public = 0;
 	    var _private = 1;
 	    var accessFlag = _public;
-	    if(isLoggedIn()) {
+	    if(files[i].type == "text/html" && isLoggedIn()) {
 	    	 if(!window.confirm('テンプレートを公開しますか？')){
 	 	    	accessFlag = _private;
 	 		}
