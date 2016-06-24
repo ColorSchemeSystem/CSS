@@ -1,6 +1,6 @@
 @(dto : dtos.PagingDto[Template], member : Member, snapShotsUrl : String)
 
-@main("Color Scheme",member){ 
+@main("すべてのテンプレート",member){ 
 <script>
 var timerID = setInterval(function() {
 	$(".listImage img").each(function(index, elem) {
@@ -22,7 +22,11 @@ setTimeout(function() {
 						全てのテンプレートを表示 
 					</a></li>
 					<li role="presentation" id="myTemplate"><a href='@routes.Application.templates()?type=member'>
-						@(member.memberName)さんのテンプレートのみを表示
+						@if(member.nickName.isEmpty()){
+							@(member.memberName)さんのテンプレートのみを表示
+						}else{
+							@(member.nickName)さんのテンプレートのみを表示
+						}
 					</a></li>
 				</ul>
 			</div>

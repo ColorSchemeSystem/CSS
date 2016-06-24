@@ -69,6 +69,7 @@ public class AdminController extends BaseController {
 			Member mem = adminS.findMemberByMemberName(form.get().memberName);
 			if(mem == null) {
 				adminS.addMemberErrors(form, "ユーザIDが誤っています", "memberName");
+				form.data().put("password", "");
 				return badRequest(login.render(null, "ログイン", form));
 			}
 			// パスワード確認
@@ -76,6 +77,7 @@ public class AdminController extends BaseController {
 			if(!adminS.checkpw(password, mem.password)) {
 				// 一致していなかったらログイン画面へ
 				adminS.addMemberErrors(form, "パスワードが誤っています", "password");
+				form.data().put("password", "");
 				return badRequest(login.render(null, "ログイン", form));
 			}
 			// ログインする
@@ -83,6 +85,7 @@ public class AdminController extends BaseController {
 		} else {
 			adminS.addMemberErrors(form, "ユーザIDが誤っています", "memberName");
 			adminS.addMemberErrors(form, "パスワードが誤っています", "password");
+			form.data().put("password", "");
 			return badRequest(login.render(null, "ログイン", form));
 		}
 		return redirect("/");
@@ -97,13 +100,15 @@ public class AdminController extends BaseController {
 				Member inputMem = adminS.findMemberByMemberName(formMem.memberName);
 				if(inputMem == null) {
 					adminS.addMemberErrors(form, "ユーザIDが誤っています", "memberName");
-					return badRequest(confirmPassword.render(null, "パスワードを再入力してください", form));
+					form.data().put("password", "");
+					return badRequest(confirmPassword.render(loginMem, "パスワードを再入力してください", form));
 				}
 				// パスワード確認
 				if(!adminS.checkpw(formMem.password, inputMem.password)) {
 					// 一致していなかったらログイン画面へ
 					adminS.addMemberErrors(form, "パスワードが誤っています", "password");
-					return badRequest(confirmPassword.render(null, "パスワードを再入力してください", form));
+					form.data().put("password", "");
+					return badRequest(confirmPassword.render(loginMem, "パスワードを再入力してください", form));
 				}
 				/*
 				 * 確認用ログ
@@ -111,7 +116,8 @@ public class AdminController extends BaseController {
 				System.out.println("パスワード確認");
 				return ok(deleteAccount.render(loginMem, Form.form(checkDelete.class)));
 			}else{
-				return badRequest(confirmPassword.render(null, "パスワードを再入力してください", form));
+				form.data().put("password", "");
+				return badRequest(confirmPassword.render(loginMem, "パスワードを再入力してください", form));
 			}
 		}
 		return redirect("/login");
@@ -166,6 +172,7 @@ public class AdminController extends BaseController {
 			}
 		} else {
 			// 新規アカウント登録画面へ
+			form.data().put("password", "");
 			return badRequest(createAccount.render(null, "新規登録", form));
 		}
 	}
@@ -192,9 +199,6 @@ public class AdminController extends BaseController {
 		}
 		if(result.deletePublicTmp == 0){
 			adminS.deleteMemberWithTemplate(id, 0);
-		}
-		if(result.deleteImage == 0){
-			adminS.deleteMemberWithImage(id);
 		}
 
 		List<Template> tempList = adminS.findTemplateByUser(id);
@@ -332,6 +336,7 @@ public class AdminController extends BaseController {
 	 */
 	public static Result doModifyPassword() {
 		Form<ModifyPassword> form = Form.form(ModifyPassword.class).bindFromRequest();
+		System.out.println("form = " + form.data());
 		Member member = isLoggedIn();
 		if(member == null) {
 			return redirect(routes.AdminController.login());
@@ -360,9 +365,17 @@ public class AdminController extends BaseController {
 				form = Form.form(ModifyPassword.class);
 				return ok(editPass.render(form,member,"パスワードを変更しました"));
 			}	else	{
+				form.data().put("password", "");
+				form.data().put("newPassword", "");
+				form.data().put("confirmNewPassword", "");
+				System.out.println("form2 = " + form.data());
 				return ok(editPass.render(form,member,""));
 			}
 		}	else	{
+			form.data().put("password", "");
+			form.data().put("newPassword", "");
+			form.data().put("confirmNewPassword", "");
+			System.out.println("form3 = " + form.data());
 			return ok(editPass.render(form,member,""));
 		}
 	}

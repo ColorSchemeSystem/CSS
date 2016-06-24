@@ -453,7 +453,7 @@ function textCheck(obj) {
 *  eqしてあげる対象
 */
 function gentlenessEq(targetPass, viewName, number) {
-	if(viewName == "li" || viewName == "tr" || viewName == "th" || viewName == "tr") targetPass = targetPass+":eq("+number+")";
+	if(viewName == "tr" || viewName == "th" || viewName == "tr") targetPass = targetPass+":eq("+number+")";
 	return targetPass;
 };
 

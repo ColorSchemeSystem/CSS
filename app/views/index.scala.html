@@ -4,7 +4,7 @@
 
 @implicitField = @{ FieldConstructor(fieldConstructor.fieldC.f) }
 
-@main("Color Scheme", user){ 
+@main("MyCanvas", user){ 
 
 <!--modalView-->
 <div class="remodal" data-remodal-id="modal" role="dialog" aria-labelledby="modal1Title" aria-describedby="modal1Desc">
@@ -68,7 +68,7 @@
 				}else{
 					<input class="btn btn-default" type="button" value="HTMLを保存" onClick="showPopup(@user.memberId, @id);">
 				}
-					<input id='downloadTemplate' class="btn btn-default" type="submit" value="HTMLをダウンロード" id="downloadTemp" onClick="sendHTML('#sendForm', @id);disabledButton('#sendForm', '#downloadTemp');">
+					<input id='downloadTemplate' class="btn btn-default" type="submit" value="HTMLをダウンロード" onClick="sendHTML('#sendForm', @id);disabledButton('#sendForm', '#downloadTemplate');">
 
 				</div>
 			</form>
