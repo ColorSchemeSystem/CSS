@@ -308,7 +308,7 @@ function renamedImagePass(obj, classname, targetPass) {
 		type: "GET"
 	}).done(function(result){
 		if(Boolean(result.status)) {
-			var src = config.images + String(result.imageId) + "." + result.imageType;
+			var src = config.images + "/" + String(result.imageId) + "." + result.imageType;
 			$('iframe').contents().find(result.path).attr('src', src);
 		}	else	{
 			$('iframe').contents().find(result.path).attr('src', '');
@@ -334,7 +334,7 @@ function imageChange(element) {
 				type: "GET"
 			}).done(function(result){
 				if(Boolean(result.status)) {
-					var src = config.images + String(result.imageId) + "." + result.imageType;
+					var src = config.images + "/" + String(result.imageId) + "." + result.imageType;
 					$('iframe').contents().find(result.path).attr('src', src);
 				} else {
 					$('iframe').contents().find(result.path).attr('src', '');
