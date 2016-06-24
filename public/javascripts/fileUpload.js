@@ -54,7 +54,7 @@ function createStatusbar(obj, flg){
     this.size = $("<div class='filesize'></div>").appendTo(this.statusbar);
     this.progressBar = $("<div class='progressBar'><div></div></div>").appendTo(this.statusbar);
     if(flg){
-        this.link = $("<a class='uploadLink' href='/images'><button class='uploadLinkButton btn btn-primary btn-sm'>画像一覧へ</button></a>").appendTo(this.statusbar);
+        this.link = $("<a class='uploadLink' href='/images'><button class='uploadLinkButton btn btn-primary btn-sm'>投稿画像へ</button></a>").appendTo(this.statusbar);
     }else{
         this.link = $("<a target='_blank' href='#'><button class='uploadLinkButton btn btn-primary btn-sm'>htmlを編集</button></a>").appendTo(this.statusbar);
      //this.abort = $("<div class='abort'>Abort</div>").appendTo(this.statusbar);
