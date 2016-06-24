@@ -46,6 +46,7 @@ public class StyleParser {
 		String elements = "";
 		if(m.find() && m.groupCount() == 2) {
 			attrs = m.group(1);
+			Logger.error(attrs);
 			elements = m.group(2);
 		}
 		return new String[]{attrs,elements};
@@ -90,6 +91,7 @@ public class StyleParser {
 	}
 
 	/**
+	 * StringのAttrをAttrオブジェクトに変換する。
 	 * @param attrs
 	 * @return
 	 */
@@ -99,7 +101,7 @@ public class StyleParser {
 			Attr e = new Attr();
 			if(attr.startsWith(".")) {
 				e.attrType = "class";
-				e.attrName = attr.replace(".", "");
+				e.attrName = attr;
 			}	else	{
 				e.attrType = "tag";
 				e.attrName = attr;
@@ -154,12 +156,12 @@ public class StyleParser {
 		List<String> classNames = this.extractClasses(document);
 		Style style = new Style();
 		for(String className : classNames) {
-			if(className.equals("")) {
+			if(StringUtils.isEmpty(className)) {
 				continue;
 			}
 			Attr attr = new Attr();
 			attr.attrType = "class";
-			attr.attrName = className;
+			attr.attrName = "." + className;
 			Block block = new Block();
 			block.attrs.add(attr);
 			block.important = true;
@@ -219,5 +221,4 @@ public class StyleParser {
 		}
 		return new ArrayList<String>(classNames);
 	}
-
 }
