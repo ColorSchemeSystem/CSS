@@ -224,7 +224,7 @@ public class Application extends BaseController{
 				page = Integer.parseInt(request().getQueryString("page"));
 			} catch(Exception e) {}
 			PagingDto<Image> dto = appS.findImagesWithPages(page, 20, member.memberId);
-			return ok(images.render(dto,member,5));
+			return ok(images.render(dto,member,5,appS.getMemberimagesUrl()));
 		}	else	{
 			return redirect(routes.AdminController.login());
 		}
@@ -256,6 +256,10 @@ public class Application extends BaseController{
 		if(!html.tempHtml.matches(".*<html.*>.*")){
 			html.tempHtml = "<html lang=\"ja\">" + html.tempHtml + "</html>";
 		}
+		String[] imageFileNames = {};
+		if(StringUtils.isNotEmpty(html.imageFileNames)) {
+			imageFileNames = html.imageFileNames.split(",");
+		}
 		Logger.info("html : " + html.tempHtml);
 		StyleParser styleParser = new StyleParser();
 		StyleCleaner styleCleaner = new StyleCleaner();
@@ -265,7 +269,13 @@ public class Application extends BaseController{
 		final String cssFile = "index.html";
 		fileS.saveFile(token + "/" + htmlFile, styleParser.parse(html.tempHtml).toString());
 		fileS.saveFile(token + "/" + cssFile, styleCleaner.removeStyleTagAndStyleAttrs(html.tempHtml));
-		String[] files = {token + "/" + htmlFile , token + "/" + cssFile};
+		List<String> files = new ArrayList<String>();
+		files.add(token + "/" + htmlFile);
+		files.add(token + "/" + cssFile);
+		for(String imageFileName : imageFileNames) {
+			files.add(appS.getPublicFolderPath() + 
+					"/" + "member-images/" + imageFileName);
+		}
 		try {
 			String zipFileName = "template_" + new Faker().name().firstName() + ".zip";
 			fileS.zip(zipFileName,files);

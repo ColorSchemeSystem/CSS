@@ -1,4 +1,4 @@
-@(dto : dtos.PagingDto[Image], member : Member, columns : Integer)
+@(dto : dtos.PagingDto[Image], member : Member, columns : Integer, memberImagesUrl : String)
 
 @main("Color Scheme",member){ 
 <div class='imgContainer'>
@@ -22,7 +22,7 @@
 						<div class="col-xs-3">
 							<div class="imgThumb">
 								<img width='260' height='200' 
-								src='/assets/member-images/@(image.imageId).@(image.imageType)'
+								src='@memberImagesUrl/@(image.imageId).@(image.imageType)'
 								/>
 							</div>
 							<div class="imgName">

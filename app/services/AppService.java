@@ -60,6 +60,18 @@ public class AppService {
 			return "/assets/snapshots";
 		}
 	}
+	
+	/**
+	 * @return
+	 */
+	public String getMemberimagesUrl() {
+		String path = Play.application().configuration().getString("paths.images");
+		if(!StringUtils.isEmpty(path)) {
+			return path;
+		}	else	{
+			return "/assets/member-images";
+		}
+	}
 
 	/**
 	 * @return
