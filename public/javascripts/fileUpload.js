@@ -145,8 +145,22 @@ function handleFileUpload(files,obj){
 	    	alert("ファイル名が空白です。");
 	    	continue;
 	    }
+	    /*
+	     * テンプレートの公開/非公開フラグ
+	     * 0 -> 公開
+	     * 1 -> 非公開 
+	     */
+	    var _public = 0;
+	    var _private = 1;
+	    var accessFlag = _public;
+	    if(isLoggedIn()) {
+	    	 if(!window.confirm('テンプレートを公開しますか？')){
+	 	    	accessFlag = _private;
+	 		}
+	    }
         var fd = new FormData();
         fd.append('file', files[i]);
+        fd.append('accessFlag', accessFlag);
         var status = new createStatusbar(obj, flg); //Using this we can set progress.
         status.setFileNameSize(fileName,files[i].size);
         sendFileToServer(fd,status); 
