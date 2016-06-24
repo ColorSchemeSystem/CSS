@@ -60,7 +60,7 @@ public class AppService {
 			return "/assets/snapshots";
 		}
 	}
-	
+
 	/**
 	 * @return
 	 */
@@ -146,7 +146,7 @@ public class AppService {
 	 * @return
 	 */
 	public PagingDto<Image> findImagesWithPages(int page,int itemPerPage, Long memberId) {
-		Page<Image> imagePage = Image.find.findPagingList(itemPerPage).getPage(page -1);
+		Page<Image> imagePage = Image.find.where().eq("Member_Member_Id", memberId).findPagingList(itemPerPage).getPage(page -1);
 		PagingDto<Image> dto = new PagingDto<Image>();
 		dto.data = imagePage.getList();
 		dto.currentPage = page;
