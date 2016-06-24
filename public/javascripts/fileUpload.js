@@ -140,10 +140,15 @@ function handleFileUpload(files,obj){
 				   continue;   
 			    }
 	    }
+	    var fileName = files[i].name.replace(/[\s　]*/g,"");
+	    if(fileName.startsWith(".")) {
+	    	alert("ファイル名が空白です。");
+	    	continue;
+	    }
         var fd = new FormData();
         fd.append('file', files[i]);
         var status = new createStatusbar(obj, flg); //Using this we can set progress.
-        status.setFileNameSize(files[i].name,files[i].size);
+        status.setFileNameSize(fileName,files[i].size);
         sendFileToServer(fd,status); 
     }
 }
