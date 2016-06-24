@@ -308,7 +308,7 @@ function renamedImagePass(obj, classname, targetPass) {
 		type: "GET"
 	}).done(function(result){
 		if(Boolean(result.status)) {
-			var src = config.images + String(result.imageId) + "." + result.imageType;
+			var src = config.images + "/" + String(result.imageId) + "." + result.imageType;
 			$('iframe').contents().find(result.path).attr('src', src);
 		}	else	{
 			$('iframe').contents().find(result.path).attr('src', '');
@@ -334,7 +334,7 @@ function imageChange(element) {
 				type: "GET"
 			}).done(function(result){
 				if(Boolean(result.status)) {
-					var src = config.images + String(result.imageId) + "." + result.imageType;
+					var src = config.images + "/" + String(result.imageId) + "." + result.imageType;
 					$('iframe').contents().find(result.path).attr('src', src);
 				} else {
 					$('iframe').contents().find(result.path).attr('src', '');
@@ -453,7 +453,7 @@ function textCheck(obj) {
 *  eqしてあげる対象
 */
 function gentlenessEq(targetPass, viewName, number) {
-	if(viewName == "li" || viewName == "tr" || viewName == "th" || viewName == "tr") targetPass = targetPass+":eq("+number+")";
+	if(viewName == "tr" || viewName == "th" || viewName == "tr") targetPass = targetPass+":eq("+number+")";
 	return targetPass;
 };
 
