@@ -4,7 +4,7 @@
 
 @import helper._
 
-@main("createAccount Page", user) {
+@main("アカウント作成", user) {
 <div class='accountContainer'>
 	<h2>@message</h2>
 	@helper.form(action = routes.AdminController.saveAccount(), 'id -> "createAccountForm") {

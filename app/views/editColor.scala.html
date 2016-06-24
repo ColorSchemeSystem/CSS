@@ -4,7 +4,7 @@
 
 @implicitField = @{ FieldConstructor(fieldConstructor.fieldC.f) }
 
-@main("myPage", member) {
+@main("カラーパレット編集", member) {
 	@helper.form(action = routes.AdminController.saveColorSetting(), 'id -> "colorForm") {
 		<input type="hidden" name="memberName" value="@member.memberName">
 		<div class="mypageContainer">
