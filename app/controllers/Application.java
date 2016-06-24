@@ -59,6 +59,10 @@ public class Application extends BaseController{
 	private static CompressionService compS = new CompressionService();
 
 	private static ColorService colorS = new ColorService();
+	
+	private static final int TEMPLATE_PUBLIC = 0;
+	
+	private static final int TEMPLATE_PRIVATE = 1;
 
 	public static Result index() {
 		Chooser chooser = new Chooser();
@@ -113,12 +117,22 @@ public class Application extends BaseController{
 	 * @return
 	 */
 	public static Result doUpload() {
+		Member member = isLoggedIn();
 		MultipartFormData body = request().body().
 				asMultipartFormData();
 		FilePart picture = body.getFile("file");
+		int accessFlag = TEMPLATE_PUBLIC;
+		if(member != null) {
+			try {
+				accessFlag = Integer.parseInt(body.asFormUrlEncoded().get("accessFlag")[0]);	
+			}	catch(Exception e) {
+				e.printStackTrace();
+			}
+		}
+		Logger.info("accessFlag : " + accessFlag);
 	    if(picture != null && picture.getFile() != null) {
 	    	if(picture.getContentType().equals("text/html")) {
-	    		Template template = saveHtml(picture);
+	    		Template template = saveHtml(picture,accessFlag);
 	    		AjaxResult result = new AjaxResult();
 	    		result.status = "success";
 	    		result.message = "アップロードが完了しました";
@@ -126,7 +140,6 @@ public class Application extends BaseController{
 	    		result.templateName = template.templateName;
 	    		return ok(Json.toJson(result));
 	    	} else {
-	    		Member member = isLoggedIn();
 	    		if(member == null) {
 	    			AjaxResult result = new AjaxResult();
 		    		result.status = "failure";
@@ -149,7 +162,7 @@ public class Application extends BaseController{
 	 * @param file
 	 * @param form
 	 */
-	private static Template saveHtml(FilePart fileP) {
+	private static Template saveHtml(FilePart fileP,int accessFlag) {
 		Template template = new Template();
 	    template.templateName = fileP.getFilename();
 	    File file = fileP.getFile();
@@ -161,9 +174,9 @@ public class Application extends BaseController{
 	    Member member = isLoggedIn();
 	    if(member != null) {
 	    	template.member = member;
-	    	template.accessFlag = 1;
+	    	template.accessFlag = accessFlag;
 	    }else{
-	    	template.accessFlag = 0;
+	    	template.accessFlag = TEMPLATE_PUBLIC;
 	    }
 	    appS.saveTemplate(template);
 	    final String path = appS.getPublicFolderPath() + "/iframes/";
