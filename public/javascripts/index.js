@@ -486,7 +486,7 @@ function changedColor(color, targetPass) {
 function addBackground(name, targetPass) {
 	var tr = $("<tr class='iframe"+name+"'></tr>");
 	var td = $("<td>background</td>");
-	var td2 = $("<input type='text' class='form-control' id='"+name+"-back' value='#A6FF00' data-color-format='hex'>");
+	var td2 = $("<input type='text' class='form-control surveillance' id='"+name+"-back' value='#A6FF00' data-color-format='hex' data-target='"+targetPass+"' >");
 
 	tr.append(td);
 	tr.append(td2);
@@ -498,7 +498,9 @@ function addBackground(name, targetPass) {
 	color = changedColor(color, targetPass);
 	$("#"+name+"-back").val(color);
 
-	var dataBack = {contentName:classname, targetName:"background"};
+	var setBG = new SetBackGround(targetPass, name);
+
+	var dataBack = {contentName:classname, targetName:"background", setChildColor:setBG};
 	$("input#"+name+"-back").ColorPickerSliders({
 		placement: $('#chooser').data('placement'),
 		hsvpanel: $('#chooser').data('hsvpanel'),
@@ -506,6 +508,23 @@ function addBackground(name, targetPass) {
 		swatches: $('#chooser').data('swatches'),
 		previewformat: 'hex'
 	},dataBack);
+};
+
+function SetBackGround(targetPass, classname) {
+	var target = targetPass;
+	var clName = classname;
+
+	this.hoge = function(color) {
+		//console.log("start" + "  name:" + clName);
+		$('.surveillance').each(function() {
+			if($(this).attr('id').indexOf(clName) != -1) {
+				$(this).val(color);
+				$(this).css('background', color);
+				$('iframe').contents().find($(this).data('target')).css("background-color", color);
+			}
+		});
+		//console.log("end");
+	};
 };
 
 /*
