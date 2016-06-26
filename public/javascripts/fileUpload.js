@@ -145,6 +145,10 @@ function handleFileUpload(files,obj){
 	    	alert("ファイル名が空白です。");
 	    	continue;
 	    }
+	    if(fileName.length > 50) {
+	    	alert("ファイル名が50文字をオーバーしています。");
+	    	continue;
+	    }
 	    /*
 	     * テンプレートの公開/非公開フラグ
 	     * 0 -> 公開
