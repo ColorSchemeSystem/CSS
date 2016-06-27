@@ -13,13 +13,28 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.*;
 
+import javax.persistence.OptimisticLockException;
+
 public class AdminService {
 	/**
 	 *
 	 * @param template
 	 */
 	public void saveTemplate(Template template) {
-		template.save();
+		do {
+			try { 
+				template.save();
+				break;
+			} catch (OptimisticLockException e) {
+				Logger.info("処理が競合しました。");
+				Template newTemplate = this.findTemplateById(
+						template.templateId);
+				newTemplate.templateName = template.templateName;
+				newTemplate.templateMessage = template.templateMessage;
+				newTemplate.accessFlag = template.accessFlag;
+				newTemplate.save();
+			}
+		} while(true);
 	}
 
 	public void updateTemplate(Template template){
