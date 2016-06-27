@@ -31,7 +31,16 @@ function disabledButton(formId, buttonId){
 	var button = $(buttonId);
 	form.submit();
 	button.attr("disabled", true);
+	if(buttonId == "#downloadTemplate"){
+		setTimeout("reviveButton()", 5000);
+	}
 }
+
+function reviveButton(){
+	$('#downloadTemplate').attr("disabled", false);
+}
+
+
 
 function fixSideBar(){
 	var navi = $('.fixnav');
