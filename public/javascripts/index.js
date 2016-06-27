@@ -295,7 +295,7 @@ function renamedImagePass(obj, classname, targetPass) {
 	}
 	TextureName.push(imgName);
 
-	var childName = "image"+TextureName.length;
+	var childName = classname + "-image"+TextureName.length;
 	$(obj).addClass(classname);
 	addTr(obj, classname, childName, "."+classname, "img", new RGBColor("#3AC"));
 
