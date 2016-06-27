@@ -24,6 +24,9 @@ import models.Image;
 import models.Member;
 import models.Template;
 import play.Play;
+import play.db.ebean.Model.Finder;
+
+import com.avaje.ebean.PagingList;
 
 public class AppService {
 	/**
@@ -58,6 +61,18 @@ public class AppService {
 			return path;
 		}	else	{
 			return "/assets/snapshots";
+		}
+	}
+
+	/**
+	 * @return
+	 */
+	public String getMemberimagesUrl() {
+		String path = Play.application().configuration().getString("paths.images");
+		if(!StringUtils.isEmpty(path)) {
+			return path;
+		}	else	{
+			return "/assets/member-images";
 		}
 	}
 
@@ -134,12 +149,24 @@ public class AppService {
 	 * @return
 	 */
 	public PagingDto<Image> findImagesWithPages(int page,int itemPerPage, Long memberId) {
-		Page<Image> imagePage = Image.find.findPagingList(itemPerPage).getPage(page -1);
+		Page<Image> imagePage = Image.find.where().eq("Member_Member_Id", memberId).findPagingList(itemPerPage).getPage(page -1);
 		PagingDto<Image> dto = new PagingDto<Image>();
 		dto.data = imagePage.getList();
 		dto.currentPage = page;
 		dto.totalPage = imagePage.getTotalPageCount();
 		return dto;
+	}
+
+	public Integer getMaxPage(Long id) {
+        Finder<Long, Template> find = new Finder<Long, Template>(Long.class, Template.class);
+        PagingList<Template> pagingList;
+        if(id == null){
+        	pagingList = find.where().eq("accessFlag", "0").orderBy("created desc").findPagingList(12);
+        }else{
+        	pagingList = find.where().eq("Member_Member_Id", id).orderBy("created desc").findPagingList(12);
+        }
+        return pagingList.getTotalPageCount();
+        // getTotalPageCountを使用して最大ページ数取得
 	}
 
 	/**

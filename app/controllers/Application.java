@@ -28,6 +28,7 @@ import org.apache.commons.lang3.StringEscapeUtils;
 import com.avaje.ebean.Query;
 import com.github.javafaker.Faker;
 
+import dtos.AjaxImageResult;
 import dtos.AjaxResult;
 import dtos.PagingDto;
 import entity.Color;
@@ -47,6 +48,8 @@ public class Application extends BaseController{
 
 	private static AppService appS = new AppService();
 
+	private static AdminService adminS = new AdminService();
+
 	private static ImageService imageS = new ImageService();
 
 	private static FileService fileS = new FileService();
@@ -56,6 +59,10 @@ public class Application extends BaseController{
 	private static CompressionService compS = new CompressionService();
 
 	private static ColorService colorS = new ColorService();
+
+	private static final int TEMPLATE_PUBLIC = 0;
+
+	private static final int TEMPLATE_PRIVATE = 1;
 
 	public static Result index() {
 		Chooser chooser = new Chooser();
@@ -71,24 +78,28 @@ public class Application extends BaseController{
 				mem.chooser = new Chooser();
 				chooser = new Chooser();
 			}
-			return ok(index.render(mem, chooser, form, "0",""));
+			return ok(index.render(mem, chooser, form, "0", "", appS.getPublicFolderPath()));
 		}
-		return ok(index.render(null, chooser, form, "0",""));
+		return ok(index.render(null, chooser, form, "0", "", appS.getPublicFolderPath()));
 	}
 
 	public static Result indexWithId(Long id){
 		Chooser chooser = new Chooser();
 		Member mem = isLoggedIn();
 		Template temp = appS.getTemp(id);
-		TemplateSave tempS = new TemplateSave();
-		tempS.flg = 0;
-		Form<TemplateSave> form = Form.form(TemplateSave.class).fill(tempS);
-		if(mem != null) {
-			Query<Chooser> query = Chooser.find.where("chooserId = '"+mem.chooser.chooserId+"'");
-			chooser = query.findUnique();
-			return ok(index.render(mem, chooser, form, id.toString(), appS.escapeHtml(compS.decompress(temp.html))));
+		if(temp == null || temp.accessFlag == 1 && mem == null || temp.accessFlag == 1 && temp.member != null && !temp.member.memberId.equals(mem.memberId)){
+			return badRequest(notfound.render());
+		}else{
+			TemplateSave tempS = new TemplateSave();
+			tempS.flg = 0;
+			Form<TemplateSave> form = Form.form(TemplateSave.class).fill(tempS);
+			if(mem != null) {
+				Query<Chooser> query = Chooser.find.where("chooserId = '"+mem.chooser.chooserId+"'");
+				chooser = query.findUnique();
+				return ok(index.render(mem, chooser, form, id.toString(), appS.escapeHtml(compS.decompress(temp.html)), appS.getPublicFolderPath()));
+			}
+			return ok(index.render(null, chooser, form, id.toString(),appS.escapeHtml(compS.decompress(temp.html)), appS.getPublicFolderPath()));
 		}
-		return ok(index.render(null, chooser, form, id.toString(),appS.escapeHtml(compS.decompress(temp.html))));
 	}
 
 	/**
@@ -106,12 +117,22 @@ public class Application extends BaseController{
 	 * @return
 	 */
 	public static Result doUpload() {
+		Member member = isLoggedIn();
 		MultipartFormData body = request().body().
 				asMultipartFormData();
 		FilePart picture = body.getFile("file");
+		int accessFlag = TEMPLATE_PUBLIC;
+		if(member != null) {
+			try {
+				accessFlag = Integer.parseInt(body.asFormUrlEncoded().get("accessFlag")[0]);
+			}	catch(Exception e) {
+				e.printStackTrace();
+			}
+		}
+		Logger.info("accessFlag : " + accessFlag);
 	    if(picture != null && picture.getFile() != null) {
 	    	if(picture.getContentType().equals("text/html")) {
-	    		Template template = saveHtml(picture);
+	    		Template template = saveHtml(picture,accessFlag);
 	    		AjaxResult result = new AjaxResult();
 	    		result.status = "success";
 	    		result.message = "アップロードが完了しました";
@@ -119,7 +140,6 @@ public class Application extends BaseController{
 	    		result.templateName = template.templateName;
 	    		return ok(Json.toJson(result));
 	    	} else {
-	    		Member member = isLoggedIn();
 	    		if(member == null) {
 	    			AjaxResult result = new AjaxResult();
 		    		result.status = "failure";
@@ -130,7 +150,7 @@ public class Application extends BaseController{
 	    			AjaxResult result = new AjaxResult();
 		    		result.status = "success";
 		    		result.message = "アップロードが完了しました";
-		    		return ok();
+		    		return ok(Json.toJson(result));
 	    		}
 	    	}
 	    }
@@ -142,7 +162,7 @@ public class Application extends BaseController{
 	 * @param file
 	 * @param form
 	 */
-	private static Template saveHtml(FilePart fileP) {
+	private static Template saveHtml(FilePart fileP,int accessFlag) {
 		Template template = new Template();
 	    template.templateName = fileP.getFilename();
 	    File file = fileP.getFile();
@@ -154,6 +174,9 @@ public class Application extends BaseController{
 	    Member member = isLoggedIn();
 	    if(member != null) {
 	    	template.member = member;
+	    	template.accessFlag = accessFlag;
+	    }else{
+	    	template.accessFlag = TEMPLATE_PUBLIC;
 	    }
 	    appS.saveTemplate(template);
 	    final String path = appS.getPublicFolderPath() + "/iframes/";
@@ -190,7 +213,7 @@ public class Application extends BaseController{
 	private static void saveImage(FilePart fileP, String type) {
 		Image image = new Image();
 		image.imageName = fileP.getFilename();
-		image.imageType = "png";
+		image.imageType = type.replace("image/", "");
 		File file = fileP.getFile();
 		Member member = isLoggedIn();
 	    if(member != null) {
@@ -198,7 +221,7 @@ public class Application extends BaseController{
 	    }
 	    appS.saveImage(image);
 	    final String imageFilePath = appS.getPublicFolderPath() + "/member-images/";
-		final String imageFileName = String.valueOf(image.imageId) + ".png";
+		final String imageFileName = image.imageId + "." + image.imageType;
 		file.renameTo(new File(imageFilePath + imageFileName));
 	}
 
@@ -214,7 +237,7 @@ public class Application extends BaseController{
 				page = Integer.parseInt(request().getQueryString("page"));
 			} catch(Exception e) {}
 			PagingDto<Image> dto = appS.findImagesWithPages(page, 20, member.memberId);
-			return ok(images.render(dto,member,5));
+			return ok(images.render(dto,member,5,appS.getMemberimagesUrl()));
 		}	else	{
 			return redirect(routes.AdminController.login());
 		}
@@ -229,13 +252,29 @@ public class Application extends BaseController{
 		Integer page = 1;
 		try {
 			page = Integer.parseInt(request().getQueryString("page"));
-		} catch(Exception e) {}
+			if(page == 0 || page.equals("")){
+				return badRequest(notfound.render());
+			}
+		} catch(Exception e) {
+		}
 		PagingDto<Template> pagingDto;
+		int maxPage;
+		if(member != null){
+			maxPage = appS.getMaxPage(member.memberId);
+		}else{
+			maxPage = appS.getMaxPage(null);
+		}
 		if(StringUtils.isNotEmpty(type) && type.equals("member") && member != null) {
-			pagingDto = appS.findTemplatesWithPages(page, 20 , member.memberId);
+			pagingDto = appS.findTemplatesWithPages(page, 12 , member.memberId);
+			if(page != 1 && maxPage < page){
+				return badRequest(notfound.render());
+			}
 			return ok(myTemplates.render(pagingDto,member,appS.getSnapShotsUrl()));
 		} else {
-			pagingDto = appS.findTemplatesWithPages(page, 20);
+			pagingDto = appS.findTemplatesWithPages(page, 12);
+			if(page != 1 && maxPage < page){
+				return badRequest(notfound.render());
+			}
 			return ok(templates.render(pagingDto,member,appS.getSnapShotsUrl()));
 		}
 	}
@@ -243,21 +282,43 @@ public class Application extends BaseController{
 	public static Result download(){
 		Form<TemplateDownload> form = Form.form(TemplateDownload.class).bindFromRequest();
 		TemplateDownload html = form.get();
-		html.tempHtml = "<html>" + html.tempHtml + "</html>";
+		if(!html.tempHtml.matches(".*<html.*>.*")){
+			html.tempHtml = "<html lang=\"ja\">" + html.tempHtml + "</html>";
+		}
+		String[] imageFileNames = {};
+		if(StringUtils.isNotEmpty(html.imageFileNames)) {
+			imageFileNames = html.imageFileNames.split(",");
+		}
 		Logger.info("html : " + html.tempHtml);
 		StyleParser styleParser = new StyleParser();
 		StyleCleaner styleCleaner = new StyleCleaner();
-		fileS.saveFile("style.css", styleParser.parse(html.tempHtml).toString());
-		fileS.saveFile("index.html", styleCleaner.removeStyleTagAndStyleAttrs(html.tempHtml));
-		String[] files = {"index.html","style.css"};
+		final String token = String.valueOf(System.currentTimeMillis());
+		new File(token).mkdirs();
+		final String htmlFile = "style.css";
+		final String cssFile = "index.html";
+		fileS.saveFile(token + "/" + htmlFile, styleParser.parse(html.tempHtml).toString());
+		fileS.saveFile(token + "/" + cssFile, styleCleaner.removeStyleTagAndStyleAttrs(html.tempHtml));
+		List<String> files = new ArrayList<String>();
+		files.add(token + "/" + htmlFile);
+		files.add(token + "/" + cssFile);
+		for(String imageFileName : imageFileNames) {
+			files.add(appS.getPublicFolderPath() +
+					"/" + "member-images/" + imageFileName);
+		}
 		try {
 			String zipFileName = "template_" + new Faker().name().firstName() + ".zip";
 			fileS.zip(zipFileName,files);
 			response().setContentType("application/x-download");
 			response().setHeader("Content-disposition","attachment; filename=" + zipFileName);
+			fileS.deleteFile(token + "/" + htmlFile);
+			fileS.deleteFile(token + "/" + cssFile);
+			fileS.deleteFile(token);
 			return ok(new File(zipFileName));
 		} catch (IOException e) {
 			e.printStackTrace();
+			fileS.deleteFile(token + "/" + htmlFile);
+			fileS.deleteFile(token + "/" + cssFile);
+			fileS.deleteFile(token);
 			return redirect(routes.Application.indexWithId(Long.parseLong(html.temp_id)));
 		}
 	}
@@ -342,9 +403,9 @@ public class Application extends BaseController{
 		if(mem != null) {
 			Query<Chooser> query = Chooser.find.where("chooserId = '"+mem.chooser.chooserId+"'");
 			chooser = query.findUnique();
-			return ok(index.render(mem, chooser, form, id.toString(), html.tempHtml));
+			return ok(index.render(mem, chooser, form, id.toString(), html.tempHtml, appS.getPublicFolderPath()));
 		}
-		return ok(index.render(null, chooser, form, id.toString(), html.tempHtml));
+		return ok(index.render(null, chooser, form, id.toString(), html.tempHtml, appS.getPublicFolderPath()));
 	}
 
 	/**
@@ -365,6 +426,13 @@ public class Application extends BaseController{
 		Form<Analyze> form = Form.form(Analyze.class).bindFromRequest();
 		Member mem = isLoggedIn();
 		if(!form.hasErrors()) {
+			if(!form.get().targetUrl.matches("https?://[\\w/:%#\\$&\\?\\(\\)~\\.=\\+\\-]+")) {
+				List<ValidationError> errors = new ArrayList<ValidationError>();
+				errors.add(new ValidationError("targetUrl", "URL形式ではありません。"));
+				form.errors().put("targetUrl", errors);
+				Logger.error(form.get().targetUrl + " : URL形式ではありません。");
+				return ok(analyze.render(form,"", mem));
+			}
 			Map<String,String> result = new LinkedHashMap<String,String>();
 			try {
 				String base64ImageData = httpS.request(ImageService.webShotUrl
@@ -373,6 +441,8 @@ public class Application extends BaseController{
 					List<ValidationError> errors = new ArrayList<ValidationError>();
 					errors.add(new ValidationError("targetUrl", "無効なURLです。"));
 					form.errors().put("targetUrl", errors);
+					Logger.error(form.get().targetUrl + " : 無効なURLです。");
+					Logger.error("base64ImageData : " + base64ImageData);
 					return ok(analyze.render(form,"", mem));
 				}
 				BufferedImage image = imageS.convertBase64ImageDataToBufferedImage(base64ImageData, "png");
@@ -416,5 +486,71 @@ public class Application extends BaseController{
 	public static Result about(){
 		Member mem = isLoggedIn();
 		return ok(about.render(mem));
+	}
+
+	/**
+	 * @return
+	 */
+	public static Result downloadTemplate() {
+		Long templateId = null;
+		try {
+			templateId = Long.valueOf(request().getQueryString("tid"));
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		String fileName = appS.getPublicFolderPath() + "/iframes/"
+		+ String.valueOf(templateId) + ".html";
+		String html = fileS.fileGetContents(fileName);
+		String css  = new StyleParser().parse(html).toString();
+		html = new StyleCleaner().removeStyleTagAndStyleAttrs(html);
+		final String token = String.valueOf(System.currentTimeMillis());
+		fileS.mkdir(token);
+		String indexHtml = token + "/index.html";
+		String styleCss = token + "/style.css";
+		fileS.saveFile(indexHtml, html);
+		fileS.saveFile(styleCss, css);
+		String[] files = {indexHtml , styleCss};
+		try {
+			String zipFileName = "template_" + new Faker().name().firstName() + ".zip";
+			fileS.zip(zipFileName,files);
+			response().setContentType("application/x-download");
+			response().setHeader("Content-disposition","attachment; filename=" + zipFileName);
+			fileS.deleteFile(indexHtml);
+			fileS.deleteFile(styleCss);
+			fileS.deleteFile(token);
+			return ok(new File(zipFileName));
+		} catch (IOException e) {
+			return ok();
+		}
+	}
+
+	/**
+	 * @return
+	 */
+	public static Result loadImage() {
+		String imageName = request().getQueryString("iname");
+		String path = request().getQueryString("path");
+		Member member = isLoggedIn();
+		Logger.info("iname : " + imageName);
+		Logger.info("path : " + path);
+		if(member != null
+				&& StringUtils.isNotEmpty(imageName)
+				&& StringUtils.isNotEmpty(path)) {
+			Logger.info("memberId : " + member.memberId);
+			Image image = adminS
+					.findImageByImageNameAndMemberId(imageName,member.memberId);
+			if(image != null) {
+				AjaxImageResult result = new AjaxImageResult();
+				result.imageId = image.imageId;
+				result.imageName = image.imageName;
+				result.imageType = image.imageType;
+				result.path = path;
+				result.status = true;
+				return ok(Json.toJson(result));
+			}
+		}
+		AjaxImageResult result = new AjaxImageResult();
+		result.path = path;
+		return ok(Json.toJson(result));
 	}
 }

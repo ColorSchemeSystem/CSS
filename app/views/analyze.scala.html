@@ -4,11 +4,15 @@
 
 @implicitField = @{ FieldConstructor(fieldConstructor.fieldC.f) }
 
-@main("analyze", user) {
+@main("URLから配色を分析する", user) {
 	<div class='analyzeContainer'>
-	@helper.form(action = routes.Application.doAnalyze()) {
-		@helper.inputText(myform("targetUrl"),'_label -> "分析したいサイトのURL", 'size -> 45, 'placeholder -> "分析したいサイトのURLを入力してください")
-		<input class="btn btn-primary" type="submit" value="分析する">
+	<div class='desc'>
+	<p>外部サイトの配色を分析します。<br>結果を表示するまで10秒ほどかかります。&lt;(_ _)&gt;</p>
+	</div>
+	<p>*URLはエンコードせずに入力してください。</p>
+	@helper.form(action = routes.Application.doAnalyze(), 'id -> "analyzeForm") {
+		@helper.inputText(myform("targetUrl"),'_label -> "分析したいサイトのURL", 'size -> 45, 'placeholder -> "分析したいURL (例) https://www.google.co.jp/")
+		<input class="btn btn-primary" type="submit" value="分析する" id="analyzeSubmit" onClick="disabledButton('#analyzeForm', '#analyzeSubmit');">
 	}
 
 	@if(org.apache.commons.lang3.StringUtils.isNotEmpty(colorsData)) {
@@ -46,6 +50,7 @@
         };
         var chart = new google.visualization.PieChart(document.getElementById('piechart'));
         chart.draw(data, options);
+        $('#analyzeSubmit').attr('disabled', false);
       }
   	}
     </script>

@@ -10,6 +10,7 @@
 *******************************************************************************/
 var iframeMethod;
 var NamedClassName = [];
+var TextureName = [];
 
 $(window).load(function(){
 	$('#loading').css("display", "block");
@@ -22,6 +23,14 @@ $(window).load(function(){
 
 function isLoggedIn() {
 	return Boolean($("body").data("login"));
+}
+
+function disabledButton(formId, buttonId){
+	console.log("無効化");
+	var form = $(formId);
+	var button = $(buttonId);
+	form.submit();
+	button.attr("disabled", true);
 }
 
 function fixSideBar(){
@@ -69,7 +78,29 @@ function sendHTML(formId, id){
 				});
 	$(formId).append(ele);
 	$(formId).append(ele2);
-};
+	
+	/*
+	 * 画像ファイル名をhiddenでappendする。
+	 */
+	var imageFileNames = [];
+	$('iframe').contents().find('img').each(function() {
+		if(_.isEmpty($(this).attr("src"))) {
+			return true;
+		}
+		var imageFileName = $(this).attr("src").match(/^.*\/(.*?)$/)[1];
+		if(!_.isEmpty(imageFileName)) {
+			imageFileNames.push(imageFileName);
+		}
+	});
+	$(formId).append(
+			$('<input>').attr({
+				type: 'hidden',
+				name: 'imageFileNames',
+				value: imageFileNames.join(),
+			})
+	);
+}
+
 
 function showPopup(member_id, id){
 	var inst = $('[data-remodal-id=modal]').remodal();
@@ -133,19 +164,25 @@ function reloadIframe(html){
 					// border-sizeリアルタイム処理
 					$(function() {
 						$('input#border-size').each(function() {
-							$(this).bind('keyup', setBorderSize(this));
+							$(this).on('keyup', setBorderSize(this));
 						});
 					});
 
 					// textのリアルタイム処理
 					$(function() {
 						$('input.editText').each(function() {
-							$(this).bind('keyup', editText(this));
+							$(this).on('keyup', editText(this));
+						});
+					});
+
+					// imgのリアルタイム処理
+					$(function() {
+						$('input.imageText').each(function() {
+							$(this).on('keyup blur paste', imageChange(this));
 						});
 					});
 				}
 			}
-
 		});
 		$('#afterLoad').append(iframe);
 	}
@@ -175,7 +212,17 @@ function toggleHide(obj) {
 */
 function allScribing(obj, assignmentName, number, targetPass, viewName, color) {
 	var tagName = $(obj).prop("tagName");
-	if(tagName == "SCRIPT" || tagName == "BR" || tagName == "IMG" || tagName=="STYLE" || tagName=="HEADER") return;
+	gentlenessTags(tagName, obj, targetPass, assignmentName);
+	if(tagName == "SCRIPT" || tagName == "BR" || tagName == "IMG" || tagName== "STYLE" || tagName== "HEADER") return;
+
+	// liだったらclassを振る
+	if(tagName == "LI") {
+		var name = tagName.toLowerCase()+NamedClassName.length;
+		$(obj).addClass(name);
+		NamedClassName.push(name);
+		targetPass = "."+name;
+		viewName = tagName.toLowerCase();
+	}
 	var childName = assignmentName + "-" + number+"-"+tagName.toLowerCase() + "-child";
 
 	// タブの追加
@@ -218,6 +265,84 @@ function allScribing(obj, assignmentName, number, targetPass, viewName, color) {
 		}
 		allScribing($(this), copy, $(this).index(), pass, viewName, colorCopy);
 	});
+};
+
+/*
+*  タグ別やるなら
+*/
+function gentlenessTags(tagName, obj, targetPass, assignmentName) {
+	if(tagName == "IMG") renamedImagePass(obj, assignmentName, targetPass);
+	else if(tagName == "A") $('iframe').contents().find(targetPass).removeAttr("href");
+};
+
+/*
+*  imgタグのパスを変更してtextureの名前を保存する
+*/
+function renamedImagePass(obj, classname, targetPass) {
+	var imgName = $(obj).attr("src");
+	var fileURL = $('#fileURL').data('url');
+	while(imgName.indexOf("/") != -1) {
+		imgName = imgName.substr(imgName.indexOf("/")+1,imgName.length);
+	}
+	TextureName.push(imgName);
+
+	var childName = "image"+TextureName.length;
+	$(obj).addClass(classname);
+	addTr(obj, classname, childName, "."+classname, "img", new RGBColor("#3AC"));
+
+	var tr = $("<tr class='iframe"+childName+"'></tr>");
+	var td = $("<td>textuerName</td>");
+	var td2 = $("<input style='height:100%;' type='text' class='imageText' id='"+childName+"-texture' value='"+imgName+"' data-path='"+childName+"' data-target='"+targetPass+"' >");
+
+	tr.append(td);
+	tr.append(td2);
+	tr.css("display", "none");
+	$('#classTable').append(tr);
+
+	$.ajax({
+		url: "/loadImage",
+		data: {
+			iname: imgName,
+			path: targetPass
+		},
+		type: "GET"
+	}).done(function(result){
+		if(Boolean(result.status)) {
+			var src = config.images + "/" + String(result.imageId) + "." + result.imageType;
+			$('iframe').contents().find(result.path).attr('src', src);
+		}	else	{
+			$('iframe').contents().find(result.path).attr('src', '');
+		}
+	}).fail(function(data){
+	});
+};
+
+/*
+*  imgのリアルタイム変更(keyup blur paste)
+*/
+function imageChange(element) {
+	var v, old = element.value;
+	return function() {
+		if(old != (v = element.value)) {
+			old = v;
+			$.ajax({
+				url: "/loadImage",
+				data: {
+					iname: element.value,
+					path: $(this).data('target')
+				},
+				type: "GET"
+			}).done(function(result){
+				if(Boolean(result.status)) {
+					var src = config.images + "/" + String(result.imageId) + "." + result.imageType;
+					$('iframe').contents().find(result.path).attr('src', src);
+				} else {
+					$('iframe').contents().find(result.path).attr('src', '');
+				}
+			}).fail(function(data){
+			});
+		}
+	}
 };
 
 /*
@@ -325,10 +450,10 @@ function textCheck(obj) {
 };
 
 /*
-*  タグ別などの優しさ
+*  eqしてあげる対象
 */
 function gentlenessEq(targetPass, viewName, number) {
-	if(viewName == "li" || viewName == "tr" || viewName == "th" || viewName == "tr") targetPass = targetPass+":eq("+number+")";
+	if(viewName == "tr" || viewName == "th" || viewName == "tr") targetPass = targetPass+":eq("+number+")";
 	return targetPass;
 };
 
@@ -361,7 +486,7 @@ function changedColor(color, targetPass) {
 function addBackground(name, targetPass) {
 	var tr = $("<tr class='iframe"+name+"'></tr>");
 	var td = $("<td>background</td>");
-	var td2 = $("<input type='text' class='form-control' id='"+name+"-back' value='#A6FF00' data-color-format='hex'>");
+	var td2 = $("<input type='text' class='form-control surveillance' id='"+name+"-back' value='#A6FF00' data-color-format='hex' data-target='"+targetPass+"' >");
 
 	tr.append(td);
 	tr.append(td2);
@@ -434,7 +559,7 @@ function addBorderTop(name, targetPass) {
 	$('#classTable').append(tr);
 	var classname = targetPass;
 
-	var color = $('iframe').contents().find(classname).css('border-color');
+	var color = $('iframe').contents().find(classname).css('border-top-color');
 	color = changedColor(color);
 	$("#"+name+"-bor-top").val(color);
 
@@ -442,7 +567,13 @@ function addBorderTop(name, targetPass) {
 	var tr2 = $("<tr class='iframe"+name+"'></tr>");
 	var td3 = $("<td>top-size</td>");
 	var size = 0;
-	if($(targetPass).css("border") != undefined && $(targetPass).css("border") != "") size = $(targetPass).css('border-top-width').substr(0,1);
+	var obj = $('iframe').contents().find(targetPass);
+	if($(obj).css("border-top-width") != undefined && $(obj).css("border-top-width") != "") {
+		size = $(obj).css('border-top-width');
+		size = size.replace(/\s|　/g,"");
+		size = size.replace("px", "");
+		size = size.substr(0, size.length);
+	}
 	var td4 = $("<input type='text' class='"+name+"-bor-top-size' id='border-size' value='"+size+"' data-classname='"+classname+"' data-name='"+name+"' data-position='top' >");
 	tr2.append(td3);
 	tr2.append(td4);
@@ -473,7 +604,7 @@ function addBorderBottom(name, targetPass) {
 	$('#classTable').append(tr);
 	var classname = targetPass;
 
-	var color = $('iframe').contents().find(classname).css('border-color');
+	var color = $('iframe').contents().find(classname).css('border-bottom-color');
 	color = changedColor(color);
 	$("#"+name+"-bor-bottom").val(color);
 
@@ -481,7 +612,13 @@ function addBorderBottom(name, targetPass) {
 	var tr2 = $("<tr class='iframe"+name+"'></tr>");
 	var td3 = $("<td>bottom-size</td>");
 	var size = 0;
-	if($(targetPass).css("border") != undefined && $(targetPass).css("border") != "") size = $(targetPass).css('border-bottom-width').substr(0,1);
+	var obj = $('iframe').contents().find(targetPass);
+	if($(obj).css("border-bottom-width") != undefined && $(obj).css("border-bottom-width") != "") {
+		size = $(obj).css('border-bottom-width');
+		size = size.replace(/\s|　/g,"");
+		size = size.replace("px", "");
+		size = size.substr(0, size.length);
+	}
 	var td4 = $("<input type='text' class='"+name+"-bor-bottom-size' id='border-size' value='"+size+"' data-classname='"+classname+"' data-name='"+name+"' data-position='bottom' >");
 	tr2.append(td3);
 	tr2.append(td4);
@@ -512,7 +649,7 @@ function addBorderRight(name, targetPass) {
 	$('#classTable').append(tr);
 	var classname = targetPass;
 
-	var color = $('iframe').contents().find(classname).css('border-color');
+	var color = $('iframe').contents().find(classname).css('border-right-color');
 	color = changedColor(color);
 	$("#"+name+"-bor-right").val(color);
 
@@ -520,7 +657,13 @@ function addBorderRight(name, targetPass) {
 	var tr2 = $("<tr class='iframe"+name+"'></tr>");
 	var td3 = $("<td>right-size</td>");
 	var size = 0;
-	if($(targetPass).css("border") != undefined && $(targetPass).css("border") != "") size = $(targetPass).css('border-right-width').substr(0,1);
+	var obj = $('iframe').contents().find(targetPass);
+	if($(obj).css("border-right-width") != undefined && $(obj).css("border-right-width") != "") {
+		size = $(obj).css('border-right-width');
+		size = size.replace(/\s|　/g,"");
+		size = size.replace("px", "");
+		size = size.substr(0, size.length);
+	}
 	var td4 = $("<input type='text' class='"+name+"-bor-right-size' id='border-size' value='"+size+"' data-classname='"+classname+"' data-name='"+name+"' data-position='right' >");
 	tr2.append(td3);
 	tr2.append(td4);
@@ -551,7 +694,7 @@ function addBorderLeft(name, targetPass) {
 	$('#classTable').append(tr);
 	var classname = targetPass;
 
-	var color = $('iframe').contents().find(classname).css('border-color');
+	var color = $('iframe').contents().find(classname).css('border-left-color');
 	color = changedColor(color);
 	$("#"+name+"-bor-left").val(color);
 
@@ -559,7 +702,56 @@ function addBorderLeft(name, targetPass) {
 	var tr2 = $("<tr class='iframe"+name+"'></tr>");
 	var td3 = $("<td>left-size</td>");
 	var size = 0;
-	if($(targetPass).css("border") != undefined && $(targetPass).css("border") != "") size = $(targetPass).css('border-left-width').substr(0,1);
+	var obj = $('iframe').contents().find(targetPass);
+	if($(obj).css("border-left-width") != undefined && $(obj).css("border-left-width") != "") {
+		size = $(obj).css('border-left-width');
+		size = size.replace(/\s|　/g,"");
+		size = size.replace("px", "");
+		size = size.substr(0, size.length);
+	}
+	var td4 = $("<input type='text' class='"+name+"-bor-left-size' id='border-size' value='"+size+"' data-classname='"+classname+"' data-name='"+name+"' data-position='left' >");
+	tr2.append(td3);
+	tr2.append(td4);
+	tr2.css("display", "none");
+	$('#classTable').append(tr2);
+
+	var dataBorder = {contentName:classname, targetName:"border", borderSize:"."+name+"-bor-left-size", borderPosition:"left"};
+	$("input#"+name+"-bor-left").ColorPickerSliders({
+		placement: $('#chooser').data('placement'),
+		hsvpanel: $('#chooser').data('hsvpanel'),
+		sliders: $('#chooser').data('sliders'),
+		swatches: $('#chooser').data('swatches'),
+		previewformat: 'hex'
+	},dataBorder);
+};
+
+/*
+*  ボーダー(角丸)追加
+*/
+function addBorderRadius(name, targetPass) {
+	var tr = $("<tr class='iframe"+name+"'></tr>");
+	var td = $("<td>radius</td>");
+	var td2 = $("<input type='text' class='form-control' id='"+name+"-bor-radius' value='#A6FF00' data-color-format='hex'>");
+
+	tr.append(td);
+	tr.append(td2);
+	tr.css("display", "none");
+	$('#classTable').append(tr);
+	var classname = targetPass;
+
+	var color = $('iframe').contents().find(classname).css('border-color');
+	color = changedColor(color);
+	$("#"+name+"-bor-radius").val(color);
+
+	// ボーダーサイズ変更できる様に
+	var tr2 = $("<tr class='iframe"+name+"'></tr>");
+	var td3 = $("<td>radius-size</td>");
+	var size = 0;
+	if($(targetPass).css("border") != undefined && $(targetPass).css("border") != "") {
+		size = $(targetPass).css('border-radius');
+		size = size.replace("px", "　");
+		size = size.substr(size.match(/　/), size.match(/　/)+1);
+	}
 	var td4 = $("<input type='text' class='"+name+"-bor-left-size' id='border-size' value='"+size+"' data-classname='"+classname+"' data-name='"+name+"' data-position='left' >");
 	tr2.append(td3);
 	tr2.append(td4);
@@ -666,6 +858,7 @@ function editText(element) {
 	var v, old = element.value;
 	return function() {
 		if(old != (v = element.value)) {
+			old = v;
 			var text = $("#"+$(this).attr("id")).val();
 			$('iframe').contents().find($("#"+$(this).attr("id")).data('classname')).text(text);
 		}

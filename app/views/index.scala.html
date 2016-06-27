@@ -1,10 +1,10 @@
-@(user: Member, chooser: Chooser, myForm: Form[forms.TemplateSave], id: String, content : String)
+@(user: Member, chooser: Chooser, myForm: Form[forms.TemplateSave], id: String, content : String, fileURL: String)
 
 @import helper._
 
 @implicitField = @{ FieldConstructor(fieldConstructor.fieldC.f) }
 
-@main("Color Scheme", user){ 
+@main("MyCanvas", user){ 
 
 <!--modalView-->
 <div class="remodal" data-remodal-id="modal" role="dialog" aria-labelledby="modal1Title" aria-describedby="modal1Desc">
@@ -14,11 +14,11 @@
   	<br><br>
   	@form(action = routes.Application.saveEditTemplate, 'id -> "saveHtmlForm"){
 	    @(inputText(
-	    	field = myForm("tempName"), args = 'class -> "nameForm", 'size -> 50, 'placeholder -> "HTMLの名前"
+	    	field = myForm("tempName"), args = 'class -> "nameForm", 'size -> 50, 'placeholder -> "HTMLの名前", 'id -> "saveHtmlName"
 	    ))
 	    <br><br>
 	    @(textarea(
-	    	field = myForm("tempMessage"), args = 'class -> "messageForm", 'rows -> 10, 'cols -> 50, 'placeholder -> "HTMLの説明"
+	    	field = myForm("tempMessage"), args = 'class -> "messageForm", 'rows -> 10, 'cols -> 50, 'placeholder -> "HTMLの説明", 'id -> "saveHtmlMessage"
 	    ))
 	    <br><br>
 	    @if(user == null){
@@ -30,14 +30,16 @@
 	      	))
 	      	<br><br>
 	    }
+	    <input type="button" class="remodal-confirm" value="保存" id="saveTemp" onClick="checkWordLength('#saveHtmlName', '#saveHtmlMessage', '#saveTemp', '#saveHtmlForm')">
 	    <button data-remodal-action="cancel" class="remodal-cancel">キャンセル</button>
-  		<input type="submit" class="remodal-confirm" value="保存">
 	}
   </div>
 </div>
 
 
+<!-- datas -->
 <div id="chooser" data-placement="'@chooser.placement'" data-hsvpanel="@chooser.hsvpanel" data-sliders="@chooser.slider" data-swatches="@chooser.swatche"></div>
+<div id="fileURL" data-url="@fileURL"></div>
 	<div class="main">
 		@if(id == "0"){
 			<div class="default">
@@ -66,7 +68,8 @@
 				}else{
 					<input class="btn btn-default" type="button" value="HTMLを保存" onClick="showPopup(@user.memberId, @id);">
 				}
-					<input class="btn btn-default" type="submit" value="HTMLをダウンロード" onClick="sendHTML('#sendForm', @id);">
+					<input id='downloadTemplate' class="btn btn-default" type="submit" value="HTMLをダウンロード" onClick="sendHTML('#sendForm', @id);disabledButton('#sendForm', '#downloadTemplate');">
+
 				</div>
 			</form>
 		}

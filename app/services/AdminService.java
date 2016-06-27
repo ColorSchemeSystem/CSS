@@ -3,9 +3,14 @@ package services;
 import org.mindrot.jbcrypt.BCrypt;
 
 import models.*;
+import play.Logger;
 import play.data.Form;
 import play.data.validation.ValidationError;
 import forms.*;
+
+import java.io.File;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.*;
 
 public class AdminService {
@@ -21,8 +26,54 @@ public class AdminService {
 		template.update();
 	}
 
+	public void deleteTemplate(Template template){
+		template.delete();
+	}
+
 	public Template findTemplateById(Long id){
 		return Template.findById(id);
+	}
+
+	public List<Template> findTemplateByUser(Long id){
+		return Template.find.where().eq("Member_Member_Id", id).findList();
+	}
+
+	public List<Template> findTemplateByUser(Long id, int flg){
+		if(flg == 0){
+			return Template.find.where().eq("Member_Member_Id", id).eq("accessFlag", "0").findList();
+		}else{
+			return Template.find.where().eq("Member_Member_Id", id).eq("accessFlag", "1").findList();
+		}
+	}
+
+	public void deleteMemberWithTemplate(Long id, int flg){
+		List<Template> list = findTemplateByUser(id, flg);
+		for(Template temp : list){
+			if(temp != null){
+				System.out.println(temp.templateName);
+				temp.member = null;
+				temp.accessFlag = 0;
+				temp.update();
+			}
+		}
+	}
+
+	public List<Image> findImageByUser(Long id){
+		return Image.find.where().eq("Member_Member_id", id).findList();
+	}
+
+	public void deleteMemberWithImage(Long id){
+		List<Image> list = findImageByUser(id);
+		for(Image img : list){
+			if(img != null){
+				img.member = null;
+				img.update();
+			}
+		}
+	}
+
+	public void deleteImg(Image img){
+		img.delete();
 	}
 
 	/**
@@ -70,6 +121,10 @@ public class AdminService {
 		member.update();
 	}
 
+	public void deleteMember(Member member){
+		member.delete();
+	}
+
 	/**
 	 *
 	 * @param password
@@ -110,5 +165,21 @@ public class AdminService {
 		errors.add(new ValidationError(errorColumn, error));
 		form.errors().put(errorColumn, errors);
 		return form;
+	}
+
+	/**
+	 * @param imageName
+	 * @param memberId
+	 * @return
+	 */
+	public Image findImageByImageNameAndMemberId(String imageName, Long memberId) {
+		List<Image> images = Image.find.where()
+				.eq("imageName", imageName).eq("member.memberId", memberId)
+				.findList();
+		if(images.size() > 0) {
+			return images.get(0);
+		}	else	{
+			return null;
+		}
 	}
 }

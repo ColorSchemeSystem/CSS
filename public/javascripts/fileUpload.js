@@ -32,10 +32,9 @@ function sendFileToServer(formData,status){
             $('.uploadContainer h4').css("display", "block");
             if(result.status == "success") {
             	status.setProgress(100);
+                status.setLink(result);
+                status.setCss();
             	$('.uploadContainer h4').html("<span>" + result.message + "</span>");
-            	$('#editPageLinks').append("<a target='_blank' style='margin-left : 20px;' href='/template/" + 
-            			result.templateId +"'><button type='button'>"
-            			 + result.templateName + "を編集</button></a>");
             }	else if(result.status == "failure") {
             	$('.uploadContainer h4').html("<span style='color : red;'>" + result.message + "</span>");
             }
@@ -46,16 +45,21 @@ function sendFileToServer(formData,status){
 }
 
 var rowCount=0;
-function createStatusbar(obj){
-     rowCount++;
-     var row="odd";
-     if(rowCount %2 ==0) row ="even";
-     this.statusbar = $("<div class='statusbar "+row+"'></div>");
-     this.filename = $("<div class='filename'></div>").appendTo(this.statusbar);
-     this.size = $("<div class='filesize'></div>").appendTo(this.statusbar);
-     this.progressBar = $("<div class='progressBar'><div></div></div>").appendTo(this.statusbar);
+function createStatusbar(obj, flg){
+    rowCount++;
+    var row="odd";
+    if(rowCount %2 ==0) row ="even";
+    this.statusbar = $("<div class='statusbar "+row+"' style='display : none'></div>");
+    this.filename = $("<div class='filename'></div>").appendTo(this.statusbar);
+    this.size = $("<div class='filesize'></div>").appendTo(this.statusbar);
+    this.progressBar = $("<div class='progressBar'><div></div></div>").appendTo(this.statusbar);
+    if(flg){
+        this.link = $("<a class='uploadLink' href='/images'><button class='uploadLinkButton btn btn-primary btn-sm'>投稿画像へ</button></a>").appendTo(this.statusbar);
+    }else{
+        this.link = $("<a target='_blank' href='#'><button class='uploadLinkButton btn btn-primary btn-sm'>htmlを編集</button></a>").appendTo(this.statusbar);
      //this.abort = $("<div class='abort'>Abort</div>").appendTo(this.statusbar);
-     obj.after(this.statusbar);
+    }
+    obj.after(this.statusbar);
   
     this.setFileNameSize = function(name,size){
         var sizeStr="";
@@ -83,6 +87,19 @@ function createStatusbar(obj){
         }*/
     }
 
+    this.setLink = function(result){
+        if(flg){
+
+        }else{
+            var href = "/template/" + result.templateId;
+            this.link.attr('href', href);
+        }
+    }
+
+    this.setCss = function(){
+        this.statusbar.css("display", "block");
+    }
+
     /*this.setAbort = function(jqxhr){
         var sb = this.statusbar;
         this.abort.click(function()
@@ -93,34 +110,71 @@ function createStatusbar(obj){
     }*/
 }
 
+var uploadedFiles = 0;
 
 function handleFileUpload(files,obj){
-   for (var i = 0; i < files.length; i++) {
-	   if(files[i].size >= 1000 * 1000) {
-		   var size = String(files[i].size / (1000 * 1000)) + "MB";
-		   alert(size + " : 容量オーバーです。");
-		   continue;
-	   }
-	   if(files[i].type != "text/html") {
-		   if(isLoggedIn()) {
-			   if(files[i].type == "image/png" ||　
-					   files[i].type == "image/jpeg") {
-				   $("#imagesPageLink").show();
-			   }	else	{
-				   alert("HTML,JPEG,PNG以外のファイルはアップロードできません。");           
-				   continue;  
-			   }
-		   }	else	{
-			   alert("HTML以外のファイルはアップロードできません。");           
-			   continue;   
-		   }
-	   }
+    var flg = 0;
+    for (var i = 0; i < files.length; i++) {
+    	if(uploadedFiles >= 5) {
+    		alert("同時にアップロードできるファイル数の上限は5件です。");
+			continue;
+    	}
+	    if(files[i].type == "text/html") {
+	    	if(files[i].size >= 1000 * 1000) {
+				   var size = String(files[i].size / (1000 * 1000)) + "MB";
+				   alert(size + " : 容量オーバーです。");
+				   continue;
+			    }
+	    }	else	{
+	    	if(isLoggedIn()) {
+				   if(files[i].type == "image/png" ||　
+						files[i].type == "image/jpeg") {
+					   if(files[i].size >= 1000 * 1000) {
+						   var size = String(files[i].size / (1000 * 1000)) + "MB";
+						   alert(size + " : 容量オーバーです。");
+						   continue;
+					    }	else	{
+					    	flg = 1;
+					    }
+				    } else {
+					   alert("HTML,JPEG,PNG以外のファイルはアップロードできません。");           
+					   continue;  
+				    }
+			    }	else	{
+				   alert("HTML以外のファイルはアップロードできません。");           
+				   continue;   
+			    }
+	    }
+	    var fileName = files[i].name.replace(/[\s　]*/g,"");
+	    if(fileName.startsWith(".")) {
+	    	alert("ファイル名が空白です。");
+	    	continue;
+	    }
+	    if(fileName.length > 50) {
+	    	alert("ファイル名が50文字をオーバーしています。");
+	    	continue;
+	    }
+	    /*
+	     * テンプレートの公開/非公開フラグ
+	     * 0 -> 公開
+	     * 1 -> 非公開 
+	     */
+	    var _public = 0;
+	    var _private = 1;
+	    var accessFlag = _public;
+	    if(files[i].type == "text/html" && isLoggedIn()) {
+	    	 if(!window.confirm('テンプレートを公開しますか？')){
+	 	    	accessFlag = _private;
+	 		}
+	    }
         var fd = new FormData();
         fd.append('file', files[i]);
-        var status = new createStatusbar(obj); //Using this we can set progress.
-        status.setFileNameSize(files[i].name,files[i].size);
-        sendFileToServer(fd,status); 
-   }
+        fd.append('accessFlag', accessFlag);
+        var status = new createStatusbar(obj, flg); //Using this we can set progress.
+        status.setFileNameSize(fileName,files[i].size);
+        sendFileToServer(fd,status);
+        uploadedFiles++;
+    }
 }
 
 

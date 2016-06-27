@@ -25,6 +25,7 @@ public class StyleParser {
 	 * @return
 	 */
 	private List<String> splitStyleIntoBlock(String style) {
+		style = style.replaceAll("/\\*[\\s\\S]*?\\*/", "");
 		Pattern p = Pattern.compile("[\\s\\S]*?\\{[\\s\\S]*?\\}");
 		Matcher m = p.matcher(style);
 		List<String> list = new ArrayList<String>();
@@ -39,16 +40,13 @@ public class StyleParser {
 	 * @return
 	 */
 	private String[] blockToAttrsAndContent(String style) {
-		//時々先頭の文字が切れてしまう(body -> ody)問題があるので、とりあえず応急処置
-		style = "    " + style;
 		Pattern p = Pattern.compile("([\\s\\S]*?)\\{([\\s\\S]*?)\\}");
 		Matcher m = p.matcher(style);
 		String attrs = "";
-		if(m.find(1)) {
-			attrs = m.group(1);
-		}
 		String elements = "";
-		if(m.find(2)) {
+		if(m.find() && m.groupCount() == 2) {
+			attrs = m.group(1);
+			Logger.error(attrs);
 			elements = m.group(2);
 		}
 		return new String[]{attrs,elements};
@@ -59,13 +57,12 @@ public class StyleParser {
 	 * @return
 	 */
 	private List<String> splitAndTrimAttrs(String attrs) {
-		Pattern p = Pattern.compile("\\s");
 		List<String> attrsList = new ArrayList<String>();
-		for(String attr : p.split(attrs)) {
+		for(String attr : attrs.split(",")) {
 			if(StringUtils.isBlank(attr)) {
 				continue;
 			}
-			attrsList.add(attr.replaceAll("\\s", ""));
+			attrsList.add(attr.trim());
 		}
 		return attrsList;
 	}
@@ -94,6 +91,7 @@ public class StyleParser {
 	}
 
 	/**
+	 * StringのAttrをAttrオブジェクトに変換する。
 	 * @param attrs
 	 * @return
 	 */
@@ -103,7 +101,7 @@ public class StyleParser {
 			Attr e = new Attr();
 			if(attr.startsWith(".")) {
 				e.attrType = "class";
-				e.attrName = attr.replace(".", "");
+				e.attrName = attr;
 			}	else	{
 				e.attrType = "tag";
 				e.attrName = attr;
@@ -117,13 +115,13 @@ public class StyleParser {
 	 * @param elements
 	 * @return
 	 */
-	private List<Elem> convertElements(Map<String,String> elements) {
-		List<Elem> result = new ArrayList<Elem>();
+	private Map<String,Elem> convertElements(Map<String,String> elements) {
+		Map<String,Elem> result = new LinkedHashMap<String,Elem>();
 		for(String key : elements.keySet()) {
 			Elem e = new Elem();
 			e.name = key;
 			e.value = elements.get(key);
-			result.add(e);
+			result.put(e.name,e);
 		}
 		return result;
 	}
@@ -158,14 +156,15 @@ public class StyleParser {
 		List<String> classNames = this.extractClasses(document);
 		Style style = new Style();
 		for(String className : classNames) {
-			if(className.equals("")) {
+			if(StringUtils.isEmpty(className)) {
 				continue;
 			}
 			Attr attr = new Attr();
 			attr.attrType = "class";
-			attr.attrName = className;
+			attr.attrName = "." + className;
 			Block block = new Block();
 			block.attrs.add(attr);
+			block.important = true;
 			Elements elements = document.getElementsByClass(className);
 			Map<String,String> result = new HashMap<String,String>();
 			for(int i = 0; i < elements.size(); i++) {
@@ -222,5 +221,4 @@ public class StyleParser {
 		}
 		return new ArrayList<String>(classNames);
 	}
-
 }

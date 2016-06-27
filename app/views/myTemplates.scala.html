@@ -1,6 +1,6 @@
 @(dto : dtos.PagingDto[Template], member : Member, snapShotsUrl : String)
 
-@main("Color Scheme",member){ 
+@main("すべてのテンプレート",member){ 
 <div class='listContainer'>
 	@if(member != null) {
 		<div class="clearfix">
@@ -10,7 +10,11 @@
 						全てのテンプレートを表示 
 					</a></li>
 					<li role="presentation" id="myTemplate" class="active"><a href='@routes.Application.templates()?type=member'>
-						@(member.memberName)さんのテンプレートのみを表示
+						@if(member.nickName.isEmpty()){
+							@(member.memberName)さんのテンプレートのみを表示
+						}else{
+							@(member.nickName)さんのテンプレートのみを表示
+						}
 					</a></li>
 				</ul>
 			</div>
@@ -41,7 +45,10 @@
 							<div class="tempName">
 								@t.templateName
 							</div>
-								</a>	
+								</a>
+							<a href='@routes.Application.downloadTemplate()?tid=@(t.templateId)'>
+								<button type='button' onClick="this.disabled = true;" class="btn btn-default btn-xs">download</button>
+							</a>		
 						</div>
 					</div>
 				}
@@ -65,7 +72,7 @@
 		  	<h3 id="tempN"></h3>
 		  	<img src='#' width="260" height="200" id="shumbPopup"/><br><br>
 		  	作成者<br><input type="text" id="userN" readonly="true" size="40"></input><br><br>
-		  	コメント<br><textarea id="tempM" rows="4" cols="40" readonly="true"></textarea><br><br>
+		  	コメント<br><textarea id="tempM" rows="4" cols="40" readonly="true" disabled="true"></textarea><br><br>
 			<button data-remodal-action="cancel" class="remodal-cancel">キャンセル</button>
 		  	<a href="#" id="buttonToEdit"><button class="remodal-confirm">編集ページへ</button></a>
 		  </div>

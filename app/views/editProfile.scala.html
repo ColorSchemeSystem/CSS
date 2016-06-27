@@ -4,11 +4,11 @@
 
 @implicitFieldConstructor = @{ helper.FieldConstructor(myhelper.formFieldConstructor.render) } 
 
-@main("myPage", member) {
-	@helper.form(action = routes.AdminController.saveProfileSetting()) {
+@main("ユーザー情報編集", member) {
+	@helper.form(action = routes.AdminController.saveProfileSetting(), 'id -> "profileForm") {
 		<div class="mypageContainer">
 			@if(!message.isEmpty()) {
-				<h3 style="text-align:center;">@message</h3>
+				<h4>@message</h4>
 			}
 		<!--<script type="text/javascript">
 			$(window).load(function(){
@@ -17,10 +17,11 @@
 		</script>-->
 		<!--<h1 style='margin-top : 20px;'>マイページ</h1>-->
 			<div class='profile'>
-				@helper.inputText(setting("memberName"),'_label -> "アカウント名",'_showConstraints -> false, 'size -> 70, 'readonly -> true)
+				@helper.inputText(setting("memberName"),'_label -> "ユーザーID",'_showConstraints -> false, 'size -> 70, 'readonly -> true)
 				@helper.inputText(setting("mail"),'_label -> "メールアドレス",'_showConstraints -> false, 'size -> 70)
 				@helper.inputText(setting("nickName"), '_label -> "ニックネーム", '_showConstraints -> false, 'size -> 70)
-				<input type="submit" value="設定を保存" id="profileSubmit" class="btn btn-primary">
+				<input type="submit" value="設定を保存" id="profileSubmit" class="btn btn-primary" onClick="disabledButton('#profileForm', '#profileSubmit');"><br>
+				<a href="/confirmPassword">アカウントの削除</a>
 			</div>
 			<div class="sideMenu">
 				<ul class="nav nav-pills nav-stacked">

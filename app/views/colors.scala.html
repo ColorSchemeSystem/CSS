@@ -25,13 +25,13 @@
 		<ul class="nav nav-tabs" onLoad="checkActive(@judge)">
 			<li role="presentation" id="tabPrimary"><a href='@routes.Application.colors()?type=primary'>原色140色</a></li>
 			<li role="presentation" id="tabSafe"><a href='@routes.Application.colors()?type=safe'>WEBセーフカラー216色</a></li>
-			<li role="presentation" id="tabStandard"><a href='@routes.Application.colors()?type=standard'>スタンダードカラー16色</a></li>
+			<li role="presentation" id="tabStandard"><a href='@routes.Application.colors()?type=standard'>スタンダードカラー17色</a></li>
 		</ul>
 		<p>クリックすると16進数がコピーされます</p>
 		<div class="colorContent">
 			@for((color, index) <- colors.zipWithIndex) {
-				<div class="col-xs-2" data-clipboard-text="@color.colorHex">
-					<div class="colorName" style="cursor : pointer; background-color: @color.colorHex;">
+				<div class="col-xs-2">
+					<div data-clipboard-text="@color.colorHex" class="colorName clip" style="cursor : pointer; background-color: @color.colorHex;">
 						@if(color.colorName != null) {
 							@color.colorName<br>
 						}

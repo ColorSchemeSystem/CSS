@@ -10,10 +10,9 @@ public class StyleCleaner {
 		for(Element e : document.getAllElements()) {
 			if(e.tagName().equals("head")) {
 				e.append("<link rel='stylesheet' type='text/css' href='./style.css'>");
-			}
-			if(e.tagName().equals("style")) {
+			} else if(e.tagName().equals("style")) {
 				e.remove();
-			}	else if(e.hasAttr("style")) {
+			}	else if(e.hasAttr("style") && e.hasAttr("class")) {
 				e.removeAttr("style");
 			}
 		}

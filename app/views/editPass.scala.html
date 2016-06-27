@@ -4,11 +4,11 @@
 
 @implicitFieldConstructor = @{ helper.FieldConstructor(myhelper.formFieldConstructor.render) } 
 
-@main("myPage", member) {
-	@helper.form(action = routes.AdminController.doModifyPassword()) {
+@main("パスワード編集", member) {
+	@helper.form(action = routes.AdminController.doModifyPassword(), 'id -> "passForm") {
 		<div class="mypageContainer">
 			@if(!message.isEmpty()) {
-				<h3 style="text-align:center;">@message</h3>
+				<h4>@message</h4>
 			}
 		<!--<script type="text/javascript">
 			$(window).load(function(){
@@ -20,7 +20,7 @@
 				@helper.inputText(myform("password"),'_label -> "現在のパスワード",'_showConstraints -> false, 'size -> 70, 'type -> "password")
 				@helper.inputText(myform("newPassword"),'_label -> "新しいパスワード",'_showConstraints -> false, 'size -> 70, 'type -> "password")
 				@helper.inputText(myform("confirmNewPassword"),'_label -> "新しいパスワード再入力",'_showConstraints -> false, 'size -> 70, 'type -> "password")
-				<input type="submit" value="変更を保存" id="passSubmit" class="btn btn-primary">
+				<input type="submit" value="変更を保存" id="passSubmit" class="btn btn-primary" onClick="disabledButton('#passForm', '#passSubmit');">
 			</div>
 			<div class="sideMenu">
 				<ul class="nav nav-pills nav-stacked">
