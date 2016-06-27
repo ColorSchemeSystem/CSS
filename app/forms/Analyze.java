@@ -5,6 +5,6 @@ import play.data.validation.Constraints.Required;
 
 public class Analyze {
 	@Required
-	@MaxLength(100)
+	@MaxLength(200)
 	public String targetUrl;
 }
