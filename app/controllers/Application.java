@@ -258,15 +258,11 @@ public class Application extends BaseController{
 		} catch(Exception e) {
 		}
 		PagingDto<Template> pagingDto;
-		int maxPage;
-		if(member != null){
-			maxPage = appS.getMaxPage(member.memberId);
-		}else{
-			maxPage = appS.getMaxPage(null);
-		}
+		int maxPage = appS.getMaxPage(null);;
+		int memMaxPage = appS.getMaxPage(member.memberId);
 		if(StringUtils.isNotEmpty(type) && type.equals("member") && member != null) {
 			pagingDto = appS.findTemplatesWithPages(page, 12 , member.memberId);
-			if(page != 1 && maxPage < page){
+			if(page != 1 && memMaxPage < page){
 				return badRequest(notfound.render());
 			}
 			return ok(myTemplates.render(pagingDto,member,appS.getSnapShotsUrl()));
