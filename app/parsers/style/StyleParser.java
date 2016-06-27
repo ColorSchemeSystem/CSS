@@ -46,7 +46,6 @@ public class StyleParser {
 		String elements = "";
 		if(m.find() && m.groupCount() == 2) {
 			attrs = m.group(1);
-			Logger.error(attrs);
 			elements = m.group(2);
 		}
 		return new String[]{attrs,elements};
