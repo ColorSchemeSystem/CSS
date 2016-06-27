@@ -188,7 +188,6 @@
       function updateColor(newcolor, disableinputupdate) {
         var updatedcolor = tinycolor(newcolor);
         $('iframe').contents().find(targetData.contentName).css('background-color',updatedcolor);
-
         if (updatedcolor.isValid()) {
           color.tiny = updatedcolor;
           color.hsla = updatedcolor.toHsl();
@@ -523,7 +522,7 @@
         if (connectedinput) {
           connectedinput.on('keyup change', function() {
             var $input = $(this);
-
+            console.log("input" + $input.val());
             updateColor($input.val(), true);
           });
         }

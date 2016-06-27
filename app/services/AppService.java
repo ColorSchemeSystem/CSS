@@ -24,6 +24,9 @@ import models.Image;
 import models.Member;
 import models.Template;
 import play.Play;
+import play.db.ebean.Model.Finder;
+
+import com.avaje.ebean.PagingList;
 
 public class AppService {
 	/**
@@ -152,6 +155,18 @@ public class AppService {
 		dto.currentPage = page;
 		dto.totalPage = imagePage.getTotalPageCount();
 		return dto;
+	}
+
+	public Integer getMaxPage(Long id) {
+        Finder<Long, Template> find = new Finder<Long, Template>(Long.class, Template.class);
+        PagingList<Template> pagingList;
+        if(id == null){
+        	pagingList = find.where().eq("accessFlag", "0").orderBy("created desc").findPagingList(12);
+        }else{
+        	pagingList = find.where().eq("Member_Member_Id", id).orderBy("created desc").findPagingList(12);
+        }
+        return pagingList.getTotalPageCount();
+        // getTotalPageCountを使用して最大ページ数取得
 	}
 
 	/**
