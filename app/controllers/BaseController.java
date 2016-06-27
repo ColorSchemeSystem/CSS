@@ -1,6 +1,7 @@
 package controllers;
 
 import play.Logger;
+import play.Play;
 import play.libs.F.Promise;
 import play.mvc.Controller;
 import play.mvc.SimpleResult;
@@ -57,7 +58,14 @@ public class BaseController extends Controller {
 		 */
 		Logger.info("最後のログイン : " + new DateTime(member.lastLogin).toString());
 		//final int expired = 60 * 24 * 14;
-		final int expired = 2;
+		int expired = 20160;
+		try {
+			expired = Integer
+					.parseInt(Play.application().configuration()
+							.getString("login.expire"));	
+		} catch(Exception e) {
+			e.printStackTrace();
+		}
 		DateTime dt = new DateTime(member.lastLogin);
 		if(dt.plusMinutes(expired).isBeforeNow()) {
 			Logger.info("期限が過ぎたのでログイン状態を解除します。");

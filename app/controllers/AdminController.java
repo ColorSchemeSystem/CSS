@@ -179,6 +179,7 @@ public class AdminController extends BaseController {
 				mem.password = adminS.passwordHash(form.get().password);
 				mem.mail = form.get().mail;
 				mem.chooser = new Chooser();
+				mem.lastLogin = new Timestamp(new Date().getTime());
 				adminS.storeMember(mem);
 				writeObjectOnSession("Member", mem);
 				return redirect("/");
