@@ -54,7 +54,7 @@ function createStatusbar(obj, flg){
     this.size = $("<div class='filesize'></div>").appendTo(this.statusbar);
     this.progressBar = $("<div class='progressBar'><div></div></div>").appendTo(this.statusbar);
     if(flg){
-        this.link = $("<a class='uploadLink' href='/images'><button class='uploadLinkButton btn btn-primary btn-sm'>画像一覧へ</button></a>").appendTo(this.statusbar);
+        this.link = $("<a class='uploadLink' href='/images'><button class='uploadLinkButton btn btn-primary btn-sm'>投稿画像へ</button></a>").appendTo(this.statusbar);
     }else{
         this.link = $("<a target='_blank' href='#'><button class='uploadLinkButton btn btn-primary btn-sm'>htmlを編集</button></a>").appendTo(this.statusbar);
      //this.abort = $("<div class='abort'>Abort</div>").appendTo(this.statusbar);
@@ -145,8 +145,26 @@ function handleFileUpload(files,obj){
 	    	alert("ファイル名が空白です。");
 	    	continue;
 	    }
+	    if(fileName.length > 50) {
+	    	alert("ファイル名が50文字をオーバーしています。");
+	    	continue;
+	    }
+	    /*
+	     * テンプレートの公開/非公開フラグ
+	     * 0 -> 公開
+	     * 1 -> 非公開 
+	     */
+	    var _public = 0;
+	    var _private = 1;
+	    var accessFlag = _public;
+	    if(files[i].type == "text/html" && isLoggedIn()) {
+	    	 if(!window.confirm('テンプレートを公開しますか？')){
+	 	    	accessFlag = _private;
+	 		}
+	    }
         var fd = new FormData();
         fd.append('file', files[i]);
+        fd.append('accessFlag', accessFlag);
         var status = new createStatusbar(obj, flg); //Using this we can set progress.
         status.setFileNameSize(fileName,files[i].size);
         sendFileToServer(fd,status); 

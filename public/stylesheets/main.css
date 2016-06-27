@@ -579,6 +579,15 @@
 				height: 500px; 
 			}
 
+			.wrapper .analyzeContainer .desc {
+				margin-top: 10px;
+			}
+			
+			.wrapper .analyzeContainer > p{
+				color: #808080;
+				margin-top: 30px;
+			}
+
 
 
 
@@ -600,14 +609,11 @@
 				color: #808080;
 				margin-top: 30px;
 			}
-			
-			.wrapper .analyzeContainer .desc {
-				margin-top: 10px;
-			}
-			
-			.wrapper .analyzeContainer > p{
-				color: #808080;
-				margin-top: 30px;
+
+			.wrapper .colorContainer .colorContent{
+				width: 1200px;
+				margin-right: auto;
+				margin-left: auto;
 			}
 
 			.wrapper .colorContainer .colorContent .colorName{
