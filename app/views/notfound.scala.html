@@ -6,21 +6,40 @@
 		<title>お探しのページは見つかりません(404: Not Found)</title>
 		<style type="text/css">
 			.notFound{
-				width: 720px;
+				width: 800px;
 				margin: 100px auto 0px auto;
+			}
+
+			.notFound:after{
+				display: block;
+				clear: both;
+			}
+
+			.questionIcon{
+				float: left;
+				width: 100px;
+				height: 100px;
+			}
+
+			.message404{
+				float: right;
+				width: 850px;
 			}
 		</style>
 	</head>
 
 	<body>
 		<div class="notFound">
-			<h1>お探しのページは見つかりません</h1>
-			<h2>404: Not Found</h2>
-			<p>
-				お探しのページは現在アクセスできない状況にあるか、移動もしくは削除された可能性があります。<br>
-				またURL、ファイル名にタイプミスがないか再度ご確認ください。
-			</p><br>
-			<a href="/">HOMEへ移動</a>
+			<img src='@routes.Assets.at("images/question.png")' class="questionIcon"></div>
+			<div class="message404">
+				<h1>お探しのページは見つかりません</h1>
+				<h2>404: Not Found</h2>
+				<p>
+					お探しのページは現在アクセスできない状況にあるか、移動もしくは<br>削除された可能性があります。<br>
+					またURL、ファイル名にタイプミスがないか再度ご確認ください。
+				</p><br>
+				<a href="/">HOMEへ移動</a>
+			</div>
 		</div>
 	</body>
 </html>
