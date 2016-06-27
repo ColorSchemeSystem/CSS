@@ -17,6 +17,8 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.util.List;
+import java.sql.Timestamp;
+import java.util.Date;
 
 import javax.imageio.ImageIO;
 
@@ -61,6 +63,7 @@ public class AdminController extends BaseController {
 	public static Result loginEntry() {
 		Member member = isLoggedIn();
 		if(member != null) {
+			Logger.info("memberName : " + member.memberName + " 既にログイン状態なのでマイページに遷移します。");
 			return redirect(routes.AdminController.editProfile());
 		}
 		Form<Member> form = Form.form(Member.class).bindFromRequest();
@@ -69,6 +72,7 @@ public class AdminController extends BaseController {
 			Member mem = adminS.findMemberByMemberName(form.get().memberName);
 			if(mem == null) {
 				adminS.addMemberErrors(form, "ユーザIDが誤っています", "memberName");
+				Logger.error("memberName : " + form.get().memberName + " 存在しないmemberNameです。");
 				form.data().put("password", "");
 				return badRequest(login.render(null, "ログイン", form));
 			}
@@ -77,12 +81,17 @@ public class AdminController extends BaseController {
 			if(!adminS.checkpw(password, mem.password)) {
 				// 一致していなかったらログイン画面へ
 				adminS.addMemberErrors(form, "パスワードが誤っています", "password");
+				Logger.error("memberName : " + form.get().memberName + " パスワードが違います。");
 				form.data().put("password", "");
 				return badRequest(login.render(null, "ログイン", form));
 			}
+			//最終ログイン日付を更新する。
+			mem.lastLogin = new Timestamp(new Date().getTime());
+			adminS.storeMember(mem);
 			// ログインする
 			writeObjectOnSession("Member", mem);
 		} else {
+			Logger.error("ログインに失敗しました。");
 			adminS.addMemberErrors(form, "ユーザIDが誤っています", "memberName");
 			adminS.addMemberErrors(form, "パスワードが誤っています", "password");
 			form.data().put("password", "");
@@ -157,15 +166,20 @@ public class AdminController extends BaseController {
 		if(!form.hasErrors()) {
 			if(adminS.memberExists(form.get().memberName)) {
 				adminS.addMemberErrors(form, "同じユーザーIDがすでに存在しています", "memberName");
+				Logger.error(form.get().memberName + " : 同じユーザーIDがすでに存在しています。");
 				return badRequest(createAccount.render(null, "新規登録", form));
 			}	else	{
 				Member mem = new Member();
 				mem.nickName = form.get().nickName.replace(" ", "")
 						.replace("　", "");
+				if(!mem.nickName.equals(form.get().nickName)) {
+					Logger.info(form.get().nickName + " -> " + mem.nickName + " 空白文字を削除しました。");
+				}
 				mem.memberName = form.get().memberName;
 				mem.password = adminS.passwordHash(form.get().password);
 				mem.mail = form.get().mail;
 				mem.chooser = new Chooser();
+				mem.lastLogin = new Timestamp(new Date().getTime());
 				adminS.storeMember(mem);
 				writeObjectOnSession("Member", mem);
 				return redirect("/");

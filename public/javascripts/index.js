@@ -358,6 +358,7 @@ function addTr(obj, classname, childName, targetPass, viewName, color) {
 		text : viewName
 	});
 	var td2 = $("<td>"+tagName+"</td>");
+	var position;
 	var tr = $("<tr></tr>",{
 		"class" : "iframe"+classname,
 		"data-targetPass" : targetPass,
@@ -367,6 +368,7 @@ function addTr(obj, classname, childName, targetPass, viewName, color) {
 				var element = $("<div></div>", {
 						"class" : "hoverImage"
 				});
+				position = $('iframe').contents().find(targetPass).css("position");
 				var css = {
 					color : "red",
 					position : "absolute",
@@ -385,6 +387,7 @@ function addTr(obj, classname, childName, targetPass, viewName, color) {
 				content.append(element);
 			},
 			mouseout : function(classname){
+				$('iframe').contents().find(targetPass).css("position", position);
 				var content = $('iframe').contents().find(classname);
 				content.css("position", "");
 				$('iframe').contents().find('.hoverImage').remove();
@@ -486,7 +489,7 @@ function changedColor(color, targetPass) {
 function addBackground(name, targetPass) {
 	var tr = $("<tr class='iframe"+name+"'></tr>");
 	var td = $("<td>background</td>");
-	var td2 = $("<input type='text' class='form-control' id='"+name+"-back' value='#A6FF00' data-color-format='hex'>");
+	var td2 = $("<input type='text' class='form-control surveillance' id='"+name+"-back' value='#A6FF00' data-color-format='hex' data-target='"+targetPass+"' >");
 
 	tr.append(td);
 	tr.append(td2);

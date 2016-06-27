@@ -429,6 +429,7 @@ public class Application extends BaseController{
 				List<ValidationError> errors = new ArrayList<ValidationError>();
 				errors.add(new ValidationError("targetUrl", "URL形式ではありません。"));
 				form.errors().put("targetUrl", errors);
+				Logger.error(form.get().targetUrl + " : URL形式ではありません。");
 				return ok(analyze.render(form,"", mem));
 			}
 			Map<String,String> result = new LinkedHashMap<String,String>();
@@ -439,6 +440,8 @@ public class Application extends BaseController{
 					List<ValidationError> errors = new ArrayList<ValidationError>();
 					errors.add(new ValidationError("targetUrl", "無効なURLです。"));
 					form.errors().put("targetUrl", errors);
+					Logger.error(form.get().targetUrl + " : 無効なURLです。");
+					Logger.error("base64ImageData : " + base64ImageData);
 					return ok(analyze.render(form,"", mem));
 				}
 				BufferedImage image = imageS.convertBase64ImageDataToBufferedImage(base64ImageData, "png");
