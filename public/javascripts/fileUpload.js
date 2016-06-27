@@ -110,10 +110,15 @@ function createStatusbar(obj, flg){
     }*/
 }
 
+var uploadedFiles = 0;
 
 function handleFileUpload(files,obj){
     var flg = 0;
     for (var i = 0; i < files.length; i++) {
+    	if(uploadedFiles >= 5) {
+    		alert("同時にアップロードできるファイル数の上限は5件です。");
+			continue;
+    	}
 	    if(files[i].type == "text/html") {
 	    	if(files[i].size >= 1000 * 1000) {
 				   var size = String(files[i].size / (1000 * 1000)) + "MB";
@@ -145,6 +150,10 @@ function handleFileUpload(files,obj){
 	    	alert("ファイル名が空白です。");
 	    	continue;
 	    }
+	    if(fileName.length > 50) {
+	    	alert("ファイル名が50文字をオーバーしています。");
+	    	continue;
+	    }
 	    /*
 	     * テンプレートの公開/非公開フラグ
 	     * 0 -> 公開
@@ -163,7 +172,8 @@ function handleFileUpload(files,obj){
         fd.append('accessFlag', accessFlag);
         var status = new createStatusbar(obj, flg); //Using this we can set progress.
         status.setFileNameSize(fileName,files[i].size);
-        sendFileToServer(fd,status); 
+        sendFileToServer(fd,status);
+        uploadedFiles++;
     }
 }
 
