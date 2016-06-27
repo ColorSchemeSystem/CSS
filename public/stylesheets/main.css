@@ -633,16 +633,32 @@
 				padding: 50px 40px 40px 40px;
 				margin: 30px auto 30px auto;
 				background-color: #FFF;
-				min-height: 600px;
 			}
 
 			.wrapper .aboutContainer .aboutThis{
 				text-align: center;
-				margin-bottom: 180px;
+				margin-bottom: 110px;
+			}
+
+			.wrapper .aboutContainer .aboutThis button{
+				margin-top: 50px;
 			}
 
 			.wrapper .aboutContainer .attention h2{
 				border-bottom: 1px solid #808080;
+			}
+
+			.wrapper .aboutContainer .attention h3{
+				font-weight: bold;
+			}
+
+			.wrapper .aboutContainer .attention h4{
+				font-size: 16px;
+			}
+
+			.wrapper .aboutContainer .attention li{
+				font-size: 16px;
+				font-style: italic;
 			}
 
 
