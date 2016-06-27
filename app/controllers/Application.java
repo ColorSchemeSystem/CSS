@@ -59,9 +59,9 @@ public class Application extends BaseController{
 	private static CompressionService compS = new CompressionService();
 
 	private static ColorService colorS = new ColorService();
-	
+
 	private static final int TEMPLATE_PUBLIC = 0;
-	
+
 	private static final int TEMPLATE_PRIVATE = 1;
 
 	public static Result index() {
@@ -88,7 +88,7 @@ public class Application extends BaseController{
 		Member mem = isLoggedIn();
 		Template temp = appS.getTemp(id);
 		if(temp == null || temp.accessFlag == 1 && mem == null || temp.accessFlag == 1 && temp.member != null && !temp.member.memberId.equals(mem.memberId)){
-			return ok(notfound.render());
+			return badRequest(notfound.render());
 		}else{
 			TemplateSave tempS = new TemplateSave();
 			tempS.flg = 0;
@@ -124,7 +124,7 @@ public class Application extends BaseController{
 		int accessFlag = TEMPLATE_PUBLIC;
 		if(member != null) {
 			try {
-				accessFlag = Integer.parseInt(body.asFormUrlEncoded().get("accessFlag")[0]);	
+				accessFlag = Integer.parseInt(body.asFormUrlEncoded().get("accessFlag")[0]);
 			}	catch(Exception e) {
 				e.printStackTrace();
 			}
@@ -252,13 +252,29 @@ public class Application extends BaseController{
 		Integer page = 1;
 		try {
 			page = Integer.parseInt(request().getQueryString("page"));
-		} catch(Exception e) {}
+			if(page == 0 || page.equals("")){
+				return badRequest(notfound.render());
+			}
+		} catch(Exception e) {
+		}
 		PagingDto<Template> pagingDto;
+		int maxPage;
+		if(member != null){
+			maxPage = appS.getMaxPage(member.memberId);
+		}else{
+			maxPage = appS.getMaxPage(null);
+		}
 		if(StringUtils.isNotEmpty(type) && type.equals("member") && member != null) {
-			pagingDto = appS.findTemplatesWithPages(page, 20 , member.memberId);
+			pagingDto = appS.findTemplatesWithPages(page, 12 , member.memberId);
+			if(page != 1 && maxPage < page){
+				return badRequest(notfound.render());
+			}
 			return ok(myTemplates.render(pagingDto,member,appS.getSnapShotsUrl()));
 		} else {
-			pagingDto = appS.findTemplatesWithPages(page, 20);
+			pagingDto = appS.findTemplatesWithPages(page, 12);
+			if(page != 1 && maxPage < page){
+				return badRequest(notfound.render());
+			}
 			return ok(templates.render(pagingDto,member,appS.getSnapShotsUrl()));
 		}
 	}
@@ -286,7 +302,7 @@ public class Application extends BaseController{
 		files.add(token + "/" + htmlFile);
 		files.add(token + "/" + cssFile);
 		for(String imageFileName : imageFileNames) {
-			files.add(appS.getPublicFolderPath() + 
+			files.add(appS.getPublicFolderPath() +
 					"/" + "member-images/" + imageFileName);
 		}
 		try {
