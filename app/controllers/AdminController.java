@@ -17,6 +17,8 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.util.List;
+import java.sql.Timestamp;
+import java.util.Date;
 
 import javax.imageio.ImageIO;
 
@@ -83,6 +85,9 @@ public class AdminController extends BaseController {
 				form.data().put("password", "");
 				return badRequest(login.render(null, "ログイン", form));
 			}
+			//最終ログイン日付を更新する。
+			mem.lastLogin = new Timestamp(new Date().getTime());
+			adminS.storeMember(mem);
 			// ログインする
 			writeObjectOnSession("Member", mem);
 		} else {
