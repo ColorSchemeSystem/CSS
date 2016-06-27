@@ -9,6 +9,9 @@ import services.AdminService;
 import flexjson.JSONSerializer;
 import models.Member;
 
+import java.sql.Timestamp;
+import java.util.Date;
+
 import org.joda.time.DateTime;
 
 import flexjson.JSONDeserializer;
@@ -79,6 +82,11 @@ public class BaseController extends Controller {
 			return null;
 		}
 		if(member.password.equals(newMember.password)) {
+			Timestamp ts = new Timestamp(new Date().getTime());
+			Logger.info("lastLoginを更新します。 : " + ts.toString());
+			newMember.lastLogin = ts;
+			new AdminService().storeMember(newMember);
+			writeObjectOnSession("Member" , newMember);
 			return newMember;
 		}	else	{
 			Logger.info("パスワードが変更されたのでログイン状態を解除します。");

@@ -20,39 +20,42 @@
   		</div>
   	}
   	<script type="text/javascript">
-  	var colorsData = $('#piechart').data('colors').split(",");
-  	if(!_.isEmpty(colorsData)) {
-      google.charts.load('current', {'packages':['corechart']});
-      var chartData = [];
-      chartData.push(['colorHex','per']);
-      var colors = [];
-      for(var i in colorsData) {
-    	  var arr = colorsData[i].split(":");
-    	  if(arr[0] == "その他") {
-    		  chartData.push([arr[0],Number(arr[1])]);
-        	  colors.push("transparent");  
-    	  }	else	{
-    		  chartData.push(["#" + arr[0],Number(arr[1])]);
-        	  colors.push("#" + arr[0]);  
-    	  }
-      }
-      google.charts.setOnLoadCallback(drawChart);
-      function drawChart() {
-        var data = google.visualization.arrayToDataTable(chartData);
-        var options = {
-          title : '配色の解析結果',
-          colors : colors,
-          backgroundColor: '#f4f4f4',
-          border: "1px solid #000",
-          pieSliceTextStyle: {
-              color: '#000000'
-          }
-        };
-        var chart = new google.visualization.PieChart(document.getElementById('piechart'));
-        chart.draw(data, options);
-        $('#analyzeSubmit').attr('disabled', false);
-      }
-  	}
+  	var colorsData = $('#piechart').data('colors');
+    if(colorsData != undefined) {
+      colorsData = colorsData.split(",");
+    	if(!_.isEmpty(colorsData)) {
+        google.charts.load('current', {'packages':['corechart']});
+        var chartData = [];
+        chartData.push(['colorHex','per']);
+        var colors = [];
+        for(var i in colorsData) {
+      	  var arr = colorsData[i].split(":");
+      	  if(arr[0] == "その他") {
+      		  chartData.push([arr[0],Number(arr[1])]);
+          	  colors.push("transparent");  
+      	  }	else	{
+      		  chartData.push(["#" + arr[0],Number(arr[1])]);
+          	  colors.push("#" + arr[0]);  
+      	  }
+        }
+        google.charts.setOnLoadCallback(drawChart);
+        function drawChart() {
+          var data = google.visualization.arrayToDataTable(chartData);
+          var options = {
+            title : '配色の解析結果',
+            colors : colors,
+            backgroundColor: '#f4f4f4',
+            border: "1px solid #000",
+            pieSliceTextStyle: {
+                color: '#000000'
+            }
+          };
+          var chart = new google.visualization.PieChart(document.getElementById('piechart'));
+          chart.draw(data, options);
+          $('#analyzeSubmit').attr('disabled', false);
+        }
+    	}
+    }
     </script>
 	</div>
 }

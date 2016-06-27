@@ -164,7 +164,8 @@ public class Application extends BaseController{
 	 */
 	private static Template saveHtml(FilePart fileP,int accessFlag) {
 		Template template = new Template();
-	    template.templateName = fileP.getFilename();
+	    template.templateName = fileP.getFilename()
+	    		.replace(" ", "").replace("　", "");
 	    File file = fileP.getFile();
 	    try {
 			template.html = compS.compress(FileUtils.readFileToString(file, "UTF-8"));
@@ -212,7 +213,8 @@ public class Application extends BaseController{
 	 */
 	private static void saveImage(FilePart fileP, String type) {
 		Image image = new Image();
-		image.imageName = fileP.getFilename();
+		image.imageName = fileP.getFilename()
+				.replace(" ", "").replace("　", "");
 		image.imageType = type.replace("image/", "");
 		File file = fileP.getFile();
 		Member member = isLoggedIn();
@@ -468,9 +470,7 @@ public class Application extends BaseController{
 		Member mem = isLoggedIn();
 		try {
 			type = request().queryString().get("type")[0];
-		} catch(Exception e) {
-			e.printStackTrace();
-		}
+		} catch(Exception e) {}
 		List<Color> colorsList = new ArrayList<Color>();
 		if(type.equals("safe")) {
 			colorsList = colorS.getWebSafeColors();
