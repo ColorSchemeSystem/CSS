@@ -469,9 +469,7 @@ public class Application extends BaseController{
 		Member mem = isLoggedIn();
 		try {
 			type = request().queryString().get("type")[0];
-		} catch(Exception e) {
-			e.printStackTrace();
-		}
+		} catch(Exception e) {}
 		List<Color> colorsList = new ArrayList<Color>();
 		if(type.equals("safe")) {
 			colorsList = colorS.getWebSafeColors();
