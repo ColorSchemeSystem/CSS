@@ -1392,7 +1392,6 @@
       function setTargetColor(targetData,color) {
         if(targetData.targetName == "background") {
           $('iframe').contents().find(targetData.contentName).css('background-color',color);
-          targetData.setChildColor.hoge(color);
         }
         else if (targetData.targetName == "border") {
           var borderSize = $(targetData.borderSize).val();

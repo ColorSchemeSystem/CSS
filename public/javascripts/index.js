@@ -498,9 +498,7 @@ function addBackground(name, targetPass) {
 	color = changedColor(color, targetPass);
 	$("#"+name+"-back").val(color);
 
-	var setBG = new SetBackGround(targetPass, name);
-
-	var dataBack = {contentName:classname, targetName:"background", setChildColor:setBG};
+	var dataBack = {contentName:classname, targetName:"background"};
 	$("input#"+name+"-back").ColorPickerSliders({
 		placement: $('#chooser').data('placement'),
 		hsvpanel: $('#chooser').data('hsvpanel'),
@@ -508,23 +506,6 @@ function addBackground(name, targetPass) {
 		swatches: $('#chooser').data('swatches'),
 		previewformat: 'hex'
 	},dataBack);
-};
-
-function SetBackGround(targetPass, classname) {
-	var target = targetPass;
-	var clName = classname;
-
-	this.hoge = function(color) {
-		//console.log("start" + "  name:" + clName);
-		$('.surveillance').each(function() {
-			if($(this).attr('id').indexOf(clName) != -1) {
-				$(this).val(color);
-				$(this).css('background', color);
-				$('iframe').contents().find($(this).data('target')).css("background-color", color);
-			}
-		});
-		//console.log("end");
-	};
 };
 
 /*
