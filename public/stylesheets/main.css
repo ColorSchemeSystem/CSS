@@ -448,7 +448,7 @@
 			/*mypage's CSS*/
 
 			.wrapper .mypageContainer{
-				margin: 20px auto 30px auto;
+				margin: 30px auto 30px auto;
 				width: 1200px;
 			}
 
@@ -511,6 +511,38 @@
 				text-align: center;
 			}
 
+			.wrapper .mypageContainer .editImages{
+				float: right;
+				width: 850px;
+				background-color: #FFF;
+				margin-right: 60px;
+				padding: 30px 0px 30px 0px;
+				margin-bottom: 30px;
+			}
+
+			.wrapper .mypageContainer .editImages .editImageList{
+				min-height: 300px;
+				text-align: center;
+			}
+
+			.wrapper .mypageContainer .editImages .editImageList .noneImg h2{
+				color: #808080;
+				margin-top: 200px;
+			}
+
+			.wrapper .mypageContainer .editImages .col-xs-4{
+				margin-top: 10px;
+			}
+
+			.wrapper .mypageContainer .editImages .imageName{
+				width: 270px;
+				white-space: nowrap;
+				overflow: hidden;
+				text-overflow: ellipsis;
+				margin-top: 10px;
+				text-align: center;
+			}
+
 			.wrapper .mypageContainer .sideMenu{
 				float: left;
 				width: 200px;
@@ -551,6 +583,17 @@
 			}
 
 			#deleteTmpButton{
+				width: 300px;
+				background-color: #e57373;
+			}
+
+			#saveImgButton{
+				width: 300px;
+				margin-top: 20px;
+				margin-bottom: 30px;
+			}
+
+			#deleteImgButton{
 				width: 300px;
 				background-color: #e57373;
 			}
@@ -768,17 +811,5 @@
 				font-size: 16px;
 				margin-left: 25px;
 			}
-
-
-
-
-
-
-
-
-
-
-
-
 
 

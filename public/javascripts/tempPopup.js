@@ -30,13 +30,27 @@ function showEditTemp(id, imgUrl){
 }
 
 function checkWordLength(textId, areaId, submitId, formId){
+
 	if($(textId).val().length > 50){
 		alert("50文字以内で入力してください");
 		return false;
 	}
-	if($(areaId).text().length > 100){
-		alert("100文字以内で入力してください");
-		return false;
+
+	if(areaId != null){
+		if($(areaId).text().length > 100){
+			alert("100文字以内で入力してください");
+			return false;
+		}
 	}
 	disabledButton(formId, submitId);
+}
+
+function showEditImage(id, imgUrl){
+	var findClass = "." + id;
+	var name = $(findClass).data("name");
+	var type = $(findClass).data("type");
+	$('#eImgN').attr("value", name);
+	$('#updateImg').attr("action", "/image/update/" + id);
+	$('#deleteImg').attr("action", "/image/delete/" + id);
+	$('#eImagePopup').attr("src", imgUrl + "/" + id + "." + type);
 }
