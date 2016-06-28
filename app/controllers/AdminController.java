@@ -285,6 +285,10 @@ public class AdminController extends BaseController {
 		}
 		if(!form.hasErrors()) {
 			if(form.get().hsvpanel == null && form.get().slider == null && form.get().swatche == null){
+				Chooser chooser = adminS.findChooserByChooserId(mem.chooser.chooserId);
+				form.get().hsvpanel = chooser.hsvpanel;
+				form.get().slider = chooser.slider;
+				form.get().swatche = chooser.swatche;
 				return badRequest(editColor.render(mem, form, "最低1つは選択してください"));
 			}else{
 				Chooser chooser = adminS.findChooserByChooserId(mem.chooser.chooserId);
