@@ -21,7 +21,7 @@
 					<div class="listImage">
 						<div class="col-xs-3">
 							<div class="imgThumb">
-								<img width='260' height='200' 
+								<img width='200' height='200' 
 								src='@memberImagesUrl/@(image.imageId).@(image.imageType)'
 								/>
 							</div>
@@ -38,11 +38,11 @@
 	<ul class="pager pager-margin">
 			@dto.currentPage match {
 		    	case i if i <= 1 => {}
-		    	case _ => { <li class="previous"><a href="@routes.Application.templates()?page=@(dto.currentPage - 1)">&larr; 前へ</a></li> }
+		    	case _ => { <li class="previous"><a href="@routes.Application.images()?page=@(dto.currentPage - 1)">&larr; 前へ</a></li> }
 			}
 			@dto.currentPage match {
 		    	case i if i >= dto.totalPage => {}
-		    	case _ => { <li class="next"><a href="@routes.Application.templates()?page=@(dto.currentPage + 1)">次へ &rarr;</a></li> }
+		    	case _ => { <li class="next"><a href="@routes.Application.images()?page=@(dto.currentPage + 1)">次へ &rarr;</a></li> }
 			}
 	</ul>
 </div>

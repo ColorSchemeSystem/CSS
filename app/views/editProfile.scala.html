@@ -19,7 +19,7 @@
 			<div class='profile'>
 				@helper.inputText(setting("memberName"),'_label -> "ユーザーID",'_showConstraints -> false, 'size -> 70, 'readonly -> true)
 				@helper.inputText(setting("mail"),'_label -> "メールアドレス",'_showConstraints -> false, 'size -> 70)
-				@helper.inputText(setting("nickName"), '_label -> "ニックネーム", '_showConstraints -> false, 'size -> 70)
+				@helper.inputText(setting("nickName"), '_label -> "ニックネーム", '_showConstraints -> false, 'size -> 70, 'placeholder -> "50文字以内で入力してください")
 				<input type="submit" value="設定を保存" id="profileSubmit" class="btn btn-primary" onClick="disabledButton('#profileForm', '#profileSubmit');"><br>
 				<a href="/confirmPassword">アカウントの削除</a>
 			</div>
@@ -29,6 +29,7 @@
 					<li role="presentation"><a href="/editPassword">パスワード</a></li>
 					<li role="presentation"><a href="/editColor">カラーパレット</a></li>
 					<li role="presentation"><a href="/editTemplate">テンプレート</a></li>
+					<li role="presentation"><a href="/editImage">画像</a></li>
 				</ul>
 			</div>
 		</div>

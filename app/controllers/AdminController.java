@@ -284,10 +284,13 @@ public class AdminController extends BaseController {
 			return redirect(routes.AdminController.login());
 		}
 		if(!form.hasErrors()) {
+			Chooser chooser = adminS.findChooserByChooserId(mem.chooser.chooserId);
 			if(form.get().hsvpanel == null && form.get().slider == null && form.get().swatche == null){
+				form.get().hsvpanel = chooser.hsvpanel;
+				form.get().slider = chooser.slider;
+				form.get().swatche = chooser.swatche;
 				return badRequest(editColor.render(mem, form, "最低1つは選択してください"));
-			}else{
-				Chooser chooser = adminS.findChooserByChooserId(mem.chooser.chooserId);
+			} else {
 				chooser.hsvpanel	= form.get().hsvpanel;
 				chooser.slider		= form.get().slider;
 				chooser.swatche		= form.get().swatche;
@@ -401,11 +404,18 @@ public class AdminController extends BaseController {
 		}
 		String type = request().getQueryString("type");
 		Integer page = 1;
+		int memMaxPage = appS.getMaxPage(member.memberId);
 		try {
 			page = Integer.parseInt(request().getQueryString("page"));
+			if(page == 0){
+				return badRequest(notfound.render());
+			}
 		} catch(Exception e) {}
 		PagingDto<Template> pagingDto;
 		pagingDto = appS.findTemplatesWithPages(page, 12 , member.memberId);
+		if(page != 1 && memMaxPage < page){
+			return badRequest(notfound.render());
+		}
 		return ok(editTemp.render(pagingDto,member,appS.getSnapShotsUrl(), ""));
 	}
 
@@ -433,7 +443,6 @@ public class AdminController extends BaseController {
 	public static Result deleteTmp(Long id){
 		Template tmp = appS.getTemp(id);
 		Member mem = isLoggedIn();
-		System.out.println("tempmember = " + tmp.member.memberId + " memId = " + mem.memberId);
 		if(tmp != null && tmp.member != null && tmp.member.memberId.equals(mem.memberId)){
 			adminS.deleteTemplate(tmp);
 			/*
@@ -443,6 +452,62 @@ public class AdminController extends BaseController {
 			PagingDto<Template> pagingDto;
 			pagingDto = appS.findTemplatesWithPages(1, 12 , mem.memberId);
 			return ok(editTemp.render(pagingDto, mem, appS.getSnapShotsUrl(), "削除しました"));
+		}
+		return redirect("/");
+	}
+
+	public static Result editImageList(){
+		Member member = isLoggedIn();
+		if(member == null) {
+			return redirect("/login");
+		}
+		Integer page = 1;
+		int memMaxPage = appS.getMaxPageOfImage(member.memberId, 12);
+		try {
+			page = Integer.parseInt(request().getQueryString("page"));
+			if(page == 0){
+				return badRequest(notfound.render());
+			}
+		} catch(Exception e) {}
+		PagingDto<Image> pagingDto;
+		pagingDto = appS.findImagesWithPages(page, 12 , member.memberId);
+		if(page != 1 && memMaxPage < page){
+			return badRequest(notfound.render());
+		}
+		return ok(editImage.render(pagingDto,member,appS.getMemberimagesUrl(), ""));
+	}
+
+	public static Result updateImg(Long id){
+		Form<Image> form = Form.form(Image.class).bindFromRequest();
+		Member member = isLoggedIn();
+		Image editImg = form.get();
+		if(editImg.imageName.replaceAll("　", " ").trim().isEmpty()){
+			editImg.imageName = "image" + id;
+		}
+		Image img = adminS.findImageById(id);
+		img.imageName = editImg.imageName.replaceAll("　", " ").trim();
+		adminS.updateImage(img);
+		/*
+		 * 確認用ログ
+		 */
+		System.out.println("画像更新");
+		PagingDto<Image> pagingDto;
+		pagingDto = appS.findImagesWithPages(1, 12 , member.memberId);
+		return ok(editImage.render(pagingDto,member,appS.getMemberimagesUrl(), "保存しました"));
+	}
+
+	public static Result deleteImg(Long id){
+		Image img = adminS.findImageById(id);
+		Member mem = isLoggedIn();
+		if(img != null && img.member != null && img.member.memberId.equals(mem.memberId)){
+			adminS.deleteImage(img);
+			/*
+			 * 確認用ログ
+			 */
+			System.out.println("画像削除");
+			PagingDto<Image> pagingDto;
+			pagingDto = appS.findImagesWithPages(1, 12 , mem.memberId);
+			return ok(editImage.render(pagingDto,mem,appS.getMemberimagesUrl(), "削除しました"));
 		}
 		return redirect("/");
 	}

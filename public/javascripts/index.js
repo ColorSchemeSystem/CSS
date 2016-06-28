@@ -152,47 +152,49 @@ function reloadIframe(html){
 					}
 					fixSideBar();
 					var body = $('iframe').contents().find('body');
-					// body自体に配色できる様に
-					addTr(body, 'body', 'bodyColor', 'body', 'body', new RGBColor("#333"));
-					addSetting('bodyColor', 'body', body);
-					// body配下のタグを全て取得
-					$(body).children().each(function() {
-						// タグを全て取り出し表示
-						var pass = $(this).attr("class");
-						var viewName = "";
-						if(pass == undefined) {
-							viewName = $(this).prop("tagName").toLowerCase();
-							pass = viewName + NamedClassName.length;
-							$(this).addClass(pass);
-							NamedClassName.push(pass);
-							pass = "."+pass;
-						} else {
-							viewName = pass;
-							pass = "."+pass;
-						}
-						allScribing($(this), "body-child", $(this).index(), pass, viewName, new RGBColor("#333"));
-					});
-
-					// border-sizeリアルタイム処理
-					$(function() {
-						$('input#border-size').each(function() {
-							$(this).on('keyup', setBorderSize(this));
+					if($(body).size() > 0) {
+						// body自体に配色できる様に
+						addTr(body, 'body', 'bodyColor', 'body', 'body', new RGBColor("#333"));
+						addSetting('bodyColor', 'body', body);
+						// body配下のタグを全て取得
+						$(body).children().each(function() {
+							// タグを全て取り出し表示
+							var pass = $(this).attr("class");
+							var viewName = "";
+							if(pass == undefined) {
+								viewName = $(this).prop("tagName").toLowerCase();
+								pass = viewName + NamedClassName.length;
+								$(this).addClass(pass);
+								NamedClassName.push(pass);
+								pass = "."+pass;
+							} else {
+								viewName = pass;
+								pass = "."+pass;
+							}
+							allScribing($(this), "body-child", $(this).index(), pass, viewName, new RGBColor("#333"));
 						});
-					});
 
-					// textのリアルタイム処理
-					$(function() {
-						$('input.editText').each(function() {
-							$(this).on('keyup', editText(this));
+						// border-sizeリアルタイム処理
+						$(function() {
+							$('input#border-size').each(function() {
+								$(this).on('keyup blur paste', setBorderSize(this));
+							});
 						});
-					});
 
-					// imgのリアルタイム処理
-					$(function() {
-						$('input.imageText').each(function() {
-							$(this).on('keyup blur paste', imageChange(this));
+						// textのリアルタイム処理
+						$(function() {
+							$('input.editText').each(function() {
+								$(this).on('keyup blur paste', editText(this));
+							});
 						});
-					});
+
+						// imgのリアルタイム処理
+						$(function() {
+							$('input.imageText').each(function() {
+								$(this).on('keyup blur paste', imageChange(this));
+							});
+						});
+					}
 				}
 			}
 		});

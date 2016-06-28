@@ -17,13 +17,13 @@ import javax.persistence.OptimisticLockException;
 
 /**
  * insert・updateの処理は楽観ロックがかかっている場合には 例外をキャッチして再試行するようにしている。
- * 
+ *
  * @author masataka.okudera
  *
  */
 public class AdminService {
 	/**
-	 * 
+	 *
 	 * @param template
 	 */
 	public void deleteTemplate(Template template) {
@@ -100,7 +100,7 @@ public class AdminService {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param id
 	 * @return
 	 */
@@ -108,8 +108,54 @@ public class AdminService {
 		return Image.find.where().eq("Member_Member_id", id).findList();
 	}
 
+	public Image findImageById(Long id){
+		return Image.find.byId(id);
+	}
+
+	public void updateImage(Image img){
+		try{
+			img.update();
+		}catch(OptimisticLockException e){
+			e.printStackTrace();
+			Logger.info("処理が競合しました。");
+			do {
+				img = Image.find.byId(img.imageId);
+				if(img == null){
+					break;
+				}
+				try{
+					img.update();
+				}catch(OptimisticLockException e2){
+					e2.printStackTrace();
+					Logger.info("処理が競合しました。");
+				}
+			} while (true);
+		}
+	}
+
+	public void deleteImage(Image img){
+		try{
+			img.delete();
+		}catch(OptimisticLockException e){
+			e.printStackTrace();
+			Logger.info("処理が競合しました");
+			do {
+				img = Image.find.byId(img.imageId);
+				if(img == null){
+					break;
+				}
+				try{
+					img.delete();
+				}catch(OptimisticLockException e2){
+					e2.printStackTrace();
+					Logger.info("処理が競合しました");
+				}
+			}while (true);
+		}
+	}
+
 	/**
-	 * 
+	 *
 	 * @param id
 	 */
 	public void deleteMemberWithImage(Long id) {
@@ -141,7 +187,7 @@ public class AdminService {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param img
 	 */
 	public void deleteImg(Image img) {
@@ -229,7 +275,7 @@ public class AdminService {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param member
 	 */
 	public void updateMember(Member member) {
@@ -258,7 +304,7 @@ public class AdminService {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param member
 	 */
 	public void deleteMember(Member member) {
