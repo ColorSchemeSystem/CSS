@@ -401,11 +401,18 @@ public class AdminController extends BaseController {
 		}
 		String type = request().getQueryString("type");
 		Integer page = 1;
+		int memMaxPage = appS.getMaxPage(member.memberId);
 		try {
 			page = Integer.parseInt(request().getQueryString("page"));
+			if(page == 0){
+				return badRequest(notfound.render());
+			}
 		} catch(Exception e) {}
 		PagingDto<Template> pagingDto;
 		pagingDto = appS.findTemplatesWithPages(page, 12 , member.memberId);
+		if(page != 1 && memMaxPage < page){
+			return badRequest(notfound.render());
+		}
 		return ok(editTemp.render(pagingDto,member,appS.getSnapShotsUrl(), ""));
 	}
 
