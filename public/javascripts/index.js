@@ -12,6 +12,17 @@ var iframeMethod;
 var NamedClassName = [];
 var TextureName = [];
 
+/** デバッグモードかどうか。本番URLが含まれている場合は自動でfalse */
+var DEBUG_MODE = true && window.location.href.indexOf('http://ec2-52-11-169-235.us-west-2.compute.amazonaws.com:9000') == -1;
+
+/** デバッグモードでConsoleAPIが有効な場合にログを出力する */ 
+function trace(s) {
+	if(DEBUG_MODE && this.console && typeof console.log != "undefined")
+	{
+		console.log(s);
+	}
+}
+
 $(window).load(function(){
 	$('#loading').css("display", "block");
 	$('#loader').css("display", "block");
@@ -26,7 +37,7 @@ function isLoggedIn() {
 }
 
 function disabledButton(formId, buttonId){
-	console.log("無効化");
+	trace("無効化");
 	var form = $(formId);
 	var button = $(buttonId);
 	form.submit();
@@ -75,7 +86,7 @@ function fixFrameSize() {
 };
 
 function sendHTML(formId, id){
-	console.log($('iframe').contents().find('html').html());
+	trace($('iframe').contents().find('html').html());
 	var ele = $("<input>", {
 					"type" : "hidden",
 					"name" : "tempHtml",
@@ -332,6 +343,7 @@ function renamedImagePass(obj, classname, targetPass) {
 		imgName = imgName.substr(imgName.indexOf("/")+1,imgName.length);
 	}
 	TextureName.push(imgName);
+	trace("loadImage : " + imgName);	// ログ出力
 
 	var childName = classname + "-image"+TextureName.length;
 	$(obj).addClass(classname);
