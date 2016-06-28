@@ -361,7 +361,6 @@ function renamedImagePass(obj, classname, targetPass) {
 				break;
 			}
 		}
-		console.log(result.path + "  name:"+result.imageId+"."+result.imageType);
 		if(Boolean(result.status)) {
 			var src = config.images + "/" + String(result.imageId) + "." + result.imageType;
 			$('iframe').contents().find(result.path).attr('src', src);
