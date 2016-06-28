@@ -85,9 +85,9 @@ public class BaseController extends Controller {
 			Timestamp ts = new Timestamp(new Date().getTime());
 			Logger.info("lastLoginを更新します。 : " + ts.toString());
 			newMember.lastLogin = ts;
-			new AdminService().storeMember(newMember);
+			adminS.storeMember(newMember);
 			writeObjectOnSession("Member" , newMember);
-			return newMember;
+			return adminS.findMemberById(newMember.memberId);
 		}	else	{
 			Logger.info("パスワードが変更されたのでログイン状態を解除します。");
 			removeObjectSession("Member");

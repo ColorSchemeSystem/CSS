@@ -7,6 +7,8 @@ import services.FileService;
 public class StyleParserTest {
 	StyleParser p = new StyleParser();
 	FileService f = new FileService();
+	StyleCleaner c = new StyleCleaner();
+	
 	@Test
 	public void test() {
 		String html = f.fileGetContents("test/parsers/style/t1.html");
@@ -35,5 +37,17 @@ public class StyleParserTest {
 	public void test5() {
 		String html = f.fileGetContents("test/parsers/style/t5.html");
 		System.out.println(p.parse(html).toString());
+	}
+	
+	@Test
+	public void test6() {
+		String html = f.fileGetContents("test/parsers/style/t6.html");
+		System.out.println(p.parse(html).toString());
+	}
+	
+	@Test
+	public void test6a() {
+		String html = f.fileGetContents("test/parsers/style/t6.html");
+		System.out.println(c.removeStyleTagAndStyleAttrs(html));
 	}
 }
