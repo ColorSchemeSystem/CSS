@@ -321,4 +321,12 @@ public class AppService {
 	public Template getTemp(Long id){
 		return Template.findById(id);
 	}
+	
+	/** 
+	 * @param imageId
+	 * @return
+	 */
+	public Image findImageById(Long imageId) {
+		return Image.find.byId(imageId);
+	}
 }

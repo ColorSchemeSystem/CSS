@@ -17,6 +17,8 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.imageio.ImageIO;
 
@@ -550,6 +552,45 @@ public class Application extends BaseController{
 		}
 		AjaxImageResult result = new AjaxImageResult();
 		result.path = path;
+		return ok(Json.toJson(result));
+	}
+	
+	/**
+	 * @return
+	 */
+	public static Result loadImageName() {
+		String logicalImageName = request().getQueryString("liname");
+		Long imageId = null;
+		Pattern p = Pattern.compile(".*/(.*?)\\.(jpeg|jpg|png)");
+		Matcher m = p.matcher(logicalImageName);
+		try {
+			if(m.find()) {
+				imageId = Long.parseLong(m.group(1));
+			}
+		} catch(Exception e) {
+			e.printStackTrace();
+		}
+		String path = request().getQueryString("path");
+		Member member = isLoggedIn();
+		Logger.info("liname : " + logicalImageName);
+		if(member != null
+				&& StringUtils.isNotEmpty(logicalImageName)
+				&& StringUtils.isNotEmpty(path)
+				&& imageId != null) {
+			Logger.info("memberId : " + member.memberId);
+			Image image = appS.findImageById(imageId);
+			if(image != null) {
+				AjaxImageResult result = new AjaxImageResult();
+				result.imageId = image.imageId;
+				result.imageName = image.imageName;
+				result.imageType = image.imageType;
+				result.path = path;
+				result.status = true;
+				return ok(Json.toJson(result));
+			}
+		}
+		AjaxImageResult result = new AjaxImageResult();
+		result.path = "";
 		return ok(Json.toJson(result));
 	}
 }

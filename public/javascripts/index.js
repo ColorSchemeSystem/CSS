@@ -75,6 +75,7 @@ function fixFrameSize() {
 };
 
 function sendHTML(formId, id){
+	console.log($('iframe').contents().find('html').html());
 	var ele = $("<input>", {
 					"type" : "hidden",
 					"name" : "tempHtml",
@@ -112,17 +113,44 @@ function sendHTML(formId, id){
 
 
 function showPopup(member_id, id){
-	var inst = $('[data-remodal-id=modal]').remodal();
-	inst.open();
+	$('iframe').contents().find('img').each(function(index) {
+		$.ajax({
+			url: "/loadImageName",
+			data: {
+				liname: $(this).attr('src'),
+				path : "img:eq(" + index +")",
+			},
+			type: "GET"
+		}).done(function(result){
+			if(Boolean(result.status)) {
+				var src = result.imageName;
+				$('iframe').contents().find(result.path).attr('src', src);
+			}	else	{
+				$('iframe').contents().find(result.path).attr('src', '');
+			}
+			var inst = $('[data-remodal-id=modal]').remodal();
+			inst.open();
+			sendHTML('#saveHtmlForm', id);
+			var ele = $("<input>", {
+							"type" : "hidden",
+							"name" : "member_id",
+							"value" : member_id
+						});
+			$('#saveHtmlForm').append(ele);
+		}).fail(function(data){
+			var inst = $('[data-remodal-id=modal]').remodal();
+			inst.open();
 
-	sendHTML('#saveHtmlForm', id);
-	
-	var ele = $("<input>", {
-					"type" : "hidden",
-					"name" : "member_id",
-					"value" : member_id
-				});
-	$('#saveHtmlForm').append(ele);
+			sendHTML('#saveHtmlForm', id);
+			
+			var ele = $("<input>", {
+							"type" : "hidden",
+							"name" : "member_id",
+							"value" : member_id
+						});
+			$('#saveHtmlForm').append(ele);
+		});
+	});
 }
 
 function loadTimeOut(){
