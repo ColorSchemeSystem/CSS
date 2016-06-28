@@ -420,7 +420,7 @@ public class AdminController extends BaseController {
 		temp.templateName = editTmp.templateName.replaceAll("　", " ").trim();
 		temp.templateMessage = editTmp.templateMessage.replaceAll("　", " ").trim();
 		temp.accessFlag = editTmp.templateFlg;
-		adminS.updateTemplate(temp);
+		appS.updateTemplate(temp);
 		/*
 		 * 確認用ログ
 		 */
