@@ -354,6 +354,7 @@ function renamedImagePass(obj, classname, targetPass) {
 		},
 		type: "GET"
 	}).done(function(result){
+		/*
 		var path = result.path.split(" ");
 		for(var cnt = 0;cnt < path.length;cnt++) {
 			if($('iframe').contents().find(path[cnt]).attr('src') != undefined) {
@@ -361,6 +362,7 @@ function renamedImagePass(obj, classname, targetPass) {
 				break;
 			}
 		}
+		*/
 		if(Boolean(result.status)) {
 			var src = config.images + "/" + String(result.imageId) + "." 
 			+ result.imageType;
@@ -388,6 +390,7 @@ function imageChange(element) {
 				},
 				type: "GET"
 			}).done(function(result){
+			/*
 				var path = result.path.split(" ");
 				for(var cnt = 0;cnt < path.length;cnt++) {
 					if($('iframe').contents().find(path[cnt]).attr('src') != undefined) {
@@ -395,6 +398,7 @@ function imageChange(element) {
 						break;
 					}
 				}
+			 */
 				if(Boolean(result.status)) {
 					var src = config.images + "/" + String(result.imageId) + "." + result.imageType;
 					$('iframe').contents().find(result.path).attr('src', src);
