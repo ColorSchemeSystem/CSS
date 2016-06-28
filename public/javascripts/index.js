@@ -2,7 +2,7 @@
 * index.scala.htmlで主に使われるjs
 * 作成日	       2016/06/09
 * 最終更新者     Momoi Yuji
-* 更新日        2016/06/21
+* 更新日        2016/06/28
 */
 
 /*******************************************************************************
@@ -44,7 +44,7 @@ function reviveButton(){
 
 function fixSideBar(){
 	var navi = $('.fixnav');
-	var main  = $('.main');
+	var main = $('.main');
 	var target_top = navi.offset().top - parseInt(navi.css('margin-top'),10);
 	var sub_top = main.offset().top - parseInt(main.css('margin-top'),10);
 	var sub_scroll = main.offset().top + main.outerHeight(true) - navi.outerHeight(true) - parseInt(navi.css('margin-top'),10);
@@ -332,7 +332,6 @@ function renamedImagePass(obj, classname, targetPass) {
 		imgName = imgName.substr(imgName.indexOf("/")+1,imgName.length);
 	}
 	TextureName.push(imgName);
-	console.log(imgName);
 
 	var childName = classname + "-image"+TextureName.length;
 	$(obj).addClass(classname);
@@ -357,11 +356,12 @@ function renamedImagePass(obj, classname, targetPass) {
 	}).done(function(result){
 		var path = result.path.split(" ");
 		for(var cnt = 0;cnt < path.length;cnt++) {
-			if(path.indexOf(".")) {
+			if($('iframe').contents().find(path[cnt]).attr('src') != undefined) {
 				result.path = path[cnt];
 				break;
 			}
 		}
+		console.log(result.path + "  name:"+result.imageId+"."+result.imageType);
 		if(Boolean(result.status)) {
 			var src = config.images + "/" + String(result.imageId) + "." + result.imageType;
 			$('iframe').contents().find(result.path).attr('src', src);
@@ -390,7 +390,7 @@ function imageChange(element) {
 			}).done(function(result){
 				var path = result.path.split(" ");
 				for(var cnt = 0;cnt < path.length;cnt++) {
-					if(path.indexOf(".")) {
+					if($('iframe').contents().find(path[cnt]).attr('src') != undefined) {
 						result.path = path[cnt];
 						break;
 					}
