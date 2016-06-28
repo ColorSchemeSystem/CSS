@@ -284,10 +284,13 @@ public class AdminController extends BaseController {
 			return redirect(routes.AdminController.login());
 		}
 		if(!form.hasErrors()) {
+			Chooser chooser = adminS.findChooserByChooserId(mem.chooser.chooserId);
 			if(form.get().hsvpanel == null && form.get().slider == null && form.get().swatche == null){
+				form.get().hsvpanel = chooser.hsvpanel;
+				form.get().slider = chooser.slider;
+				form.get().swatche = chooser.swatche;
 				return badRequest(editColor.render(mem, form, "最低1つは選択してください"));
-			}else{
-				Chooser chooser = adminS.findChooserByChooserId(mem.chooser.chooserId);
+			} else {
 				chooser.hsvpanel	= form.get().hsvpanel;
 				chooser.slider		= form.get().slider;
 				chooser.swatche		= form.get().swatche;
