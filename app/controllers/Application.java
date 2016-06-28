@@ -31,6 +31,8 @@ import com.avaje.ebean.Query;
 import com.github.javafaker.Faker;
 
 import dtos.AjaxImageResult;
+import dtos.AjaxImageResultElement;
+import dtos.AjaxImageResultList;
 import dtos.AjaxResult;
 import dtos.PagingDto;
 import entity.Color;
@@ -559,38 +561,54 @@ public class Application extends BaseController{
 	 * @return
 	 */
 	public static Result loadImageName() {
-		String logicalImageName = request().getQueryString("liname");
-		Long imageId = null;
-		Pattern p = Pattern.compile(".*/(.*?)\\.(jpeg|jpg|png)");
-		Matcher m = p.matcher(logicalImageName);
-		try {
-			if(m.find()) {
-				imageId = Long.parseLong(m.group(1));
-			}
-		} catch(Exception e) {
-			e.printStackTrace();
+		String[] linamesVal = request().body().asFormUrlEncoded()
+				.get("linames");
+		if(linamesVal == null || linamesVal.length == 0) {
+			Logger.error("linames is empty.");
+			return ok(Json.toJson(new AjaxImageResultList()));
 		}
-		String path = request().getQueryString("path");
+		String[] linames = linamesVal[0].split(",");
+		Long[] imageIds = new Long[linames.length];
+		for(int i = 0 ; i < linames.length; i++) {
+			Pattern p = Pattern.compile(".*/(.*?)\\.(jpeg|jpg|png)");
+			Matcher m = p.matcher(linames[i]);
+			try {
+				if(m.find() && m.groupCount() >= 1) {
+					imageIds[i] = Long.parseLong(m.group(1));
+				}
+			} catch(Exception e) {
+				e.printStackTrace();
+			}
+		}
+		String[] pathsVal = request().body().asFormUrlEncoded()
+				.get("paths");
+		if(pathsVal == null || pathsVal.length == 0) {
+			Logger.error("paths is empty.");
+			return ok(Json.toJson(new AjaxImageResultList()));
+		}
+		String[] paths = pathsVal[0].split(",");
 		Member member = isLoggedIn();
-		Logger.info("liname : " + logicalImageName);
 		if(member != null
-				&& StringUtils.isNotEmpty(logicalImageName)
-				&& StringUtils.isNotEmpty(path)
-				&& imageId != null) {
-			Logger.info("memberId : " + member.memberId);
-			Image image = appS.findImageById(imageId);
-			if(image != null) {
-				AjaxImageResult result = new AjaxImageResult();
-				result.imageId = image.imageId;
-				result.imageName = image.imageName;
-				result.imageType = image.imageType;
-				result.path = path;
-				result.status = true;
+				&& imageIds.length > 0
+				&& paths.length > 0
+				) {
+			AjaxImageResultList result = new AjaxImageResultList();
+			result.memberId = member.memberId;
+			result.status = true;
+			for(int i = 0; i < imageIds.length; i++) {
+				Image image = appS.findImageById(imageIds[i]);	
+				if(image != null) {
+					AjaxImageResultElement e = new AjaxImageResultElement();
+					e.imageId = image.imageId;
+					e.imageName = image.imageName;
+					e.imageType = image.imageType;
+					e.path = paths[i];
+					result.elements.add(e);
+				}
 				return ok(Json.toJson(result));
 			}
 		}
 		AjaxImageResult result = new AjaxImageResult();
-		result.path = "";
 		return ok(Json.toJson(result));
 	}
 }
