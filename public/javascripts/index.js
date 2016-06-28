@@ -177,14 +177,14 @@ function reloadIframe(html){
 						// border-sizeリアルタイム処理
 						$(function() {
 							$('input#border-size').each(function() {
-								$(this).on('keyup', setBorderSize(this));
+								$(this).on('keyup blur paste', setBorderSize(this));
 							});
 						});
 
 						// textのリアルタイム処理
 						$(function() {
 							$('input.editText').each(function() {
-								$(this).on('keyup', editText(this));
+								$(this).on('keyup blur paste', editText(this));
 							});
 						});
 
