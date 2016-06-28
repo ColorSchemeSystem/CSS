@@ -422,6 +422,9 @@ public class AdminController extends BaseController {
 	public static Result updateTemp(Long id){
 		Form<TemplateUpload> form = Form.form(TemplateUpload.class).bindFromRequest();
 		Member member = isLoggedIn();
+		if(member == null){
+			return redirect("/login");
+		}
 		TemplateUpload editTmp = form.get();
 		if(editTmp.templateName.replaceAll("　", " ").trim().isEmpty()){
 			editTmp.templateName = "template" + id;
@@ -443,6 +446,9 @@ public class AdminController extends BaseController {
 	public static Result deleteTmp(Long id){
 		Template tmp = appS.getTemp(id);
 		Member mem = isLoggedIn();
+		if(mem == null){
+			return redirect("/login");
+		}
 		if(tmp != null && tmp.member != null && tmp.member.memberId.equals(mem.memberId)){
 			adminS.deleteTemplate(tmp);
 			/*
@@ -480,6 +486,9 @@ public class AdminController extends BaseController {
 	public static Result updateImg(Long id){
 		Form<Image> form = Form.form(Image.class).bindFromRequest();
 		Member member = isLoggedIn();
+		if(member == null){
+			return redirect("/login");
+		}
 		Image editImg = form.get();
 		if(editImg.imageName.replaceAll("　", " ").trim().isEmpty()){
 			editImg.imageName = "image" + id;
@@ -499,6 +508,9 @@ public class AdminController extends BaseController {
 	public static Result deleteImg(Long id){
 		Image img = adminS.findImageById(id);
 		Member mem = isLoggedIn();
+		if(mem == null){
+			return redirect("/login");
+		}
 		if(img != null && img.member != null && img.member.memberId.equals(mem.memberId)){
 			adminS.deleteImage(img);
 			/*

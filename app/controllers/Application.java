@@ -290,6 +290,10 @@ public class Application extends BaseController{
 	public static Result download(){
 		Form<TemplateDownload> form = Form.form(TemplateDownload.class).bindFromRequest();
 		TemplateDownload html = form.get();
+		String refererUrl = request().getHeader("referer");
+		if(refererUrl == null || !refererUrl.matches(".*/template/\\d*")){
+			return badRequest(notfound.render());
+		}
 		if(!html.tempHtml.matches(".*<html.*>.*")){
 			html.tempHtml = "<html lang=\"ja\">" + html.tempHtml + "</html>";
 		}
@@ -334,9 +338,13 @@ public class Application extends BaseController{
 	public static Result saveEditTemplate(){
 		Form<TemplateSave> form = Form.form(TemplateSave.class).bindFromRequest();
 		TemplateSave tempS = form.get();
-		tempS.tempHtml = "<html>" + tempS.tempHtml + "</html>";
+		String refererUrl = request().getHeader("referer");
+		if(refererUrl == null || !refererUrl.matches(".*/template/\\d*")){
+			return badRequest(notfound.render());
+		}
 		if(tempS.tempHtml != null){
 			Template temp = new Template();
+			tempS.tempHtml = "<html>" + tempS.tempHtml + "</html>";
 			temp.templateMessage = tempS.tempMessage;
 			temp.accessFlag = tempS.flg;
 			if(temp.accessFlag == null){
@@ -390,6 +398,10 @@ public class Application extends BaseController{
 	}
 
 	public static Result detailTemp(){
+		String refererUrl = request().getHeader("referer");
+		if(refererUrl == null || !refererUrl.matches(".*/template/\\d*")){
+			return badRequest(notfound.render());
+		}
 		Form<TemplateDownload> form = Form.form(TemplateDownload.class).bindFromRequest();
 		TemplateDownload html = form.get();
 		html.tempHtml = "<html>" + html.tempHtml + "</html>";
@@ -400,6 +412,10 @@ public class Application extends BaseController{
 	}
 
 	public static Result backToIndex(Long id){
+		String refererUrl = request().getHeader("referer");
+		if(refererUrl == null || !refererUrl.matches(".*/template/detail")){
+			return badRequest(notfound.render());
+		}
 		Form<TemplateDownload> getForm = Form.form(TemplateDownload.class).bindFromRequest();
 		TemplateDownload html = getForm.get();
 		Chooser chooser = new Chooser();
