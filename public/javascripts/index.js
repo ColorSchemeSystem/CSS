@@ -75,6 +75,7 @@ function fixFrameSize() {
 };
 
 function sendHTML(formId, id){
+	console.log($('iframe').contents().find('html').html());
 	var ele = $("<input>", {
 					"type" : "hidden",
 					"name" : "tempHtml",
@@ -111,18 +112,50 @@ function sendHTML(formId, id){
 }
 
 
-function showPopup(member_id, id){
-	var inst = $('[data-remodal-id=modal]').remodal();
-	inst.open();
+function showPopup(member_id, id) {
+	var size = $('iframe').contents().find('img').size();
+	$('iframe').contents().find('img').each(function(index) {
+		var last = false;
+		if(size == index) last = true;
+		$.ajax({
+			url: "/loadImageName",
+			data: {
+				liname: $(this).attr('src'),
+				path : "img:eq(" + index +")",
+				last : last,
+			},
+			type: "GET"
+		}).done(function(result){
+			if(Boolean(result.status)) {
+				var src = result.imageName;
+				$('iframe').contents().find(result.path).attr('src', src);
+			}	else	{
+				$('iframe').contents().find(result.path).attr('src', '');
+			}
+			var inst = $('[data-remodal-id=modal]').remodal();
+			inst.open();
+			sendHTML('#saveHtmlForm', id);
+			var ele = $("<input>", {
+							"type" : "hidden",
+							"name" : "member_id",
+							"value" : member_id
+						});
+			$('#saveHtmlForm').append(ele);
+		}).fail(function(data){
+			var inst = $('[data-remodal-id=modal]').remodal();
+			inst.open();
 
-	sendHTML('#saveHtmlForm', id);
-	
-	var ele = $("<input>", {
-					"type" : "hidden",
-					"name" : "member_id",
-					"value" : member_id
-				});
-	$('#saveHtmlForm').append(ele);
+			sendHTML('#saveHtmlForm', id);
+			
+			var ele = $("<input>", {
+							"type" : "hidden",
+							"name" : "member_id",
+							"value" : member_id
+						});
+			$('#saveHtmlForm').append(ele);
+		});
+		alert("hoge");
+	});
 }
 
 function loadTimeOut(){
@@ -299,6 +332,7 @@ function renamedImagePass(obj, classname, targetPass) {
 		imgName = imgName.substr(imgName.indexOf("/")+1,imgName.length);
 	}
 	TextureName.push(imgName);
+	console.log(imgName);
 
 	var childName = classname + "-image"+TextureName.length;
 	$(obj).addClass(classname);
@@ -321,6 +355,13 @@ function renamedImagePass(obj, classname, targetPass) {
 		},
 		type: "GET"
 	}).done(function(result){
+		var path = result.path.split(" ");
+		for(var cnt = 0;cnt < path.length;cnt++) {
+			if(path.indexOf(".")) {
+				result.path = path[cnt];
+				break;
+			}
+		}
 		if(Boolean(result.status)) {
 			var src = config.images + "/" + String(result.imageId) + "." + result.imageType;
 			$('iframe').contents().find(result.path).attr('src', src);
@@ -347,6 +388,13 @@ function imageChange(element) {
 				},
 				type: "GET"
 			}).done(function(result){
+				var path = result.path.split(" ");
+				for(var cnt = 0;cnt < path.length;cnt++) {
+					if(path.indexOf(".")) {
+						result.path = path[cnt];
+						break;
+					}
+				}
 				if(Boolean(result.status)) {
 					var src = config.images + "/" + String(result.imageId) + "." + result.imageType;
 					$('iframe').contents().find(result.path).attr('src', src);
