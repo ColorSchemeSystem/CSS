@@ -522,7 +522,6 @@
         if (connectedinput) {
           connectedinput.on('keyup change', function() {
             var $input = $(this);
-            console.log("input" + $input.val());
             updateColor($input.val(), true);
           });
         }
