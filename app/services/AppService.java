@@ -9,6 +9,8 @@ import java.util.Map;
 import java.io.*;
 import java.util.regex.Pattern;
 
+import javax.persistence.OptimisticLockException;
+
 import org.apache.commons.lang3.StringUtils;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -23,6 +25,7 @@ import models.Chooser;
 import models.Image;
 import models.Member;
 import models.Template;
+import play.Logger;
 import play.Play;
 import play.db.ebean.Model.Finder;
 
@@ -161,6 +164,11 @@ public class AppService {
 		return dto;
 	}
 
+	/**
+	 * 
+	 * @param id
+	 * @return
+	 */
 	public Integer getMaxPage(Long id) {
         Finder<Long, Template> find = new Finder<Long, Template>(Long.class, Template.class);
         PagingList<Template> pagingList;
@@ -178,11 +186,50 @@ public class AppService {
 	 * @param template
 	 */
 	public void saveTemplate(Template template) {
-		template.save();
+		try {
+			template.save();
+		} catch (OptimisticLockException e) {
+			e.printStackTrace();
+			Logger.info("処理が競合しました。");
+			do {
+				Template newTemplate = Template.find.byId(template.templateId);
+				newTemplate.templateName = template.templateName;
+				newTemplate.templateMessage = template.templateMessage;
+				newTemplate.accessFlag = template.accessFlag;
+				try {
+					newTemplate.save();
+					break;
+				} catch (OptimisticLockException e2) {
+					e2.printStackTrace();
+					Logger.info("処理が競合しました。");
+				}
+			} while (true);
+		}
 	}
 
+	/**
+	 * @param template
+	 */
 	public void updateTemplate(Template template){
-		template.update();
+		try {
+			template.update();
+		} catch (OptimisticLockException e) {
+			e.printStackTrace();
+			Logger.info("処理が競合しました。");
+			do {
+				Template newTemplate = Template.find.byId(template.templateId);
+				newTemplate.templateName = template.templateName;
+				newTemplate.templateMessage = template.templateMessage;
+				newTemplate.accessFlag = template.accessFlag;
+				try {
+					newTemplate.update();
+					break;
+				} catch (OptimisticLockException e2) {
+					e2.printStackTrace();
+					Logger.info("処理が競合しました。");
+				}
+			} while (true);
+		}
 	}
 
 	public Member findMemberById(Long id){
@@ -194,7 +241,26 @@ public class AppService {
 	 * @param image
 	 */
 	public void saveImage(Image image) {
-		image.save();
+		try {
+			image.save();
+		} catch (OptimisticLockException e) {
+			e.printStackTrace();
+			Logger.info("処理が競合しました。");
+			do {
+				Image newImage = Image.find.byId(image.imageId);
+				newImage.member = image.member;
+				newImage.imageName = image.imageName;
+				newImage.imageMessage = image.imageMessage;
+				newImage.imageType = image.imageType;
+				try {
+					newImage.save();
+					break;
+				} catch (OptimisticLockException e2) {
+					e2.printStackTrace();
+					Logger.info("処理が競合しました。");
+				}
+			} while (true);
+		}
 	}
 
 	public static List<String> extractClasses(String html) {
