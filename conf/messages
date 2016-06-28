@@ -8,3 +8,5 @@ error.pattern=半角英数以外の文字が含まれています。
 
 constraint.minLength=6文字以上で入力してください。
 error.minLength=6文字以上で入力してください。
+
+error.maxLength=規定の文字数を超えています
