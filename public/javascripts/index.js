@@ -152,6 +152,9 @@ function reloadIframe(html){
 					}
 					fixSideBar();
 					var body = $('iframe').contents().find('body');
+					// body自体に配色できる様に
+					addTr(body, 'body', 'bodyColor', 'body', 'body', new RGBColor("#333"));
+					addSetting('bodyColor', 'body', body);
 					// body配下のタグを全て取得
 					$(body).children().each(function() {
 						// タグを全て取り出し表示
@@ -417,7 +420,7 @@ function addTr(obj, classname, childName, targetPass, viewName, color) {
 	tr.append(td);
 	tr.append(td2);
 	tr.css("background-color", color.toRGB());
-	if($(obj).parent().prop("tagName") != "BODY") tr.css("display", "none");
+	if($(obj).parent().prop("tagName") != "BODY" && $(obj).prop("tagName") != "BODY") tr.css("display", "none");
 	$('#classTable').append(tr);
 };
 
