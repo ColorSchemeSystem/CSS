@@ -165,7 +165,7 @@ public class AppService {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param id
 	 * @return
 	 */
@@ -179,6 +179,13 @@ public class AppService {
         }
         return pagingList.getTotalPageCount();
         // getTotalPageCountを使用して最大ページ数取得
+	}
+
+	public Integer getMaxPageOfImage(Long id, int page){
+		Finder<Long, Image> find = new Finder<Long, Image>(Long.class, Image.class);
+        PagingList<Image> pagingList;
+        pagingList = find.where().eq("Member_Member_Id", id).orderBy("created desc").findPagingList(page);
+        return pagingList.getTotalPageCount();
 	}
 
 	/**

@@ -235,9 +235,16 @@ public class Application extends BaseController{
 		Member member = isLoggedIn();
 		if(member != null) {
 			Integer page = 1;
+			int memMaxPage = appS.getMaxPageOfImage(member.memberId, 20);
 			try {
 				page = Integer.parseInt(request().getQueryString("page"));
+				if(page == 0){
+					return badRequest(notfound.render());
+				}
 			} catch(Exception e) {}
+			if(page != 1 && memMaxPage < page){
+				return badRequest(notfound.render());
+			}
 			PagingDto<Image> dto = appS.findImagesWithPages(page, 20, member.memberId);
 			return ok(images.render(dto,member,5,appS.getMemberimagesUrl()));
 		}	else	{
