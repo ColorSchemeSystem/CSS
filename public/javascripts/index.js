@@ -86,43 +86,6 @@ function fixFrameSize() {
 };
 
 function sendHTML(formId, id){
-	var ele = $("<input>", {
-					"type" : "hidden",
-					"name" : "tempHtml",
-					"value" : $('iframe').contents().find('html').html()
-				});
-	var ele2 = $("<input>",{
-					"type" : "hidden",
-					"name" : "temp_id",
-					"value" : id
-				});
-	$(formId).append(ele);
-	$(formId).append(ele2);
-	
-	/*
-	 * 画像ファイル名をhiddenでappendする。
-	 */
-	var imageFileNames = [];
-	$('iframe').contents().find('img').each(function() {
-		if(_.isEmpty($(this).attr("src"))) {
-			return true;
-		}
-		var imageFileName = $(this).attr("src").match(/^.*\/(.*?)$/)[1];
-		if(!_.isEmpty(imageFileName)) {
-			imageFileNames.push(imageFileName);
-		}
-	});
-	$(formId).append(
-			$('<input>').attr({
-				type: 'hidden',
-				name: 'imageFileNames',
-				value: imageFileNames.join(),
-			})
-	);
-}
-
-
-function showPopup(member_id, id) {
 	var linames = [];
 	var paths = [];
 	for(var i = 0; i < $('iframe').contents().find('img').size(); i++) {
@@ -139,24 +102,59 @@ function showPopup(member_id, id) {
 		},
 		type: "POST"
 	}).done(function(result){
-		console.log(result);
 		if(Boolean(result.status)) {
 			for(var i = 0; i < result.elements.length; i++) {
 				var src = result.elements[i].imageName;
-				$('iframe').contents().find(result.elements[i].path)
-				.attr('src', src);
+				$('iframe').contents().find(result.elements[i].path).attr('src', src);
 			}
 		}
-		var inst = $('[data-remodal-id=modal]').remodal();
-		inst.open();
-		sendHTML('#saveHtmlForm', id);
 		var ele = $("<input>", {
-						"type" : "hidden",
-						"name" : "member_id",
-						"value" : result.memberId
-					});
-		$('#saveHtmlForm').append(ele);
+			"type" : "hidden",
+			"name" : "tempHtml",
+			"value" : $('iframe').contents().find('html').html()
+		});
+		var ele2 = $("<input>",{
+			"type" : "hidden",
+			"name" : "temp_id",
+			"value" : id
+		});
+		$(formId).append(ele);
+		$(formId).append(ele2);
+
+		/*
+ 		* 画像ファイル名をhiddenでappendする。
+		*/
+		var imageFileNames = [];
+		$('iframe').contents().find('img').each(function() {
+		if(_.isEmpty($(this).attr("src"))) {
+			return true;
+		}
+		var imageFileName = $(this).attr("src").match(/^.*\/(.*?)$/)[1];
+		if(!_.isEmpty(imageFileName)) {
+			imageFileNames.push(imageFileName);
+			}
+		});
+		$(formId).append(
+			$('<input>').attr({
+				type: 'hidden',
+				name: 'imageFileNames',
+				value: imageFileNames.join(),
+			})
+		);
 	}).fail(function(data){});
+}
+
+
+function showPopup(member_id, id) {
+	var inst = $('[data-remodal-id=modal]').remodal();
+	inst.open();
+	sendHTML('#saveHtmlForm', id);
+	var ele = $("<input>", {
+					"type" : "hidden",
+					"name" : "member_id",
+					"value" : member_id
+				});
+	$('#saveHtmlForm').append(ele);
 }
 
 function loadTimeOut(){
@@ -364,7 +362,8 @@ function renamedImagePass(obj, classname, targetPass) {
 			}
 		}
 		if(Boolean(result.status)) {
-			var src = config.images + "/" + String(result.imageId) + "." + result.imageType;
+			var src = config.images + "/" + String(result.imageId) + "." 
+			+ result.imageType;
 			$('iframe').contents().find(result.path).attr('src', src);
 		}	else	{
 			$('iframe').contents().find(result.path).attr('src', '');

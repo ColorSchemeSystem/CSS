@@ -566,6 +566,8 @@ public class Application extends BaseController{
 		if(linamesVal == null || linamesVal.length == 0) {
 			Logger.error("linames is empty.");
 			return ok(Json.toJson(new AjaxImageResultList()));
+		}	else	{
+			Logger.info("linames : " + linamesVal[0]);
 		}
 		String[] linames = linamesVal[0].split(",");
 		Long[] imageIds = new Long[linames.length];
@@ -575,6 +577,7 @@ public class Application extends BaseController{
 			try {
 				if(m.find() && m.groupCount() >= 1) {
 					imageIds[i] = Long.parseLong(m.group(1));
+					Logger.info("imageId : " + imageIds[i]);
 				}
 			} catch(Exception e) {
 				e.printStackTrace();
@@ -585,6 +588,8 @@ public class Application extends BaseController{
 		if(pathsVal == null || pathsVal.length == 0) {
 			Logger.error("paths is empty.");
 			return ok(Json.toJson(new AjaxImageResultList()));
+		}	else	{
+			Logger.info("paths : " + pathsVal[0]);
 		}
 		String[] paths = pathsVal[0].split(",");
 		Member member = isLoggedIn();
@@ -595,18 +600,18 @@ public class Application extends BaseController{
 			AjaxImageResultList result = new AjaxImageResultList();
 			result.memberId = member.memberId;
 			result.status = true;
-			for(int i = 0; i < imageIds.length; i++) {
-				Image image = appS.findImageById(imageIds[i]);	
+			for(int j = 0; j < imageIds.length; j++) {
+				Image image = appS.findImageById(imageIds[j]);	
 				if(image != null) {
 					AjaxImageResultElement e = new AjaxImageResultElement();
 					e.imageId = image.imageId;
 					e.imageName = image.imageName;
 					e.imageType = image.imageType;
-					e.path = paths[i];
+					e.path = paths[j];
 					result.elements.add(e);
 				}
-				return ok(Json.toJson(result));
 			}
+			return ok(Json.toJson(result));
 		}
 		AjaxImageResult result = new AjaxImageResult();
 		return ok(Json.toJson(result));
