@@ -104,30 +104,30 @@ function downloadHTML(formId, id){
 		*/
 		var imageFileNames = [];
 		$('iframe').contents().find('img').each(function() {
-		var imgSrc = $(this).attr("src");
-		if(_.isEmpty(imgSrc)) {
-			return true;
+			var imgSrc = $(this).attr("src");
+			if(_.isEmpty(imgSrc)) {
+				return true;
+			}
+			if(imgSrc.indexOf("/") == -1) {
+				imageFileNames.push(imageFileName);
+			}	else	{
+				var matches = imgSrc.match(/^.*\/(.*?)$/);
+				var imageFileName = "";
+			if(matches.length >= 1) {
+				imageFileName = matches[1];
+			}
+			if(!_.isEmpty(imageFileName)) {
+				imageFileNames.push(imageFileName);
+			}
 		}
-		if(imgSrc.indexOf("/") == -1) {
-		imageFileNames.push(imageFileName);
-		}	else	{
-		var matches = imgSrc.match(/^.*\/(.*?)$/);
-		var imageFileName = "";
-		if(matches.length >= 1) {
-			imageFileName = matches[1];
-		}
-		if(!_.isEmpty(imageFileName)) {
-			imageFileNames.push(imageFileName);
-		}
-		$(formId).append(
-				$('<input>').attr({
-					type: 'hidden',
-					name: 'imageFileNames',
-					value: imageFileNames.join(),
-				})
-		);
-	 }
 	});
+	$(formId).append(
+		$('<input>').attr({
+				type: 'hidden',
+				name: 'imageFileNames',
+				value: imageFileNames.join(),
+		})
+	);
 }
 
 function sendHTML(formId, id){
@@ -181,35 +181,6 @@ function sendHTML(formId, id){
 		$(formId).append(ele);
 		$(formId).append(ele2);
 
-		/*
-		 * 画像ファイル名をhiddenでappendする。
-		*/
-		var imageFileNames = [];
-		$('iframe').contents().find('img').each(function() {
-		var imgSrc = $(this).attr("src");
-		if(_.isEmpty(imgSrc)) {
-			return true;
-		}
-		if(imgSrc.indexOf("/") == -1) {
-				imageFileNames.push(imageFileName);
-		}	else	{
-				var matches = imgSrc.match(/^.*\/(.*?)$/);
-				var imageFileName = "";
-				if(matches.length >= 1) {
-					imageFileName = matches[1];
-				}
-				if(!_.isEmpty(imageFileName)) {
-					imageFileNames.push(imageFileName);
-				}
-			}
-		});
-		$(formId).append(
-			$('<input>').attr({
-				type: 'hidden',
-				name: 'imageFileNames',
-				value: imageFileNames.join(),
-			})
-		);
 	}).fail(function(data){});
 }
 
@@ -504,14 +475,14 @@ function addTr(obj, classname, childName, targetPass, viewName, color) {
 				});
 				position = $('iframe').contents().find(targetPass).css("position");
 				var css = {
-					color : "red",
+					color : "#1E90FF",
 					position : "absolute",
 					width : content.innerWidth(),
 					height : content.innerHeight(),
-					background : "red",
-					filter : "alpha(opacity = 30)",
-					MozOpacity : 0.3,
-					opacity : 0.3
+					background : "#1E90FF",
+					filter : "alpha(opacity = 60)",
+					MozOpacity : 0.6,
+					opacity : 0.6
 				};
 				content.css("position", "relative");
 				element.css(css);
