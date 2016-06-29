@@ -2,7 +2,7 @@
 * index.scala.htmlで主に使われるjs
 * 作成日	       2016/06/09
 * 最終更新者     Momoi Yuji
-* 更新日        2016/06/28
+* 更新日        2016/06/21
 */
 
 /*******************************************************************************
@@ -11,17 +11,6 @@
 var iframeMethod;
 var NamedClassName = [];
 var TextureName = [];
-
-/** デバッグモードかどうか。本番URLが含まれている場合は自動でfalse */
-var DEBUG_MODE = true && window.location.href.indexOf('http://ec2-52-11-169-235.us-west-2.compute.amazonaws.com:9000') == -1;
-
-/** デバッグモードでConsoleAPIが有効な場合にログを出力する */ 
-function trace(s) {
-	if(DEBUG_MODE && this.console && typeof console.log != "undefined")
-	{
-		console.log(s);
-	}
-}
 
 $(window).load(function(){
 	$('#loading').css("display", "block");
@@ -37,7 +26,7 @@ function isLoggedIn() {
 }
 
 function disabledButton(formId, buttonId){
-	trace("無効化");
+	console.log("無効化");
 	var form = $(formId);
 	var button = $(buttonId);
 	form.submit();
@@ -55,7 +44,7 @@ function reviveButton(){
 
 function fixSideBar(){
 	var navi = $('.fixnav');
-	var main = $('.main');
+	var main  = $('.main');
 	var target_top = navi.offset().top - parseInt(navi.css('margin-top'),10);
 	var sub_top = main.offset().top - parseInt(main.css('margin-top'),10);
 	var sub_scroll = main.offset().top + main.outerHeight(true) - navi.outerHeight(true) - parseInt(navi.css('margin-top'),10);
@@ -86,69 +75,49 @@ function fixFrameSize() {
 };
 
 function sendHTML(formId, id){
-	var linames = [];
-	var paths = [];
-	for(var i = 0; i < $('iframe').contents().find('img').size(); i++) {
-		var selector = 'img:eq(' + i + ')';
-		var e = $('iframe').contents().find(selector);
-		linames.push(e.attr('src'));
-		paths.push(selector);
-	}
-	$.ajax({
-		url: "/loadImageName",
-		data: {
-			linames : linames.join(","),
-			paths : paths.join(",")
-		},
-		type: "POST"
-	}).done(function(result){
-		if(Boolean(result.status)) {
-			for(var i = 0; i < result.elements.length; i++) {
-				var src = result.elements[i].imageName;
-				$('iframe').contents().find(result.elements[i].path).attr('src', src);
-			}
-		}
-		var ele = $("<input>", {
-			"type" : "hidden",
-			"name" : "tempHtml",
-			"value" : $('iframe').contents().find('html').html()
-		});
-		var ele2 = $("<input>",{
-			"type" : "hidden",
-			"name" : "temp_id",
-			"value" : id
-		});
-		$(formId).append(ele);
-		$(formId).append(ele2);
-
-		/*
- 		* 画像ファイル名をhiddenでappendする。
-		*/
-		var imageFileNames = [];
-		$('iframe').contents().find('img').each(function() {
-		if(_.isEmpty($(this).attr("src"))) {
+	var ele = $("<input>", {
+					"type" : "hidden",
+					"name" : "tempHtml",
+					"value" : $('iframe').contents().find('html').html()
+				});
+	var ele2 = $("<input>",{
+					"type" : "hidden",
+					"name" : "temp_id",
+					"value" : id
+				});
+	$(formId).append(ele);
+	$(formId).append(ele2);
+	
+	/*
+	 * 画像ファイル名をhiddenでappendする。
+	 */
+	var imageFileNames = [];
+	$('iframe').contents().find('img').each(function() {
+		var imgSrc = $(this).attr("src");
+		if(_.isEmpty(imgSrc)) {
 			return true;
 		}
-		var imageFileName = $(this).attr("src").match(/^.*\/(.*?)$/)[1];
-		if(!_.isEmpty(imageFileName)) {
+		if(imgSrc.indexOf("/") == -1) {
 			imageFileNames.push(imageFileName);
+		}	else	{
+			var matches = imgSrc.match(/^.*\/(.*?)$/);
+			var imageFileName = "";
+			if(matches.length >= 1) {
+				imageFileName = matches[1];
 			}
-		});
-		$(formId).append(
-			$('<input>').attr({
-				type: 'hidden',
-				name: 'imageFileNames',
-				value: imageFileNames.join(),
-			})
-		);
-	}).fail(function(data){});
+			if(!_.isEmpty(imageFileName)) {
+				imageFileNames.push(imageFileName);
+			}
+		}
+	});
 }
 
-
-function showPopup(member_id, id) {
+function showPopup(member_id, id){
 	var inst = $('[data-remodal-id=modal]').remodal();
 	inst.open();
+
 	sendHTML('#saveHtmlForm', id);
+	
 	var ele = $("<input>", {
 					"type" : "hidden",
 					"name" : "member_id",
@@ -331,7 +300,6 @@ function renamedImagePass(obj, classname, targetPass) {
 		imgName = imgName.substr(imgName.indexOf("/")+1,imgName.length);
 	}
 	TextureName.push(imgName);
-	trace("loadImage : " + imgName);	// ログ出力
 
 	var childName = classname + "-image"+TextureName.length;
 	$(obj).addClass(classname);
@@ -354,18 +322,17 @@ function renamedImagePass(obj, classname, targetPass) {
 		},
 		type: "GET"
 	}).done(function(result){
-		/*
 		var path = result.path.split(" ");
-		for(var cnt = 0;cnt < path.length;cnt++) {
-			if($('iframe').contents().find(path[cnt]).attr('src') != undefined) {
-				result.path = path[cnt];
-				break;
+		if(($('iframe').contents().find(result.path).attr('src') == undefined)) {
+			for(var cnt = 0;cnt < path.length;cnt++) {
+				if($('iframe').contents().find(path[cnt]).attr('src') != undefined) {
+					result.path = path[cnt];
+					break;
+				}
 			}
 		}
-		*/
 		if(Boolean(result.status)) {
-			var src = config.images + "/" + String(result.imageId) + "." 
-			+ result.imageType;
+			var src = config.images + "/" + String(result.imageId) + "." + result.imageType;
 			$('iframe').contents().find(result.path).attr('src', src);
 		}	else	{
 			$('iframe').contents().find(result.path).attr('src', '');
@@ -390,15 +357,15 @@ function imageChange(element) {
 				},
 				type: "GET"
 			}).done(function(result){
-			/*
 				var path = result.path.split(" ");
-				for(var cnt = 0;cnt < path.length;cnt++) {
-					if($('iframe').contents().find(path[cnt]).attr('src') != undefined) {
-						result.path = path[cnt];
-						break;
+				if(($('iframe').contents().find(result.path).attr('src') == undefined)) {
+					for(var cnt = 0;cnt < path.length;cnt++) {
+						if($('iframe').contents().find(path[cnt]).attr('src') != undefined) {
+							result.path = path[cnt];
+							break;
+						}
 					}
 				}
-			 */
 				if(Boolean(result.status)) {
 					var src = config.images + "/" + String(result.imageId) + "." + result.imageType;
 					$('iframe').contents().find(result.path).attr('src', src);
