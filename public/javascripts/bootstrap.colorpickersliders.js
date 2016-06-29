@@ -84,7 +84,6 @@
         }
         else {
           settings.order = {
-            opacity: 0,
             hsl: 1,
             rgb: 2,
             cie: 3, // cie sliders can increase response time of all sliders!
