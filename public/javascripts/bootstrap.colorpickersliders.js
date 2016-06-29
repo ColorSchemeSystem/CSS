@@ -73,6 +73,8 @@
           }
         }, options);
 
+        //trace(settings.swatches);
+
         if (options.hasOwnProperty('order')) {
           settings.order = $.extend({
             opacity: false,

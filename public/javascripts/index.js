@@ -354,15 +354,15 @@ function renamedImagePass(obj, classname, targetPass) {
 		},
 		type: "GET"
 	}).done(function(result){
-		/*
 		var path = result.path.split(" ");
-		for(var cnt = 0;cnt < path.length;cnt++) {
-			if($('iframe').contents().find(path[cnt]).attr('src') != undefined) {
-				result.path = path[cnt];
-				break;
+		if(($('iframe').contents().find(result.path).attr('src') == undefined)) {
+			for(var cnt = 0;cnt < path.length;cnt++) {
+				if($('iframe').contents().find(path[cnt]).attr('src') != undefined) {
+					result.path = path[cnt];
+					break;
+				}
 			}
 		}
-		*/
 		if(Boolean(result.status)) {
 			var src = config.images + "/" + String(result.imageId) + "." 
 			+ result.imageType;
@@ -370,6 +370,7 @@ function renamedImagePass(obj, classname, targetPass) {
 		}	else	{
 			$('iframe').contents().find(result.path).attr('src', '');
 		}
+		trace("after src : " + $('iframe').contents().find(result.path).attr('src'));
 	}).fail(function(data){
 	});
 };
@@ -390,15 +391,16 @@ function imageChange(element) {
 				},
 				type: "GET"
 			}).done(function(result){
-			/*
 				var path = result.path.split(" ");
-				for(var cnt = 0;cnt < path.length;cnt++) {
-					if($('iframe').contents().find(path[cnt]).attr('src') != undefined) {
-						result.path = path[cnt];
-						break;
+				if(($('iframe').contents().find(result.path).attr('src') == undefined)) {
+					for(var cnt = 0;cnt < path.length;cnt++) {
+						if($('iframe').contents().find(path[cnt]).attr('src') != undefined) {
+							result.path = path[cnt];
+							break;
+						}
 					}
 				}
-			 */
+				trace("defalt src : " + $('iframe').contents().find(result.path).attr('src'));
 				if(Boolean(result.status)) {
 					var src = config.images + "/" + String(result.imageId) + "." + result.imageType;
 					$('iframe').contents().find(result.path).attr('src', src);
@@ -567,12 +569,14 @@ function addBackground(name, targetPass) {
 	color = changedColor(color, targetPass);
 	$("#"+name+"-back").val(color);
 
+	//trace($('#chooser').data('swatches'));
+
 	var dataBack = {contentName:classname, targetName:"background"};
 	$("input#"+name+"-back").ColorPickerSliders({
 		placement: $('#chooser').data('placement'),
 		hsvpanel: $('#chooser').data('hsvpanel'),
 		sliders: $('#chooser').data('sliders'),
-		swatches: $('#chooser').data('swatches'),
+		//swatches: $('#chooser').data('swatches'),
 		previewformat: 'hex'
 	},dataBack);
 };
