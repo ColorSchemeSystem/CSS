@@ -70,7 +70,10 @@ public class FileService {
 	public void zip(String fileName,String[] targetFileNames) throws IOException{
 	    try(ZipOutputStream zos = new ZipOutputStream(new FileOutputStream(fileName)))
 	    {
-	        for(String path : targetFileNames){
+	        for(String path : targetFileNames) {
+	        	if(!new File(path).exists()) {
+	        		continue;
+	        	}
 	        	String f = path.replaceAll(".*\\/", "");
 	            zos.putNextEntry(new ZipEntry(f));
 	            Path p = Paths.get(path);
