@@ -538,7 +538,8 @@ public class Application extends BaseController{
 		fileS.saveFile(styleCss, css);
 		String[] files = {indexHtml , styleCss};
 		try {
-			String zipFileName = "template_" + new Faker().name().firstName() + ".zip";
+			String zipFileName = "template_" 
+		+ new Faker().name().firstName() + "_" + token + ".zip";
 			fileS.zip(zipFileName,files);
 			response().setContentType("application/x-download");
 			response().setHeader("Content-disposition","attachment; filename=" + zipFileName);
