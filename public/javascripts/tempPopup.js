@@ -3,7 +3,7 @@ function showTempDetail(id, imgUrl){
 	var name = $(findId).data("name");
 	var message = $(findId).data("message");
 	var user = $(findId).data("user");
-	console.log("id = " + id + " url = " + imgUrl + " temp = " + name);
+	trace("id = " + id + " url = " + imgUrl + " temp = " + name);
 	$('#tempN').text(name);
 	$('#tempM').text(message);
 	$('#userN').attr("value", user);
@@ -16,7 +16,7 @@ function showEditTemp(id, imgUrl){
 	var name = $(findClass).data("name");
 	var message = $(findClass).data("message");
 	var flg = $(findClass).data("flg");
-	console.log("flg = " + flg);
+	trace("flg = " + flg);
 	$('#eTempN').attr("value", name);
 	$('#eTempM').text(message);
 	$('#updateTmp').attr("action", "/template/update/" + id)
