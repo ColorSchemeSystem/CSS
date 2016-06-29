@@ -109,6 +109,7 @@ function sendHTML(formId, id){
 				imageFileNames.push(imageFileName);
 			}
 		}
+	});
 }
 
 function showPopup(member_id, id){
