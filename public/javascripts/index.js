@@ -829,48 +829,6 @@ function addBorderLeft(name, targetPass) {
 };
 
 /*
-*  ボーダー(角丸)追加
-*/
-function addBorderRadius(name, targetPass) {
-	var tr = $("<tr class='iframe"+name+"'></tr>");
-	var td = $("<td>radius</td>");
-	var td2 = $("<input type='text' class='form-control' id='"+name+"-bor-radius' value='#A6FF00' data-color-format='hex'>");
-
-	tr.append(td);
-	tr.append(td2);
-	tr.css("display", "none");
-	$('#classTable').append(tr);
-	var classname = targetPass;
-
-	var color = $('iframe').contents().find(classname).css('border-color');
-	color = changedColor(color);
-	$("#"+name+"-bor-radius").val(color);
-
-	// ボーダーサイズ変更できる様に
-	var tr2 = $("<tr class='iframe"+name+"'></tr>");
-	var td3 = $("<td>radius-size</td>");
-	var size = 0;
-	if($(targetPass).css("border") != undefined && $(targetPass).css("border") != "") {
-		size = $(targetPass).css('border-radius');
-		size = size.replace("px", "　");
-		size = size.substr(size.match(/　/), size.match(/　/)+1);
-	}
-	var td4 = $("<input type='text' class='"+name+"-bor-left-size' id='border-size' value='"+size+"' data-classname='"+classname+"' data-name='"+name+"' data-position='left' >");
-	tr2.append(td3);
-	tr2.append(td4);
-	tr2.css("display", "none");
-	$('#classTable').append(tr2);
-
-	var dataBorder = {contentName:classname, targetName:"border", borderSize:"."+name+"-bor-left-size", borderPosition:"left"};
-	$("input#"+name+"-bor-left").ColorPickerSliders({
-		placement: $('#chooser').data('placement'),
-		hsvpanel: $('#chooser').data('hsvpanel'),
-		sliders: $('#chooser').data('sliders'),
-		previewformat: 'hex'
-	},dataBorder);
-};
-
-/*
 *  ボーダーサイズリアルタイム変更(keyup)
 */
 function setBorderSize(element) {
@@ -884,24 +842,25 @@ function setBorderSize(element) {
 								borderSize:"."+$(this).attr("class")};
 			var color = "#777";
 			var borderSize = $(targetData.borderSize).val();
-			var pos = obj.data("position");
-			if (pos == "top") {
-				color = $("#"+obj.data('name')+"-bor-top").val();
-				$('iframe').contents().find(targetData.contentName).css('border-top', borderSize+"px solid "+color);
+			if(borderSize > 0) { 
+				var pos = obj.data("position");
+				if (pos == "top") {
+					color = $("#"+obj.data('name')+"-bor-top").val();
+					$('iframe').contents().find(targetData.contentName).css('border-top', borderSize+"px solid "+color);
+				}
+				else if (pos == "bottom") {
+					color = $("#"+obj.data('name')+"-bor-bottom").val();
+					$('iframe').contents().find(targetData.contentName).css('border-bottom', borderSize+"px solid "+color);
+				}
+				else if (pos == "right") {
+					color = $("#"+obj.data('name')+"-bor-right").val();
+					$('iframe').contents().find(targetData.contentName).css('border-right', borderSize+"px solid "+color);
+				}
+				else if (pos == "left") {
+					color = $("#"+obj.data('name')+"-bor-left").val();
+					$('iframe').contents().find(targetData.contentName).css('border-left', borderSize+"px solid "+color);
+				}
 			}
-			else if (pos == "bottom") {
-				color = $("#"+obj.data('name')+"-bor-bottom").val();
-				$('iframe').contents().find(targetData.contentName).css('border-bottom', borderSize+"px solid "+color);
-			}
-			else if (pos == "right") {
-				color = $("#"+obj.data('name')+"-bor-right").val();
-				$('iframe').contents().find(targetData.contentName).css('border-right', borderSize+"px solid "+color);
-			}
-			else if (pos == "left") {
-				color = $("#"+obj.data('name')+"-bor-left").val();
-				$('iframe').contents().find(targetData.contentName).css('border-left', borderSize+"px solid "+color);
-			}
-			else $('iframe').contents().find(targetData.contentName).css('border', borderSize+"px solid "+color);
 		}
 	}
 };

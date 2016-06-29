@@ -187,7 +187,6 @@
       // 違う
       function updateColor(newcolor, disableinputupdate) {
         var updatedcolor = tinycolor(newcolor);
-        $('iframe').contents().find(targetData.contentName).css('background-color',updatedcolor);
         if (updatedcolor.isValid()) {
           color.tiny = updatedcolor;
           color.hsla = updatedcolor.toHsl();
@@ -1340,6 +1339,7 @@
 
       // 違う
       function _updateTriggerelementColor() {
+        trace("in _updateTriggerelementColor");
         if (triggerelementisinput && settings.previewontriggerelement) {
           if ((100 - color.cielch.l) * color.cielch.a < settings.previewcontrasttreshold) {
             triggerelement.css('background', color.tiny.toRgbString()).css('color', '#000');
@@ -1348,6 +1348,7 @@
             triggerelement.css('background', color.tiny.toRgbString()).css('color', '#fff');
           }
         }
+        trace("out _updateTriggerelementColor");
       }
 
       // ここでtextエリア内の表示文字をセット
@@ -1361,25 +1362,21 @@
               case 'hex':
                 if (color.hsla.a < 1) {
                   $element.val(color.tiny.toRgbString());
-                  //$element.val(targetData.contentName);
                   setTargetColor(targetData,color.tiny.toRgbString());
                 }
                 else {
                   $element.val(color.tiny.toHexString());
-                  //$element.val(targetData.contentName);
                   setTargetColor(targetData,color.tiny.toHexString());
                 }
                 break;
               case 'hsl':
                 $element.val(color.tiny.toHslString());
-                //$element.val(targetData.contentName);
                 setTargetColor(targetData,color.tiny.toHslString());
                 break;
               case 'rgb':
                 /* falls through */
               default:
                 $element.val(color.tiny.toRgbString());
-                //$element.val(targetData.contentName);
                 setTargetColor(targetData,color.tiny.toRgbString());
                 break;
             }
@@ -1389,17 +1386,37 @@
 
       // targetに色設定
       function setTargetColor(targetData,color) {
+        // 背景色変更
         if(targetData.targetName == "background") {
           $('iframe').contents().find(targetData.contentName).css('background-color',color);
         }
+
+        // ボーダーカラー変更
         else if (targetData.targetName == "border") {
           var borderSize = $(targetData.borderSize).val();
-          if (targetData.borderPosition == "top") $('iframe').contents().find(targetData.contentName).css('border-top', borderSize+"px solid "+color);
-          else if (targetData.borderPosition == "bottom") $('iframe').contents().find(targetData.contentName).css('border-bottom', borderSize+"px solid "+color);
-          else if (targetData.borderPosition == "right") $('iframe').contents().find(targetData.contentName).css('border-right', borderSize+"px solid "+color);
-          else if (targetData.borderPosition == "left") $('iframe').contents().find(targetData.contentName).css('border-left', borderSize+"px solid "+color);
-          else $('iframe').contents().find(targetData.contentName).css('border', borderSize+"px solid "+color);
-        } else if (targetData.targetName == "font") $('iframe').contents().find(targetData.contentName).css('color',color);
+          if(borderSize > 0) {
+            if (targetData.borderPosition == "top") {
+              $('iframe').contents().find(targetData.contentName).css('border-top', borderSize+"px solid "+color);
+            }
+            else if (targetData.borderPosition == "bottom") {
+              $('iframe').contents().find(targetData.contentName).css('border-bottom', borderSize+"px solid "+color);
+            }
+            else if (targetData.borderPosition == "right") {
+              $('iframe').contents().find(targetData.contentName).css('border-right', borderSize+"px solid "+color);
+            }
+            else if (targetData.borderPosition == "left") {
+              $('iframe').contents().find(targetData.contentName).css('border-left', borderSize+"px solid "+color);
+            }
+            else {
+              $('iframe').contents().find(targetData.contentName).css('border', borderSize+"px solid "+color);
+            }
+          }
+        }
+
+        // フォントカラー変更
+        else if (targetData.targetName == "font") {
+          $('iframe').contents().find(targetData.contentName).css('color',color);
+        }
       }
 
       // 違う
