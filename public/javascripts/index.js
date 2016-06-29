@@ -74,6 +74,51 @@ function fixFrameSize() {
 	}
 };
 
+function downloadHTML(formId, id){
+	var ele = $("<input>", {
+		"type" : "hidden",
+		"name" : "tempHtml",
+		"value" : $('iframe').contents().find('html').html()
+	});
+	var ele2 = $("<input>",{
+			"type" : "hidden",
+			"name" : "temp_id",
+			"value" : id
+		});
+		$(formId).append(ele);
+		$(formId).append(ele2);
+
+		/*
+		 * 画像ファイル名をhiddenでappendする。
+		*/
+		var imageFileNames = [];
+		$('iframe').contents().find('img').each(function() {
+		var imgSrc = $(this).attr("src");
+		if(_.isEmpty(imgSrc)) {
+			return true;
+		}
+		if(imgSrc.indexOf("/") == -1) {
+		imageFileNames.push(imageFileName);
+		}	else	{
+		var matches = imgSrc.match(/^.*\/(.*?)$/);
+		var imageFileName = "";
+		if(matches.length >= 1) {
+			imageFileName = matches[1];
+		}
+		if(!_.isEmpty(imageFileName)) {
+			imageFileNames.push(imageFileName);
+		}
+		$(formId).append(
+				$('<input>').attr({
+					type: 'hidden',
+					name: 'imageFileNames',
+					value: imageFileNames.join(),
+				})
+		);
+	 }
+	});
+}
+
 function sendHTML(formId, id){
 	var linames = [];
 	var paths = [];
