@@ -93,23 +93,23 @@ function sendHTML(formId, id){
 	 */
 	var imageFileNames = [];
 	$('iframe').contents().find('img').each(function() {
-		if(_.isEmpty($(this).attr("src"))) {
+		var imgSrc = $(this).attr("src");
+		if(_.isEmpty(imgSrc)) {
 			return true;
 		}
-		var imageFileName = $(this).attr("src").match(/^.*\/(.*?)$/)[1];
-		if(!_.isEmpty(imageFileName)) {
+		if(imgSrc.indexOf("/") == -1) {
 			imageFileNames.push(imageFileName);
+		}	else	{
+			var matches = imgSrc.match(/^.*\/(.*?)$/);
+			var imageFileName = "";
+			if(matches.length >= 1) {
+				imageFileName = matches[1];
+			}
+			if(!_.isEmpty(imageFileName)) {
+				imageFileNames.push(imageFileName);
+			}
 		}
-	});
-	$(formId).append(
-			$('<input>').attr({
-				type: 'hidden',
-				name: 'imageFileNames',
-				value: imageFileNames.join(),
-			})
-	);
 }
-
 
 function showPopup(member_id, id){
 	var inst = $('[data-remodal-id=modal]').remodal();
