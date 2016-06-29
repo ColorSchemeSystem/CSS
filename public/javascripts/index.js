@@ -75,48 +75,86 @@ function fixFrameSize() {
 };
 
 function sendHTML(formId, id){
-	var ele = $("<input>", {
-					"type" : "hidden",
-					"name" : "tempHtml",
-					"value" : $('iframe').contents().find('html').html()
-				});
-	var ele2 = $("<input>",{
-					"type" : "hidden",
-					"name" : "temp_id",
-					"value" : id
-				});
-	$(formId).append(ele);
-	$(formId).append(ele2);
-	
-	/*
-	 * 画像ファイル名をhiddenでappendする。
-	 */
-	var imageFileNames = [];
-	$('iframe').contents().find('img').each(function() {
+	var linames = [];
+	var paths = [];
+	for(var i = 0; i < $('iframe').contents().find('img').size(); i++) {
+		var selector = 'img:eq(' + i + ')';
+		var e = $('iframe').contents().find(selector);
+		linames.push(e.attr('src'));
+		paths.push(selector);
+	}
+	$.ajax({
+		url: "/loadImageName",
+		data: {
+			linames : linames.join(","),
+			paths : paths.join(",")
+		},
+		type: "POST"
+	}).done(function(result){
+		var content = $('iframe').contents().find('html').html();
+		if(Boolean(result.status)) {
+			var newSrcs = [];
+			for(var i = 0; i < result.elements.length; i++) {
+				newSrcs.push(result.elements[i].imageName);
+			}
+			var matches = content.match(/<img.*?src=('|").*?('|").*?>/gim);
+			if(matches.length == newSrcs.length) {
+				for(var i = 0; i < matches.length; i++) {
+					var match = matches[i];
+					var arr = match.match(/src=('|\")(.*?)('|\")/);
+					if(arr.length < 3) {
+						continue;
+					}
+					var _src = arr[0];
+					var _path = arr[2];
+					var _new = _src.replace(_path , newSrcs[i]);
+					content = content.replace(_src,_new);
+				}
+			}
+		}
+		var ele = $("<input>", {
+			"type" : "hidden",
+			"name" : "tempHtml",
+			"value" : content
+		});
+		var ele2 = $("<input>",{
+			"type" : "hidden",
+			"name" : "temp_id",
+			"value" : id
+		});
+		$(formId).append(ele);
+		$(formId).append(ele2);
+
+		/*
+		 * 画像ファイル名をhiddenでappendする。
+		*/
+		var imageFileNames = [];
+		$('iframe').contents().find('img').each(function() {
 		var imgSrc = $(this).attr("src");
 		if(_.isEmpty(imgSrc)) {
 			return true;
 		}
 		if(imgSrc.indexOf("/") == -1) {
-			imageFileNames.push(imageFileName);
-		}	else	{
-			var matches = imgSrc.match(/^.*\/(.*?)$/);
-			var imageFileName = "";
-			if(matches.length >= 1) {
-				imageFileName = matches[1];
-			}
-			if(!_.isEmpty(imageFileName)) {
 				imageFileNames.push(imageFileName);
+		}	else	{
+				var matches = imgSrc.match(/^.*\/(.*?)$/);
+				var imageFileName = "";
+				if(matches.length >= 1) {
+					imageFileName = matches[1];
+				}
+				if(!_.isEmpty(imageFileName)) {
+					imageFileNames.push(imageFileName);
+				}
 			}
-		}
-	});
-	$(formId).append(
+		});
+		$(formId).append(
 			$('<input>').attr({
 				type: 'hidden',
 				name: 'imageFileNames',
 				value: imageFileNames.join(),
 			})
 		);
+	}).fail(function(data){});
 }
 
 function showPopup(member_id, id){
