@@ -4,42 +4,44 @@
 	<title>sample</title>
 	<style type="text/css">
 	body {
-		width: 1200px;	
+		max-width: 1200px;	
 	}
 
 	.header {
-		text-align: center;
+		text-align: left;
 	}
 
 	.menubar {
-		position: absolute;
-		top: 20%;
-		width: 260px;
+		float: left;
+		width: 16%;
 		background-color: #aaa;
 	}
 
-	.wrapper {
-		position: absolute;
-		top: 20%;
-		left: 300px; 
+	.wrapper { 
+		width: 80%;
+		float: right;
+		margin-bottom: 20px;
 	}
 
 	.content1 {
-		width: 900px;
-		height: 200px;
-		margin-bottom: 50px;
 		background-color: #aaa;
+		height: 400px;
+		max-height: 500px;
+		margin-bottom: 50px;
 	}
 
 	.content2 {
-		width: 900px;
-		height: 200px;
+		height: 400px;
+		max-height: 500px;
 		background-color: #aaa;
 	}
 
+	.clearfix {
+		clear: both;
+	}
+
 	.fotter {
-		position: relative;
-		top: 500px;
+		border-top: 1px solid black;
 		text-align: center;
 	}
 
@@ -70,7 +72,9 @@
 		</div>
 	</div>
 
-	<div class="fotter">
-		fotter
+	<div class="clearfix">
+		<div class="fotter">
+			fotter
+		</div>
 	</div>
 </body>
