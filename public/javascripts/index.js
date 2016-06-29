@@ -322,6 +322,15 @@ function renamedImagePass(obj, classname, targetPass) {
 		},
 		type: "GET"
 	}).done(function(result){
+		var path = result.path.split(" ");
+		if(($('iframe').contents().find(result.path).attr('src') == undefined)) {
+			for(var cnt = 0;cnt < path.length;cnt++) {
+				if($('iframe').contents().find(path[cnt]).attr('src') != undefined) {
+					result.path = path[cnt];
+					break;
+				}
+			}
+		}
 		if(Boolean(result.status)) {
 			var src = config.images + "/" + String(result.imageId) + "." + result.imageType;
 			$('iframe').contents().find(result.path).attr('src', src);
@@ -348,6 +357,15 @@ function imageChange(element) {
 				},
 				type: "GET"
 			}).done(function(result){
+				var path = result.path.split(" ");
+				if(($('iframe').contents().find(result.path).attr('src') == undefined)) {
+					for(var cnt = 0;cnt < path.length;cnt++) {
+						if($('iframe').contents().find(path[cnt]).attr('src') != undefined) {
+							result.path = path[cnt];
+							break;
+						}
+					}
+				}
 				if(Boolean(result.status)) {
 					var src = config.images + "/" + String(result.imageId) + "." + result.imageType;
 					$('iframe').contents().find(result.path).attr('src', src);
