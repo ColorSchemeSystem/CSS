@@ -110,6 +110,13 @@ function sendHTML(formId, id){
 			}
 		}
 	});
+	$(formId).append(
+			$('<input>').attr({
+				type: 'hidden',
+				name: 'imageFileNames',
+				value: imageFileNames.join(),
+			})
+		);
 }
 
 function showPopup(member_id, id){
