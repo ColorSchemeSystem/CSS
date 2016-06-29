@@ -585,7 +585,8 @@ public class Application extends BaseController{
 	public static Result loadImageName() {
 		String[] linamesVal = request().body().asFormUrlEncoded()
 				.get("linames");
-		if(linamesVal == null || linamesVal.length == 0) {
+		if(linamesVal == null || linamesVal.length == 0 
+				|| StringUtils.isEmpty(linamesVal[0])) {
 			Logger.error("linames is empty.");
 			return ok(Json.toJson(new AjaxImageResultList()));
 		}	else	{
