@@ -607,12 +607,22 @@ function addBackground(name, targetPass) {
 	$("#"+name+"-back").val(color);
 
 	var dataBack = {contentName:classname, targetName:"background"};
-	$("input#"+name+"-back").ColorPickerSliders({
-		placement: $('#chooser').data('placement'),
-		hsvpanel: $('#chooser').data('hsvpanel'),
-		sliders: $('#chooser').data('sliders'),
-		previewformat: 'hex'
-	},dataBack);
+	if($('#chooser').data('swatche') == true) {
+		$("input#"+name+"-back").ColorPickerSliders({
+			placement: $('#chooser').data('placement'),
+			hsvpanel: $('#chooser').data('hsvpanel'),
+			sliders: $('#chooser').data('sliders'),
+			previewformat: 'hex'
+		},dataBack);
+	} else {
+		$("input#"+name+"-back").ColorPickerSliders({
+			placement: $('#chooser').data('placement'),
+			hsvpanel: $('#chooser').data('hsvpanel'),
+			sliders: $('#chooser').data('sliders'),
+			swatches: false,
+			previewformat: 'hex'
+		},dataBack);
+	}
 };
 
 /*
@@ -688,12 +698,22 @@ function addBorderTop(name, targetPass) {
 	$('#classTable').append(tr2);
 
 	var dataBorder = {contentName:classname, targetName:"border", borderSize:"."+name+"-bor-top-size", borderPosition:"top"};
-	$("input#"+name+"-bor-top").ColorPickerSliders({
-		placement: $('#chooser').data('placement'),
-		hsvpanel: $('#chooser').data('hsvpanel'),
-		sliders: $('#chooser').data('sliders'),
-		previewformat: 'hex'
-	},dataBorder);
+	if($('#chooser').data('swatche') == true) {
+		$("input#"+name+"-bor-top").ColorPickerSliders({
+			placement: $('#chooser').data('placement'),
+			hsvpanel: $('#chooser').data('hsvpanel'),
+			sliders: $('#chooser').data('sliders'),
+			previewformat: 'hex'
+		},dataBorder);
+	} else {
+		$("input#"+name+"-bor-top").ColorPickerSliders({
+			placement: $('#chooser').data('placement'),
+			hsvpanel: $('#chooser').data('hsvpanel'),
+			sliders: $('#chooser').data('sliders'),
+			swatches: false,
+			previewformat: 'hex'
+		},dataBorder);
+	}
 };
 
 /*
@@ -732,12 +752,22 @@ function addBorderBottom(name, targetPass) {
 	$('#classTable').append(tr2);
 
 	var dataBorder = {contentName:classname, targetName:"border", borderSize:"."+name+"-bor-bottom-size", borderPosition:"bottom"};
-	$("input#"+name+"-bor-bottom").ColorPickerSliders({
-		placement: $('#chooser').data('placement'),
-		hsvpanel: $('#chooser').data('hsvpanel'),
-		sliders: $('#chooser').data('sliders'),
-		previewformat: 'hex'
-	},dataBorder);
+	if($('#chooser').data('swatche') == true) {
+		$("input#"+name+"-bor-bottom").ColorPickerSliders({
+			placement: $('#chooser').data('placement'),
+			hsvpanel: $('#chooser').data('hsvpanel'),
+			sliders: $('#chooser').data('sliders'),
+			previewformat: 'hex'
+		},dataBorder);
+	} else {
+		$("input#"+name+"-bor-bottom").ColorPickerSliders({
+			placement: $('#chooser').data('placement'),
+			hsvpanel: $('#chooser').data('hsvpanel'),
+			sliders: $('#chooser').data('sliders'),
+			swatches: false,
+			previewformat: 'hex'
+		},dataBorder);
+	}
 };
 
 /*
@@ -776,12 +806,22 @@ function addBorderRight(name, targetPass) {
 	$('#classTable').append(tr2);
 
 	var dataBorder = {contentName:classname, targetName:"border", borderSize:"."+name+"-bor-right-size", borderPosition:"right"};
-	$("input#"+name+"-bor-right").ColorPickerSliders({
-		placement: $('#chooser').data('placement'),
-		hsvpanel: $('#chooser').data('hsvpanel'),
-		sliders: $('#chooser').data('sliders'),
-		previewformat: 'hex'
-	},dataBorder);
+	if($('#chooser').data('swatche') == true) {
+		$("input#"+name+"-bor-right").ColorPickerSliders({
+			placement: $('#chooser').data('placement'),
+			hsvpanel: $('#chooser').data('hsvpanel'),
+			sliders: $('#chooser').data('sliders'),
+			previewformat: 'hex'
+		},dataBorder);
+	} else {
+		$("input#"+name+"-bor-right").ColorPickerSliders({
+			placement: $('#chooser').data('placement'),
+			hsvpanel: $('#chooser').data('hsvpanel'),
+			sliders: $('#chooser').data('sliders'),
+			swatches: false,
+			previewformat: 'hex'
+		},dataBorder);
+	}
 };
 
 /*
@@ -820,12 +860,22 @@ function addBorderLeft(name, targetPass) {
 	$('#classTable').append(tr2);
 
 	var dataBorder = {contentName:classname, targetName:"border", borderSize:"."+name+"-bor-left-size", borderPosition:"left"};
-	$("input#"+name+"-bor-left").ColorPickerSliders({
-		placement: $('#chooser').data('placement'),
-		hsvpanel: $('#chooser').data('hsvpanel'),
-		sliders: $('#chooser').data('sliders'),
-		previewformat: 'hex'
-	},dataBorder);
+	if($('#chooser').data('swatche') == true) {
+		$("input#"+name+"-bor-left").ColorPickerSliders({
+			placement: $('#chooser').data('placement'),
+			hsvpanel: $('#chooser').data('hsvpanel'),
+			sliders: $('#chooser').data('sliders'),
+			previewformat: 'hex'
+		},dataBorder);
+	} else {
+		$("input#"+name+"-bor-left").ColorPickerSliders({
+			placement: $('#chooser').data('placement'),
+			hsvpanel: $('#chooser').data('hsvpanel'),
+			sliders: $('#chooser').data('sliders'),
+			swatches: false,
+			previewformat: 'hex'
+		},dataBorder);
+	}
 };
 
 /*
@@ -884,12 +934,22 @@ function addFont(name, targetPass, obj) {
 	$("#"+name+"-font").val(color);
 
 	var dataFont = {contentName:classname, targetName:"font"};
-	$("input#"+name+"-font").ColorPickerSliders({
-		placement: $('#chooser').data('placement'),
-		hsvpanel: $('#chooser').data('hsvpanel'),
-		sliders: $('#chooser').data('sliders'),
-		previewformat: 'hex'
-	},dataFont);
+	if($('#chooser').data('swatche') == true) {
+		$("input#"+name+"-font").ColorPickerSliders({
+			placement: $('#chooser').data('placement'),
+			hsvpanel: $('#chooser').data('hsvpanel'),
+			sliders: $('#chooser').data('sliders'),
+			previewformat: 'hex'
+		},dataFont);
+	} else {
+		$("input#"+name+"-font").ColorPickerSliders({
+			placement: $('#chooser').data('placement'),
+			hsvpanel: $('#chooser').data('hsvpanel'),
+			sliders: $('#chooser').data('sliders'),
+			swatches: false,
+			previewformat: 'hex'
+		},dataFont);
+	}
 };
 
 /*
