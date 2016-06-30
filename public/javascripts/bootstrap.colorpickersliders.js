@@ -520,7 +520,6 @@
         if (connectedinput) {
           connectedinput.on('keyup change', function() {
             var $input = $(this);
-            trace("input" + $input.val());
             updateColor($input.val(), true);
           });
         }
@@ -1338,7 +1337,6 @@
 
       // 違う
       function _updateTriggerelementColor() {
-        trace("in _updateTriggerelementColor");
         if (triggerelementisinput && settings.previewontriggerelement) {
           if ((100 - color.cielch.l) * color.cielch.a < settings.previewcontrasttreshold) {
             triggerelement.css('background', color.tiny.toRgbString()).css('color', '#000');
@@ -1347,7 +1345,6 @@
             triggerelement.css('background', color.tiny.toRgbString()).css('color', '#fff');
           }
         }
-        trace("out _updateTriggerelementColor");
       }
 
       // ここでtextエリア内の表示文字をセット

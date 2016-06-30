@@ -607,7 +607,7 @@ function addBackground(name, targetPass) {
 	$("#"+name+"-back").val(color);
 
 	var dataBack = {contentName:classname, targetName:"background"};
-	if($('#chooser').data('swatche') == true) {
+	if($('#chooser').data('swatches') == true) {
 		$("input#"+name+"-back").ColorPickerSliders({
 			placement: $('#chooser').data('placement'),
 			hsvpanel: $('#chooser').data('hsvpanel'),
@@ -698,7 +698,7 @@ function addBorderTop(name, targetPass) {
 	$('#classTable').append(tr2);
 
 	var dataBorder = {contentName:classname, targetName:"border", borderSize:"."+name+"-bor-top-size", borderPosition:"top"};
-	if($('#chooser').data('swatche') == true) {
+	if($('#chooser').data('swatches') == true) {
 		$("input#"+name+"-bor-top").ColorPickerSliders({
 			placement: $('#chooser').data('placement'),
 			hsvpanel: $('#chooser').data('hsvpanel'),
@@ -752,7 +752,7 @@ function addBorderBottom(name, targetPass) {
 	$('#classTable').append(tr2);
 
 	var dataBorder = {contentName:classname, targetName:"border", borderSize:"."+name+"-bor-bottom-size", borderPosition:"bottom"};
-	if($('#chooser').data('swatche') == true) {
+	if($('#chooser').data('swatches') == true) {
 		$("input#"+name+"-bor-bottom").ColorPickerSliders({
 			placement: $('#chooser').data('placement'),
 			hsvpanel: $('#chooser').data('hsvpanel'),
@@ -806,7 +806,7 @@ function addBorderRight(name, targetPass) {
 	$('#classTable').append(tr2);
 
 	var dataBorder = {contentName:classname, targetName:"border", borderSize:"."+name+"-bor-right-size", borderPosition:"right"};
-	if($('#chooser').data('swatche') == true) {
+	if($('#chooser').data('swatches') == true) {
 		$("input#"+name+"-bor-right").ColorPickerSliders({
 			placement: $('#chooser').data('placement'),
 			hsvpanel: $('#chooser').data('hsvpanel'),
@@ -860,7 +860,7 @@ function addBorderLeft(name, targetPass) {
 	$('#classTable').append(tr2);
 
 	var dataBorder = {contentName:classname, targetName:"border", borderSize:"."+name+"-bor-left-size", borderPosition:"left"};
-	if($('#chooser').data('swatche') == true) {
+	if($('#chooser').data('swatches') == true) {
 		$("input#"+name+"-bor-left").ColorPickerSliders({
 			placement: $('#chooser').data('placement'),
 			hsvpanel: $('#chooser').data('hsvpanel'),
@@ -934,7 +934,7 @@ function addFont(name, targetPass, obj) {
 	$("#"+name+"-font").val(color);
 
 	var dataFont = {contentName:classname, targetName:"font"};
-	if($('#chooser').data('swatche') == true) {
+	if($('#chooser').data('swatches') == true) {
 		$("input#"+name+"-font").ColorPickerSliders({
 			placement: $('#chooser').data('placement'),
 			hsvpanel: $('#chooser').data('hsvpanel'),
