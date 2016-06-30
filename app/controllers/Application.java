@@ -538,7 +538,8 @@ public class Application extends BaseController{
 		fileS.saveFile(styleCss, css);
 		String[] files = {indexHtml , styleCss};
 		try {
-			String zipFileName = "template_" + new Faker().name().firstName() + ".zip";
+			String zipFileName = "template_" 
+		+ new Faker().name().firstName() + "_" + token + ".zip";
 			fileS.zip(zipFileName,files);
 			response().setContentType("application/x-download");
 			response().setHeader("Content-disposition","attachment; filename=" + zipFileName);
@@ -581,13 +582,11 @@ public class Application extends BaseController{
 		return ok(Json.toJson(result));
 	}
 	
-	/**
-	 * @return
-	 */
 	public static Result loadImageName() {
 		String[] linamesVal = request().body().asFormUrlEncoded()
 				.get("linames");
-		if(linamesVal == null || linamesVal.length == 0) {
+		if(linamesVal == null || linamesVal.length == 0 
+				|| StringUtils.isEmpty(linamesVal[0])) {
 			Logger.error("linames is empty.");
 			return ok(Json.toJson(new AjaxImageResultList()));
 		}	else	{
@@ -625,7 +624,7 @@ public class Application extends BaseController{
 			result.memberId = member.memberId;
 			result.status = true;
 			for(int j = 0; j < imageIds.length; j++) {
-				Image image = appS.findImageById(imageIds[j]);	
+				Image image = Image.find.byId(imageIds[j]);	
 				if(image != null) {
 					AjaxImageResultElement e = new AjaxImageResultElement();
 					e.imageId = image.imageId;

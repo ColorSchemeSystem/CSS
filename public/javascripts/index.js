@@ -12,6 +12,17 @@ var iframeMethod;
 var NamedClassName = [];
 var TextureName = [];
 
+/** デバッグモードかどうか。本番URLが含まれている場合は自動でfalse */
+var DEBUG_MODE = true && window.location.href.indexOf('http://ec2-52-11-169-235.us-west-2.compute.amazonaws.com:9000') == -1;
+
+/** デバッグモードでConsoleAPIが有効な場合にログを出力する */ 
+function trace(s) {
+	if(DEBUG_MODE && this.console && typeof console.log != "undefined")
+	{
+		console.log(s);
+	}
+}
+
 $(window).load(function(){
 	$('#loading').css("display", "block");
 	$('#loader').css("display", "block");
@@ -26,7 +37,7 @@ function isLoggedIn() {
 }
 
 function disabledButton(formId, buttonId){
-	console.log("無効化");
+	trace("無効化");
 	var form = $(formId);
 	var button = $(buttonId);
 	form.submit();
@@ -74,34 +85,34 @@ function fixFrameSize() {
 	}
 };
 
-function sendHTML(formId, id){
+function downloadHTML(formId, id){
 	var ele = $("<input>", {
-					"type" : "hidden",
-					"name" : "tempHtml",
-					"value" : $('iframe').contents().find('html').html()
-				});
+		"type" : "hidden",
+		"name" : "tempHtml",
+		"value" : $('iframe').contents().find('html').html()
+	});
 	var ele2 = $("<input>",{
-					"type" : "hidden",
-					"name" : "temp_id",
-					"value" : id
-				});
-	$(formId).append(ele);
-	$(formId).append(ele2);
-	
-	/*
-	 * 画像ファイル名をhiddenでappendする。
-	 */
-	var imageFileNames = [];
-	$('iframe').contents().find('img').each(function() {
-		var imgSrc = $(this).attr("src");
-		if(_.isEmpty(imgSrc)) {
-			return true;
-		}
-		if(imgSrc.indexOf("/") == -1) {
-			imageFileNames.push(imageFileName);
-		}	else	{
-			var matches = imgSrc.match(/^.*\/(.*?)$/);
-			var imageFileName = "";
+			"type" : "hidden",
+			"name" : "temp_id",
+			"value" : id
+		});
+		$(formId).append(ele);
+		$(formId).append(ele2);
+
+		/*
+		 * 画像ファイル名をhiddenでappendする。
+		*/
+		var imageFileNames = [];
+		$('iframe').contents().find('img').each(function() {
+			var imgSrc = $(this).attr("src");
+			if(_.isEmpty(imgSrc)) {
+				return true;
+			}
+			if(imgSrc.indexOf("/") == -1) {
+				imageFileNames.push(imageFileName);
+			}	else	{
+				var matches = imgSrc.match(/^.*\/(.*?)$/);
+				var imageFileName = "";
 			if(matches.length >= 1) {
 				imageFileName = matches[1];
 			}
@@ -110,6 +121,67 @@ function sendHTML(formId, id){
 			}
 		}
 	});
+	$(formId).append(
+		$('<input>').attr({
+				type: 'hidden',
+				name: 'imageFileNames',
+				value: imageFileNames.join(),
+		})
+	);
+}
+
+function sendHTML(formId, id){
+	var linames = [];
+	var paths = [];
+	for(var i = 0; i < $('iframe').contents().find('img').size(); i++) {
+		var selector = 'img:eq(' + i + ')';
+		var e = $('iframe').contents().find(selector);
+		linames.push(e.attr('src'));
+		paths.push(selector);
+	}
+	$.ajax({
+		url: "/loadImageName",
+		data: {
+			linames : linames.join(","),
+			paths : paths.join(",")
+		},
+		type: "POST"
+	}).done(function(result){
+		var content = $('iframe').contents().find('html').html();
+		if(Boolean(result.status)) {
+			var newSrcs = [];
+			for(var i = 0; i < result.elements.length; i++) {
+				newSrcs.push(result.elements[i].imageName);
+			}
+			var matches = content.match(/<img.*?src=('|").*?('|").*?>/gim);
+			if(matches.length == newSrcs.length) {
+				for(var i = 0; i < matches.length; i++) {
+					var match = matches[i];
+					var arr = match.match(/src=('|\")(.*?)('|\")/);
+					if(arr.length < 3) {
+						continue;
+					}
+					var _src = arr[0];
+					var _path = arr[2];
+					var _new = _src.replace(_path , newSrcs[i]);
+					content = content.replace(_src,_new);
+				}
+			}
+		}
+		var ele = $("<input>", {
+			"type" : "hidden",
+			"name" : "tempHtml",
+			"value" : content
+		});
+		var ele2 = $("<input>",{
+			"type" : "hidden",
+			"name" : "temp_id",
+			"value" : id
+		});
+		$(formId).append(ele);
+		$(formId).append(ele2);
+
+	}).fail(function(data){});
 }
 
 function showPopup(member_id, id){
@@ -403,14 +475,14 @@ function addTr(obj, classname, childName, targetPass, viewName, color) {
 				});
 				position = $('iframe').contents().find(targetPass).css("position");
 				var css = {
-					color : "red",
+					color : "#1E90FF",
 					position : "absolute",
 					width : content.innerWidth(),
 					height : content.innerHeight(),
-					background : "red",
-					filter : "alpha(opacity = 30)",
-					MozOpacity : 0.3,
-					opacity : 0.3
+					background : "#1E90FF",
+					filter : "alpha(opacity = 60)",
+					MozOpacity : 0.6,
+					opacity : 0.6
 				};
 				content.css("position", "relative");
 				element.css(css);
@@ -535,13 +607,22 @@ function addBackground(name, targetPass) {
 	$("#"+name+"-back").val(color);
 
 	var dataBack = {contentName:classname, targetName:"background"};
-	$("input#"+name+"-back").ColorPickerSliders({
-		placement: $('#chooser').data('placement'),
-		hsvpanel: $('#chooser').data('hsvpanel'),
-		sliders: $('#chooser').data('sliders'),
-		swatches: $('#chooser').data('swatches'),
-		previewformat: 'hex'
-	},dataBack);
+	if($('#chooser').data('swatches') == true) {
+		$("input#"+name+"-back").ColorPickerSliders({
+			placement: $('#chooser').data('placement'),
+			hsvpanel: $('#chooser').data('hsvpanel'),
+			sliders: $('#chooser').data('sliders'),
+			previewformat: 'hex'
+		},dataBack);
+	} else {
+		$("input#"+name+"-back").ColorPickerSliders({
+			placement: $('#chooser').data('placement'),
+			hsvpanel: $('#chooser').data('hsvpanel'),
+			sliders: $('#chooser').data('sliders'),
+			swatches: false,
+			previewformat: 'hex'
+		},dataBack);
+	}
 };
 
 /*
@@ -617,13 +698,22 @@ function addBorderTop(name, targetPass) {
 	$('#classTable').append(tr2);
 
 	var dataBorder = {contentName:classname, targetName:"border", borderSize:"."+name+"-bor-top-size", borderPosition:"top"};
-	$("input#"+name+"-bor-top").ColorPickerSliders({
-		placement: $('#chooser').data('placement'),
-		hsvpanel: $('#chooser').data('hsvpanel'),
-		sliders: $('#chooser').data('sliders'),
-		swatches: $('#chooser').data('swatches'),
-		previewformat: 'hex'
-	},dataBorder);
+	if($('#chooser').data('swatches') == true) {
+		$("input#"+name+"-bor-top").ColorPickerSliders({
+			placement: $('#chooser').data('placement'),
+			hsvpanel: $('#chooser').data('hsvpanel'),
+			sliders: $('#chooser').data('sliders'),
+			previewformat: 'hex'
+		},dataBorder);
+	} else {
+		$("input#"+name+"-bor-top").ColorPickerSliders({
+			placement: $('#chooser').data('placement'),
+			hsvpanel: $('#chooser').data('hsvpanel'),
+			sliders: $('#chooser').data('sliders'),
+			swatches: false,
+			previewformat: 'hex'
+		},dataBorder);
+	}
 };
 
 /*
@@ -662,13 +752,22 @@ function addBorderBottom(name, targetPass) {
 	$('#classTable').append(tr2);
 
 	var dataBorder = {contentName:classname, targetName:"border", borderSize:"."+name+"-bor-bottom-size", borderPosition:"bottom"};
-	$("input#"+name+"-bor-bottom").ColorPickerSliders({
-		placement: $('#chooser').data('placement'),
-		hsvpanel: $('#chooser').data('hsvpanel'),
-		sliders: $('#chooser').data('sliders'),
-		swatches: $('#chooser').data('swatches'),
-		previewformat: 'hex'
-	},dataBorder);
+	if($('#chooser').data('swatches') == true) {
+		$("input#"+name+"-bor-bottom").ColorPickerSliders({
+			placement: $('#chooser').data('placement'),
+			hsvpanel: $('#chooser').data('hsvpanel'),
+			sliders: $('#chooser').data('sliders'),
+			previewformat: 'hex'
+		},dataBorder);
+	} else {
+		$("input#"+name+"-bor-bottom").ColorPickerSliders({
+			placement: $('#chooser').data('placement'),
+			hsvpanel: $('#chooser').data('hsvpanel'),
+			sliders: $('#chooser').data('sliders'),
+			swatches: false,
+			previewformat: 'hex'
+		},dataBorder);
+	}
 };
 
 /*
@@ -707,13 +806,22 @@ function addBorderRight(name, targetPass) {
 	$('#classTable').append(tr2);
 
 	var dataBorder = {contentName:classname, targetName:"border", borderSize:"."+name+"-bor-right-size", borderPosition:"right"};
-	$("input#"+name+"-bor-right").ColorPickerSliders({
-		placement: $('#chooser').data('placement'),
-		hsvpanel: $('#chooser').data('hsvpanel'),
-		sliders: $('#chooser').data('sliders'),
-		swatches: $('#chooser').data('swatches'),
-		previewformat: 'hex'
-	},dataBorder);
+	if($('#chooser').data('swatches') == true) {
+		$("input#"+name+"-bor-right").ColorPickerSliders({
+			placement: $('#chooser').data('placement'),
+			hsvpanel: $('#chooser').data('hsvpanel'),
+			sliders: $('#chooser').data('sliders'),
+			previewformat: 'hex'
+		},dataBorder);
+	} else {
+		$("input#"+name+"-bor-right").ColorPickerSliders({
+			placement: $('#chooser').data('placement'),
+			hsvpanel: $('#chooser').data('hsvpanel'),
+			sliders: $('#chooser').data('sliders'),
+			swatches: false,
+			previewformat: 'hex'
+		},dataBorder);
+	}
 };
 
 /*
@@ -752,56 +860,22 @@ function addBorderLeft(name, targetPass) {
 	$('#classTable').append(tr2);
 
 	var dataBorder = {contentName:classname, targetName:"border", borderSize:"."+name+"-bor-left-size", borderPosition:"left"};
-	$("input#"+name+"-bor-left").ColorPickerSliders({
-		placement: $('#chooser').data('placement'),
-		hsvpanel: $('#chooser').data('hsvpanel'),
-		sliders: $('#chooser').data('sliders'),
-		swatches: $('#chooser').data('swatches'),
-		previewformat: 'hex'
-	},dataBorder);
-};
-
-/*
-*  ボーダー(角丸)追加
-*/
-function addBorderRadius(name, targetPass) {
-	var tr = $("<tr class='iframe"+name+"'></tr>");
-	var td = $("<td>radius</td>");
-	var td2 = $("<input type='text' class='form-control' id='"+name+"-bor-radius' value='#A6FF00' data-color-format='hex'>");
-
-	tr.append(td);
-	tr.append(td2);
-	tr.css("display", "none");
-	$('#classTable').append(tr);
-	var classname = targetPass;
-
-	var color = $('iframe').contents().find(classname).css('border-color');
-	color = changedColor(color);
-	$("#"+name+"-bor-radius").val(color);
-
-	// ボーダーサイズ変更できる様に
-	var tr2 = $("<tr class='iframe"+name+"'></tr>");
-	var td3 = $("<td>radius-size</td>");
-	var size = 0;
-	if($(targetPass).css("border") != undefined && $(targetPass).css("border") != "") {
-		size = $(targetPass).css('border-radius');
-		size = size.replace("px", "　");
-		size = size.substr(size.match(/　/), size.match(/　/)+1);
+	if($('#chooser').data('swatches') == true) {
+		$("input#"+name+"-bor-left").ColorPickerSliders({
+			placement: $('#chooser').data('placement'),
+			hsvpanel: $('#chooser').data('hsvpanel'),
+			sliders: $('#chooser').data('sliders'),
+			previewformat: 'hex'
+		},dataBorder);
+	} else {
+		$("input#"+name+"-bor-left").ColorPickerSliders({
+			placement: $('#chooser').data('placement'),
+			hsvpanel: $('#chooser').data('hsvpanel'),
+			sliders: $('#chooser').data('sliders'),
+			swatches: false,
+			previewformat: 'hex'
+		},dataBorder);
 	}
-	var td4 = $("<input type='text' class='"+name+"-bor-left-size' id='border-size' value='"+size+"' data-classname='"+classname+"' data-name='"+name+"' data-position='left' >");
-	tr2.append(td3);
-	tr2.append(td4);
-	tr2.css("display", "none");
-	$('#classTable').append(tr2);
-
-	var dataBorder = {contentName:classname, targetName:"border", borderSize:"."+name+"-bor-left-size", borderPosition:"left"};
-	$("input#"+name+"-bor-left").ColorPickerSliders({
-		placement: $('#chooser').data('placement'),
-		hsvpanel: $('#chooser').data('hsvpanel'),
-		sliders: $('#chooser').data('sliders'),
-		swatches: $('#chooser').data('swatches'),
-		previewformat: 'hex'
-	},dataBorder);
 };
 
 /*
@@ -818,24 +892,25 @@ function setBorderSize(element) {
 								borderSize:"."+$(this).attr("class")};
 			var color = "#777";
 			var borderSize = $(targetData.borderSize).val();
-			var pos = obj.data("position");
-			if (pos == "top") {
-				color = $("#"+obj.data('name')+"-bor-top").val();
-				$('iframe').contents().find(targetData.contentName).css('border-top', borderSize+"px solid "+color);
+			if(borderSize > 0) { 
+				var pos = obj.data("position");
+				if (pos == "top") {
+					color = $("#"+obj.data('name')+"-bor-top").val();
+					$('iframe').contents().find(targetData.contentName).css('border-top', borderSize+"px solid "+color);
+				}
+				else if (pos == "bottom") {
+					color = $("#"+obj.data('name')+"-bor-bottom").val();
+					$('iframe').contents().find(targetData.contentName).css('border-bottom', borderSize+"px solid "+color);
+				}
+				else if (pos == "right") {
+					color = $("#"+obj.data('name')+"-bor-right").val();
+					$('iframe').contents().find(targetData.contentName).css('border-right', borderSize+"px solid "+color);
+				}
+				else if (pos == "left") {
+					color = $("#"+obj.data('name')+"-bor-left").val();
+					$('iframe').contents().find(targetData.contentName).css('border-left', borderSize+"px solid "+color);
+				}
 			}
-			else if (pos == "bottom") {
-				color = $("#"+obj.data('name')+"-bor-bottom").val();
-				$('iframe').contents().find(targetData.contentName).css('border-bottom', borderSize+"px solid "+color);
-			}
-			else if (pos == "right") {
-				color = $("#"+obj.data('name')+"-bor-right").val();
-				$('iframe').contents().find(targetData.contentName).css('border-right', borderSize+"px solid "+color);
-			}
-			else if (pos == "left") {
-				color = $("#"+obj.data('name')+"-bor-left").val();
-				$('iframe').contents().find(targetData.contentName).css('border-left', borderSize+"px solid "+color);
-			}
-			else $('iframe').contents().find(targetData.contentName).css('border', borderSize+"px solid "+color);
 		}
 	}
 };
@@ -859,13 +934,22 @@ function addFont(name, targetPass, obj) {
 	$("#"+name+"-font").val(color);
 
 	var dataFont = {contentName:classname, targetName:"font"};
-	$("input#"+name+"-font").ColorPickerSliders({
-		placement: $('#chooser').data('placement'),
-		hsvpanel: $('#chooser').data('hsvpanel'),
-		sliders: $('#chooser').data('sliders'),
-		swatches: $('#chooser').data('swatches'),
-		previewformat: 'hex'
-	},dataFont);
+	if($('#chooser').data('swatches') == true) {
+		$("input#"+name+"-font").ColorPickerSliders({
+			placement: $('#chooser').data('placement'),
+			hsvpanel: $('#chooser').data('hsvpanel'),
+			sliders: $('#chooser').data('sliders'),
+			previewformat: 'hex'
+		},dataFont);
+	} else {
+		$("input#"+name+"-font").ColorPickerSliders({
+			placement: $('#chooser').data('placement'),
+			hsvpanel: $('#chooser').data('hsvpanel'),
+			sliders: $('#chooser').data('sliders'),
+			swatches: false,
+			previewformat: 'hex'
+		},dataFont);
+	}
 };
 
 /*

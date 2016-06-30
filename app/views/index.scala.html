@@ -68,7 +68,7 @@
 				}else{
 					<input class="btn btn-default" type="button" value="HTMLを保存" onClick="showPopup(@user.memberId, @id);">
 				}
-					<input id='downloadTemplate' class="btn btn-default" type="submit" value="HTMLをダウンロード" onClick="sendHTML('#sendForm', @id);disabledButton('#sendForm', '#downloadTemplate');">
+					<input id='downloadTemplate' class="btn btn-default" type="submit" value="HTMLをダウンロード" onClick="downloadHTML('#sendForm', @id);disabledButton('#sendForm', '#downloadTemplate');">
 
 				</div>
 			</form>
@@ -78,7 +78,7 @@
     <div class="fixnav">
 		<div class="tempButton">
 			<form method="post" id="showTemp" name="showTemp" action="/template/detail">
-				<input class="btn btn-default btn-lg" type="submit" value="PREVIEW" onClick="sendHTML('#showTemp', @id);">
+				<input class="btn btn-default btn-lg" type="submit" value="PREVIEW" onClick="downloadHTML('#showTemp', @id);">
 			</form>
 		</div>
 
